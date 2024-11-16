@@ -7,6 +7,7 @@
 
     <typeAliases>
             <typeAlias alias="SavingRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest"/>
+            <typeAlias alias="BadgeRequest" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest"/>
     </typeAliases>
 
     <mappers>
