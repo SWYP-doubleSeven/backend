@@ -6,7 +6,7 @@
     </settings>-->
 
     <typeAliases>
-        <typeAlias alias="SavingRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest"/>
+            <typeAlias alias="SavingRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest"/>
     </typeAliases>
 
     <mappers>
