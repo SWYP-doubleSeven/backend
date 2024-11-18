@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--<settings>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+    </settings>-->
+
+    <typeAliases>
+            <typeAlias alias="SavingRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest"/>
+            <typeAlias alias="BadgeRequest" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest"/>
+            <typeAlias alias="BadgeSearchCriteria" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria"/>
+    </typeAliases>
+
+    <mappers>
+        <package name="mybatis.mapper"/>
+    </mappers>
+</configuration>
