@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.saving.dao.SavingDAO">
+    <!-- resultMap -->
+    <resultMap id="SavingResultResMap" type="com.swyp.doubleSeven.domain.saving.dto.response.SavingResponse">
+        <id property="savingId" column="SAVING_ID"/>
+        <result property="memberId" column="MEMBER_ID"/>
+        <result property="savingYmd" column="SAVING_YMD"/>
+        <result property="largeCategoryId" column="L_CATEGORY_ID"/>
+        <result property="smallCategoryId" column="S_CATEGORY_ID"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="memo" column="MEMO"/>
+        <result property="rgstDt" column="RGST_DT"/>
+        <result property="updtDt" column="UPDT_DT"/>
+        <!--<result property="updtId" column="UPDT_ID"/>-->
+    </resultMap>
+
+    <!-- 가상소비 등록 -->
+    <insert id="insertSaving" parameterType="SavingRequest">
+        INSERT INTO SAVING (
+            MEMBER_ID,
+            SAVING_YMD,
+            AMOUNT,
+            MEMO,
+            L_CATEGORY_ID,
+            S_CATEGORY_ID,
+            RGST_ID,
+            RGST_DT,
+            UPDT_ID,
+            UPDT_DT
+        ) VALUES (
+            1,                          <!-- 임시 MEMBER_ID -->
+            #{savingYmd},
+            #{amount},
+            #{memo},
+            #{largeCategoryId},
+            #{smallCategoryId},
+            1,                          <!-- 임시 RGST_ID -->
+            CURRENT_TIMESTAMP,
+            1,                          <!-- 임시 UPDT_ID -->
+            CURRENT_TIMESTAMP
+        )
+    </insert>
+
+    <!-- 가상소비 단건 조회 -->
+    <select id="selectSaving" parameterType="Integer" resultMap="SavingResultResMap">
+        SELECT
+            s.SAVING_ID,
+            s.SAVING_YMD,
+            s.AMOUNT,
+            s.MEMO,
+            s.L_CATEGORY_ID,
+            s.S_CATEGORY_ID,
+            lc.L_CATEGORY_NAME,
+            sc.S_CATEGORY_NAME
+        FROM
+            SAVING s
+                JOIN L_CATEGORY lc ON s.L_CATEGORY_ID = lc.L_CATEGORY_ID
+                JOIN S_CATEGORY sc ON s.S_CATEGORY_ID = sc.S_CATEGORY_ID
+        WHERE
+            s.SAVING_ID = #{savingId}
+    </select>
+
+    <!-- 가상소비 삭제 -->
+    <delete id="deleteSaving">
+        DELETE
+        FROM
+            SAVING
+        WHERE SAVING_ID = #{savingId}
+    </delete>
+</mapper>
