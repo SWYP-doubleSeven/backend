@@ -18,7 +18,7 @@ public class BadgeResponse {
     private String operator;         // 비교연산자
     private Integer value;           // 값
     private Integer rgstId;         // 등록자 ID
-    private LocalDateTime rgstDt;    // 등록일시
+    private String rgstDt;    // 등록일시
     private Integer updtId;          // 수정자 ID
-    private LocalDateTime updtDt;    // 수정일시
+    private String updtDt;    // 수정일시
 }

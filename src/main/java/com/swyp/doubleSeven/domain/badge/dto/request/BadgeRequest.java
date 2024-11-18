@@ -17,4 +17,9 @@ public class BadgeRequest {
     private Integer mainCategoryId;
     private String operator;
     private Integer value;
+    private Integer userId;
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 }
