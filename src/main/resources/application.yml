@@ -7,10 +7,10 @@ server:
 # DataBase
 spring:
   datasource:
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: #{db_url}
-    username: #{db_username}
-    password: #{db_password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${{secrets.db_url}}
+    username: ${{secrets.db_username}}
+    password: ${{secrets.db_password}}
   profiles:
     include: oauth
 
