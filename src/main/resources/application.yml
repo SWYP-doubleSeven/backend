@@ -11,6 +11,9 @@ spring:
     url: ${{secrets.db_url}}
     username: ${{secrets.db_username}}
     password: ${{secrets.db_password}}
+    url: jdbc:log4jdbc:mysql://db-2voai5-kr.vpc-pub-cdb.ntruss.com/mysql-db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: ncp-user
+    password: 1qaz@WSX@@
   profiles:
     include: oauth
 
