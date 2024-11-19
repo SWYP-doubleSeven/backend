@@ -8,9 +8,9 @@ server:
 spring:
   datasource:
     driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: #{db_url}
-    username: #{db_username}
-    password: #{db_password}
+    url: ${{secrets.db_url}}
+    username: ${{secrets.db_username}}
+    password: ${{secrets.db_password}}
   profiles:
     include: oauth
 
