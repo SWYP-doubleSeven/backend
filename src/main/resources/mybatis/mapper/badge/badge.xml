@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.badge.dao.BadgeDAO">
+
+    <!-- resultMap -->
+    <resultMap id="BadgeResultMap" type="com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse">
+        <id property="badgeId" column="BADGE_ID"/>
+        <result property="badgeName" column="BADGE_NAME"/>
+        <result property="emblemPath" column="EMBLEM_PATH"/>
+        <result property="badgeType" column="BADGE_TYPE"/>
+        <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+        <result property="operator" column="OPERATOR"/>
+        <result property="value" column="VALUE"/>
+        <result property="rgstId" column="RGST_ID"/>
+        <result property="rgstDt" column="RGST_DT"/>
+        <result property="updtId" column="UPDT_ID"/>
+        <result property="updtDt" column="UPDT_DT"/>
+    </resultMap>
+
+    <!-- 관리자-뱃지 등록-->
+    <insert id="insertBadge" parameterType="BadgeRequest" useGeneratedKeys="true" keyProperty="badgeId">
+        INSERT INTO BADGE (
+            BADGE_NAME,
+            EMBLEM_PATH,
+            BADGE_TYPE,
+            MAIN_CATEGORY_ID,
+            OPERATOR,
+            VALUE,
+            RGST_ID,
+            RGST_DT,
+            UPDT_ID,
+            UPDT_DT
+        ) VALUES (
+            #{badgeName},
+            #{emblemPath},
+            #{badgeType},
+            #{mainCategoryId},
+            #{operator},
+            #{value},
+            #{userId},
+            NOW(),
+            #{userId},
+            NOW()
+        )
+    </insert>
+
+    <!-- 관리자-뱃지 업데이트 -->
+    <update id="updateBadge" parameterType="BadgeRequest">
+        UPDATE BADGE SET
+            BADGE_NAME = #{badgeName},
+            EMBLEM_PATH = #{emblemPath},
+            BADGE_TYPE = #{badgeType},
+            MAIN_CATEGORY_ID = #{mainCategoryId},
+            OPERATOR = #{operator},
+            VALUE = #{value},
+            UPDT_ID = #{userId},
+            UPDT_DT = NOW()
+        WHERE BADGE_ID = #{badgeId}
+    </update>
+
+    <!--뱃지 삭제-->
+    <delete id="deleteBadge" parameterType="java.lang.Integer">
+        DELETE FROM BADGE
+        WHERE BADGE_ID = #{badgeId}
+    </delete>
+
+
+    <!-- 뱃지 단건 조회 -->
+    <select id="getBadge" parameterType="java.lang.Integer" resultMap="BadgeResultMap">
+        SELECT
+            BADGE_ID,
+            BADGE_NAME,
+            EMBLEM_PATH,
+            BADGE_TYPE,
+            MAIN_CATEGORY_ID,
+            OPERATOR,
+            VALUE,
+            RGST_ID,
+            DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
+            UPDT_ID,
+            DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
+        FROM BADGE
+        WHERE BADGE_ID = #{badgeId}
+    </select>
+
+    <!-- 전체 뱃지 목록 조회 -->
+    <select id="getBadgeList" parameterType="BadgeSearchCriteria" resultMap="BadgeResultMap">
+        SELECT
+            BADGE_ID,
+            BADGE_NAME,
+            EMBLEM_PATH,
+            BADGE_TYPE,
+            MAIN_CATEGORY_ID,
+            OPERATOR,
+            VALUE,
+            RGST_ID,
+            DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
+            UPDT_ID,
+            DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
+        FROM BADGE
+        WHERE 1=1
+        <if test="badgeName != null">
+            AND BADGE_NAME LIKE '%' || #{badgeName} || '%'
+        </if>
+        <if test="badgeType != null">
+            AND BADGE_TYPE = #{badgeType}
+        </if>
+        <if test="mainCategoryId != null">
+            AND MAIN_CATEGORY_ID = #{mainCategoryId}
+        </if>
+
+        <if test="sortBy != null and sortOrder != null">
+            ORDER BY ${sortBy} ${sortOrder}
+        </if>
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+</mapper>
