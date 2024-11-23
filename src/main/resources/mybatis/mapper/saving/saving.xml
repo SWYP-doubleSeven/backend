@@ -7,8 +7,8 @@
         <id property="savingId" column="SAVING_ID"/>
         <result property="memberId" column="MEMBER_ID"/>
         <result property="savingYmd" column="SAVING_YMD"/>
-        <result property="largeCategoryId" column="L_CATEGORY_ID"/>
-        <result property="smallCategoryId" column="S_CATEGORY_ID"/>
+        <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
         <result property="amount" column="AMOUNT"/>
         <result property="memo" column="MEMO"/>
         <result property="rgstDt" column="RGST_DT"/>
@@ -16,15 +16,27 @@
         <!--<result property="updtId" column="UPDT_ID"/>-->
     </resultMap>
 
-    <!-- 가상소비 등록 -->
+    <!--<resultMap id="SavingListResMap" type="com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse">
+        <id property="savingId" column="SAVING_ID"/>
+        &lt;!&ndash;<result property="memberId" column="MEMBER_ID"/>&ndash;&gt;
+        <result property="savingYmd" column="SAVING_YMD"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="memo" column="MEMO"/>
+        <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+        <result property="mainCategoryName" column="MAIN_CATEGORY_NAME"/>
+        <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+        <result property="subCategoryName" column="SUB_CATEGORY_NAME"/>
+    </resultMap>-->
+
+    <!-- 가상 소비 등록 -->
     <insert id="insertSaving" parameterType="SavingRequest">
         INSERT INTO SAVING (
             MEMBER_ID,
             SAVING_YMD,
             AMOUNT,
             MEMO,
-            L_CATEGORY_ID,
-            S_CATEGORY_ID,
+            MAIN_CATEGORY_ID,
+            SUB_CATEGORY_ID,
             RGST_ID,
             RGST_DT,
             UPDT_ID,
@@ -34,8 +46,8 @@
             #{savingYmd},
             #{amount},
             #{memo},
-            #{largeCategoryId},
-            #{smallCategoryId},
+            #{mainCategoryId},
+            #{subCategoryId},
             1,                          <!-- 임시 RGST_ID -->
             CURRENT_TIMESTAMP,
             1,                          <!-- 임시 UPDT_ID -->
@@ -43,26 +55,71 @@
         )
     </insert>
 
-    <!-- 가상소비 단건 조회 -->
+    <!-- 가상 소비 조회 리스트 -->
+    <select id="selectSavingList" resultType="com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse">
+        SELECT
+            s.SAVING_ID,
+            s.SAVING_YMD,
+            s.AMOUNT,
+            s.MEMO,
+            m.MAIN_CATEGORY_ID,
+            m.MAIN_CATEGORY_NAME,
+            sb.SUB_CATEGORY_ID,
+            sb.SUB_CATEGORY_NAME
+        FROM SAVING s
+            JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
+            JOIN SUB_CATEGORY sb ON s.SUB_CATEGORY_ID = sb.SUB_CATEGORY_ID
+        WHERE s.MEMBER_ID = 1                                                           <!-- 임시 MEMBER_ID -->
+        <if test="yearMonth != null">
+            AND DATE_FORMAT(s.SAVING_YMD, '%Y-%m') = DATE_FORMAT(#{yearMonth}, '%Y-%m')
+        </if>
+        <if test="subCategoryId != null">
+            AND s.SUB_CATEGORY_ID = #{subCategoryId}
+        </if>
+        ORDER BY
+        <choose>
+            <when test="sortType.name() == 'LATEST'">s.SAVING_YMD DESC</when>
+            <when test="sortType.name() == 'OLDEST'">s.SAVING_YMD ASC</when>
+            <when test="sortType.name() == 'AMOUNT_DESC'">s.AMOUNT DESC</when>
+            <when test="sortType.name() == 'AMOUNT_ASC'">s.AMOUNT ASC</when>
+        </choose>
+    </select>
+
+    <!-- 가상 소비 단건 조회 -->
     <select id="selectSaving" parameterType="Integer" resultMap="SavingResultResMap">
         SELECT
             s.SAVING_ID,
             s.SAVING_YMD,
             s.AMOUNT,
             s.MEMO,
-            s.L_CATEGORY_ID,
-            s.S_CATEGORY_ID,
-            lc.L_CATEGORY_NAME,
-            sc.S_CATEGORY_NAME
+            s.MAIN_CATEGORY_ID,
+            s.SUB_CATEGORY_ID,
+            lc.MAIN_CATEGORY_NAME,
+            sc.SUB_CATEGORY_NAME
         FROM
             SAVING s
-                JOIN L_CATEGORY lc ON s.L_CATEGORY_ID = lc.L_CATEGORY_ID
-                JOIN S_CATEGORY sc ON s.S_CATEGORY_ID = sc.S_CATEGORY_ID
+                JOIN MAIN_CATEGORY lc ON s.MAIN_CATEGORY_ID = lc.MAIN_CATEGORY_ID
+                JOIN SUB_CATEGORY sc ON s.SUB_CATEGORY_ID = sc.SUB_CATEGORY_ID
         WHERE
             s.SAVING_ID = #{savingId}
     </select>
 
-    <!-- 가상소비 삭제 -->
+    <!-- 가상 소비 수정 -->
+    <update id="updateSaving">
+        UPDATE SAVING
+        SET
+            SAVING_YMD = #{savingUpdateRequest.savingYmd},
+            AMOUNT = #{savingUpdateRequest.amount},
+            MEMO = #{savingUpdateRequest.memo},
+            MAIN_CATEGORY_ID = #{savingUpdateRequest.mainCategoryId},
+            SUB_CATEGORY_ID = #{savingUpdateRequest.subCategoryId},
+            UPDT_ID = 1,                          <!-- 임시 UPDT_ID -->
+            UPDT_DT = CURRENT_TIMESTAMP
+        WHERE
+            SAVING_ID = #{savingId}
+    </update>
+
+    <!-- 가상 소비 삭제 -->
     <delete id="deleteSaving">
         DELETE
         FROM
