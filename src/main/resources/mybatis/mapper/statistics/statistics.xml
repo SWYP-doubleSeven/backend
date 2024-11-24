@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.statistics.dao.SavingStatisticsDAO">
+
+    <!-- 월별 총액 조회 -->
+    <select id="selectMonthlyTotal" resultType="long">
+        SELECT COALESCE(SUM(AMOUNT), 0)
+        FROM SAVING
+        WHERE YEAR(SAVING_YMD) = #{year}
+          AND MONTH(SAVING_YMD) = #{month}
+    </select>
+
+    <!-- 카테고리별 통계 조회 -->
+    <select id="selectCategoryStatistics" resultType="com.swyp.doubleSeven.domain.statistics.dto.response.CategoryStatisticsResponse">
+        WITH CategorySummary AS (
+            SELECT
+                m.MAIN_CATEGORY_NAME as categoryName,
+                SUM(s.AMOUNT) as amount,
+                SUM(s.AMOUNT) * 100.0 / NULLIF(SUM(SUM(s.AMOUNT)) OVER(), 0) as percentage
+            FROM SAVING s
+                     JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
+            WHERE YEAR(s.SAVING_YMD) = #{year}
+              AND MONTH(s.SAVING_YMD) = #{month}
+            GROUP BY m.MAIN_CATEGORY_ID, m.MAIN_CATEGORY_NAME
+        )
+        SELECT
+            categoryName,
+            amount,
+            ROUND(percentage, 1) as percentage
+        FROM CategorySummary
+        ORDER BY amount DESC
+    </select>
+
+    <!-- 시간대별 통계 조회 -->
+    <select id="selectHourlyStatistics" resultType="com.swyp.doubleSeven.domain.statistics.dto.response.HourlyStatisticsResponse">
+        SELECT
+            HOUR(SAVING_YMD) as hour,
+            SUM(AMOUNT) as amount,
+            COUNT(*) as count
+        FROM SAVING
+        WHERE YEAR(SAVING_YMD) = #{year}
+          AND MONTH(SAVING_YMD) = #{month}
+        GROUP BY HOUR(SAVING_YMD)
+        ORDER BY hour
+    </select>
+</mapper>
