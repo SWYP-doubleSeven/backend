@@ -10,6 +10,6 @@ class DoubleSevenApplicationTests {
 	void contextLoads() {
 	}
 
-	// ci/cd 테스트입니다
+	// ci/cd 테스트입니다2
 
 }
