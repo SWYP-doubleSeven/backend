@@ -1,13 +1,16 @@
 package com.swyp.doubleSeven.domain.saving.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@NoArgsConstructor
 public class SavingListResponse {
 
     private Integer savingId;           // 가상 소비 ID
@@ -18,11 +21,11 @@ public class SavingListResponse {
 
     private String memo;                // 메모
 
-    private Integer mainCategoryId;     // 상위 카테고리 ID
+    private int mainCategoryId;     // 상위 카테고리 ID
 
     private String mainCategoryName;    // 상위 카테고리명
 
-    private Integer subCategoryId;      // 하위 카테고리 ID
+    private int subCategoryId;      // 하위 카테고리 ID
 
     private String subCategoryName;     // 하위 카테고리명
 

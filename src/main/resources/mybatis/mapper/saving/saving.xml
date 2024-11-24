@@ -55,8 +55,130 @@
         )
     </insert>
 
-    <!-- 가상 소비 조회 리스트 -->
+    <!--<resultMap id="savingCalendarMap" type="com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarResponse">
+        <result property="year" column="year"/>
+        <result property="month" column="month"/>
+        <collection property="days" ofType="com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarDayInfoResponse">
+            <result property="day" column="day"/>
+            <result property="totalAmount" column="totalAmount"/>
+        </collection>
+    </resultMap>-->
+
+    <!-- 가상 소비 조회 (월별 => 일자별 합계) -->
+
+    <!--<select id="selectSavingMonthly" resultMap="calendarResultMap">
+        WITH DailySavings AS (
+            SELECT
+                DAY(s.SAVING_YMD) as day,
+                s.SAVING_ID,
+                m.MAIN_CATEGORY_NAME as catMain,
+                sub.SUB_CATEGORY_NAME as catSub,
+                s.AMOUNT,
+                s.MEMO,
+                DATE_FORMAT(s.RGST_DT, '%Y-%m-%d %H:%i:%s') as rgstDt
+            FROM SAVING s
+                     JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
+                     JOIN SUB_CATEGORY sub ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
+            WHERE YEAR(s.SAVING_YMD) = #{year}
+              AND MONTH(s.SAVING_YMD) = #{month}
+        )
+        SELECT
+            day,
+            SUM(AMOUNT) as totalAmount,
+            JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                            'savingId', SAVING_ID,
+                            'catMain', catMain,
+                            'catSub', catSub,
+                            'amount', AMOUNT,
+                            'memo', MEMO,
+                            'rgstDt', rgstDt
+                        )
+                ) as items
+        FROM DailySavings
+        GROUP BY day
+        ORDER BY day
+    </select>-->
+
+    <!--<resultMap id="calendarResultMap" type="com.zerocost.dto.DaySaving">
+        <result property="day" column="day"/>
+        <result property="totalAmount" column="totalAmount"/>
+        <result property="items" column="items" typeHandler="com.zerocost.handler.JsonTypeHandler"/>
+    </resultMap>-->
+
+    <resultMap id="monthlySavingMap" type="com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarDayInfoResponse">
+        <id property="day" column="day"/>
+        <result property="totalAmount" column="totalAmount"/>
+        <collection property="items" ofType="com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse">
+            <id property="savingId" column="SAVING_ID"/>
+            <result property="savingYmd" column="SAVING_YMD"/>
+            <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+            <result property="mainCategoryName" column="MAIN_CATEGORY_NAME"/>
+            <result property="subCategoryId" column="SUB_CATEGORY_ID"/>
+            <result property="subCategoryName" column="SUB_CATEGORY_NAME"/>
+            <result property="amount" column="AMOUNT"/>
+            <result property="memo" column="MEMO"/>
+            <!--<result property="rgstDt" column="rgstDt"/>-->
+        </collection>
+    </resultMap>
+
+    <select id="selectSavingMonthly" resultMap="monthlySavingMap">
+        SELECT
+            DAY(s.SAVING_YMD) as day,
+            SUM(s2.AMOUNT) as totalAmount,
+            s.SAVING_ID,
+            DATE_FORMAT(s.SAVING_YMD, '%Y-%m-%d %H:%i:%s') as SAVING_YMD,
+            m.MAIN_CATEGORY_ID,
+            m.MAIN_CATEGORY_NAME,
+            sub.SUB_CATEGORY_ID,
+            sub.SUB_CATEGORY_NAME,
+            s.AMOUNT,
+            s.MEMO
+        FROM SAVING s
+                 JOIN SAVING s2 ON DAY(s.SAVING_YMD) = DAY(s2.SAVING_YMD)
+            AND s2.MEMBER_ID = 1                                                            <!-- 임시 RGST_ID -->
+            AND YEAR(s2.SAVING_YMD) = #{year}
+            AND MONTH(s2.SAVING_YMD) = #{month}
+                 LEFT JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
+                 LEFT JOIN SUB_CATEGORY sub ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
+        WHERE s.MEMBER_ID = 1                                                                   <!-- 임시 RGST_ID -->
+            AND YEAR(s.SAVING_YMD) = #{year}
+            AND MONTH(s.SAVING_YMD) = #{month}
+        GROUP BY
+            DAY(s.SAVING_YMD),
+            s.SAVING_ID,
+            m.MAIN_CATEGORY_ID,
+            m.MAIN_CATEGORY_NAME,
+            sub.SUB_CATEGORY_ID,
+            sub.SUB_CATEGORY_NAME,
+            s.AMOUNT,
+            s.MEMO
+        ORDER BY day ASC, s.SAVING_ID ASC
+    </select>
+
+    <!-- 가상 소비 조회 (리스트) -->
     <select id="selectSavingList" resultType="com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse">
+        SELECT
+            s.SAVING_ID,
+            s.SAVING_YMD,
+            s.AMOUNT,
+            s.MEMO,
+            m.MAIN_CATEGORY_ID,
+            m.MAIN_CATEGORY_NAME,
+            sub.SUB_CATEGORY_ID,
+            sub.SUB_CATEGORY_NAME
+        FROM SAVING s
+            LEFT JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
+            LEFT JOIN SUB_CATEGORY sub ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
+        WHERE s.MEMBER_ID = 1                                                       <!-- 임시 RGST_ID -->
+            AND YEAR(s.SAVING_YMD) = #{year}
+            AND MONTH(s.SAVING_YMD) = #{month}
+        ORDER BY ${sortType.sqlOrderBy}
+    </select>
+
+
+        <!-- 가상 소비 조회 리스트 -->
+    <!--<select id="selectSavingList" resultType="com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse">
         SELECT
             s.SAVING_ID,
             s.SAVING_YMD,
@@ -69,8 +191,8 @@
         FROM SAVING s
             JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
             JOIN SUB_CATEGORY sb ON s.SUB_CATEGORY_ID = sb.SUB_CATEGORY_ID
-        WHERE s.MEMBER_ID = 1                                                           <!-- 임시 MEMBER_ID -->
-        <if test="yearMonth != null">
+        WHERE s.MEMBER_ID = 1                                                           &lt;!&ndash; 임시 MEMBER_ID &ndash;&gt;
+        <if test="yearMonth != nul:l">
             AND DATE_FORMAT(s.SAVING_YMD, '%Y-%m') = DATE_FORMAT(#{yearMonth}, '%Y-%m')
         </if>
         <if test="subCategoryId != null">
@@ -83,7 +205,7 @@
             <when test="sortType.name() == 'AMOUNT_DESC'">s.AMOUNT DESC</when>
             <when test="sortType.name() == 'AMOUNT_ASC'">s.AMOUNT ASC</when>
         </choose>
-    </select>
+    </select>-->
 
     <!-- 가상 소비 단건 조회 -->
     <select id="selectSaving" parameterType="Integer" resultMap="SavingResultResMap">
