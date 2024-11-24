@@ -13,21 +13,19 @@ public class SavingRequest {
 
     private LocalDateTime savingYmd; // 가상 소비 일자
 
-    @JsonProperty("lCategoryId")
-    private int largeCategoryId; // 상위 카테고리
+    private int mainCategoryId; // 상위 카테고리
 
-    @JsonProperty("sCategoryId")
-    private int smallCategoryId; // 하위 카테고리
+    private int subCategoryId; // 하위 카테고리
 
-    private int amount; // 가상 소비 금액
+    private double amount; // 가상 소비 금액
 
     private String memo; // 메모
 
     @Builder
-    public SavingRequest(LocalDateTime savingYmd, int largeCategoryId, int smallCategoryId, int amount, String memo) {
+    public SavingRequest(LocalDateTime savingYmd, int mainCategoryId, int subCategoryId, double amount, String memo) {
         this.savingYmd = savingYmd;
-        this.largeCategoryId = largeCategoryId;
-        this.smallCategoryId = smallCategoryId;
+        this.mainCategoryId = mainCategoryId;
+        this.subCategoryId = subCategoryId;
         this.amount = amount;
         this.memo = memo;
     }
