@@ -1,0 +1,20 @@
+# Server
+server:
+  port: 8090
+  servlet:
+    context-path: /
+
+# DataBase
+spring:
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ${{secrets.db_url}}
+    username: ${{secrets.db_username}}
+    password: ${{secrets.db_password}}
+  profiles:
+    include: oauth
+
+# MyBatis
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
