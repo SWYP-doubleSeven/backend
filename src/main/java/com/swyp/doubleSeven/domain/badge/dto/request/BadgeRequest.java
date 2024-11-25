@@ -17,9 +17,11 @@ public class BadgeRequest {
     private Integer mainCategoryId;
     private String operator;
     private Integer value;
-    private Integer userId;
+    private Integer memberId;
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+
+    public Integer getBadgeId(){return badgeId;}
+    public void setMemberId(Integer memberId) {
+        this.memberId = memberId;
     }
 }

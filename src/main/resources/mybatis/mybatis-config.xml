@@ -10,6 +10,7 @@
         <typeAlias alias="SavingUpdateRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingUpdateRequest"/>
             <typeAlias alias="BadgeRequest" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest"/>
             <typeAlias alias="BadgeSearchCriteria" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria"/>
+            <typeAlias alias="BadgeAcquireRequest" type="com.swyp.doubleSeven.domain.badgeAcquire.dto.request.BadgeAcquireRequest"/>
     </typeAliases>
 
     <mappers>
