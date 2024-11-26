@@ -38,9 +38,9 @@
             #{mainCategoryId},
             #{operator},
             #{value},
-            #{userId},
+            #{memberId},
             NOW(),
-            #{userId},
+            #{memberId},
             NOW()
         )
     </insert>
@@ -54,7 +54,7 @@
             MAIN_CATEGORY_ID = #{mainCategoryId},
             OPERATOR = #{operator},
             VALUE = #{value},
-            UPDT_ID = #{userId},
+            UPDT_ID = #{memberId},
             UPDT_DT = NOW()
         WHERE BADGE_ID = #{badgeId}
     </update>

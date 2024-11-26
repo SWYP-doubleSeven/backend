@@ -1,16 +1,10 @@
-package com.swyp.doubleSeven.domain.saving.dto.response;
+package com.swyp.doubleSeven.domain.saving.dto.request;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class SavingResponse {
+public class SavingUpdateRequest {
 
     private Integer savingId; // 가상 소비 ID
 
@@ -25,7 +19,7 @@ public class SavingResponse {
     private String memo; // 메모
 
     @Builder
-    public SavingResponse(Integer savingId, LocalDateTime savingYmd, int mainCategoryId, int subCategoryId, double amount, String memo) {
+    public SavingUpdateRequest(Integer savingId, LocalDateTime savingYmd, int mainCategoryId, int subCategoryId, double amount, String memo) {
         this.savingId = savingId;
         this.savingYmd = savingYmd;
         this.mainCategoryId = mainCategoryId;
