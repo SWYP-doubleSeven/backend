@@ -20,7 +20,7 @@ public class BadgeRequest {
     private Integer memberId;
 
 
-    public Integer getBadgeId(){return badgeId;}
+    public void setBadgeId(Integer badgeId){ this.badgeId = badgeId; }
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }

@@ -1,6 +1,6 @@
 package com.swyp.doubleSeven.domain.badge.service;
 
-import com.swyp.doubleSeven.domain.badge.dao.BadgeDAO;
+import com.swyp.doubleSeven.domain.badge.dao.AdminBadgeDAO;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
@@ -13,32 +13,32 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class BadgeServiceImpl implements BadgeService {
+public class AdminBadgeServiceImpl implements AdminBadgeService {
 
-    private final BadgeDAO badgeDAO;
+    private final AdminBadgeDAO adminBadgeDAO;
 
     // 뱃지 등록
     @Override
     public BadgeResponse insertBadge(BadgeRequest badgeRequest) {
-        badgeDAO.insertBadge(badgeRequest);
-        return badgeDAO.getBadge(badgeRequest.getBadgeId());
+        adminBadgeDAO.insertBadge(badgeRequest);
+        return adminBadgeDAO.getBadge(badgeRequest.getBadgeId());
     }
 
     // 뱃지 수정
     @Override
     public BadgeResponse updateBadge(BadgeRequest badgeRequest) {
-        int result = badgeDAO.updateBadge(badgeRequest);
+        int result = adminBadgeDAO.updateBadge(badgeRequest);
         if(result == 0) {
             throw new IllegalArgumentException("해당 뱃지 아이디가 존재하지 않습니다.");
         }
 
-        return badgeDAO.getBadge(badgeRequest.getBadgeId());
+        return adminBadgeDAO.getBadge(badgeRequest.getBadgeId());
     }
 
     // 뱃지 삭제
     @Override
     public int deleteBadge(Integer badgeId) {
-        int result = badgeDAO.deleteBadge(badgeId);
+        int result = adminBadgeDAO.deleteBadge(badgeId);
         if(result == 0) {
             throw new IllegalArgumentException("해당 뱃지 아이디가 존재하지 않습니다.");
         }
@@ -48,7 +48,7 @@ public class BadgeServiceImpl implements BadgeService {
     // 뱃지 단건조회
     @Override
     public BadgeResponse getBadge(Integer badgeId) {
-        BadgeResponse badge = badgeDAO.getBadge(badgeId);
+        BadgeResponse badge = adminBadgeDAO.getBadge(badgeId);
         if(badge == null) {
             throw new IllegalArgumentException("해당 뱃지가 존재하지 않습니다.");
         }
@@ -58,7 +58,7 @@ public class BadgeServiceImpl implements BadgeService {
     // 뱃지 목록 조회
     @Override
     public List<BadgeResponse> getBadgeList(BadgeSearchCriteria criteria) {
-        return badgeDAO.getBadgeList(criteria);
+        return adminBadgeDAO.getBadgeList(criteria);
     }
 
 
