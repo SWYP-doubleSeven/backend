@@ -21,4 +21,5 @@ public class BadgeResponse {
     private String rgstDt;    // 등록일시
     private Integer updtId;          // 수정자 ID
     private String updtDt;    // 수정일시
+    private String acquireYN; // 뱃지 획득 여부
 }
