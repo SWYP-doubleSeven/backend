@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public class Member {
 
     private Integer memberId;          // 사용자 ID
+    private String password;           // 사용자 비밀번호 (추가)
     private String memberNickname;     // 사용자 닉네임
     private String memberName;         // 사용자 이름
     private String email;              // 사용자 이메일
@@ -17,6 +18,11 @@ public class Member {
     private Integer updtId;            // 수정자 ID
     private LocalDateTime updtDt;      // 수정 일시
 
+    //기본 생성자
+    public Member() {
+        this.rgstDt = LocalDateTime.now();
+
+    }
 
     public Integer getMemberId() {
         return memberId;
