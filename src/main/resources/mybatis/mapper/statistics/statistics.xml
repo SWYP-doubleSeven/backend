@@ -15,14 +15,14 @@
     <select id="selectCategoryStatistics" resultType="com.swyp.doubleSeven.domain.statistics.dto.response.CategoryStatisticsResponse">
         WITH CategorySummary AS (
             SELECT
-                m.MAIN_CATEGORY_NAME as categoryName,
-                SUM(s.AMOUNT) as amount,
-                SUM(s.AMOUNT) * 100.0 / NULLIF(SUM(SUM(s.AMOUNT)) OVER(), 0) as percentage
-            FROM SAVING s
-                     JOIN MAIN_CATEGORY m ON s.MAIN_CATEGORY_ID = m.MAIN_CATEGORY_ID
-            WHERE YEAR(s.SAVING_YMD) = #{year}
-              AND MONTH(s.SAVING_YMD) = #{month}
-            GROUP BY m.MAIN_CATEGORY_ID, m.MAIN_CATEGORY_NAME
+                s2.SUB_CATEGORY_NAME as categoryName,
+                SUM(s1.AMOUNT) as amount,
+                SUM(s1.AMOUNT) * 100.0 / NULLIF(SUM(SUM(s1.AMOUNT)) OVER(), 0) as percentage
+            FROM SAVING s1
+                     JOIN SUB_CATEGORY s2 ON s1.SUB_CATEGORY_ID = s2.SUB_CATEGORY_ID
+            WHERE YEAR(s1.SAVING_YMD) = #{year}
+              AND MONTH(s1.SAVING_YMD) = #{month}
+            GROUP BY s2.SUB_CATEGORY_ID, s2.SUB_CATEGORY_NAME
         )
         SELECT
             categoryName,
