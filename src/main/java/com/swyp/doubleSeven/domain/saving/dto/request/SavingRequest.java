@@ -1,6 +1,6 @@
 package com.swyp.doubleSeven.domain.saving.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,24 +9,22 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
+@Schema(description = "가상 소비 등록/수정 요청")
 public class SavingRequest {
 
+    @Schema(description = "가상 소비 일자", example = "2024-03-27T10:00:00")
     private LocalDateTime savingYmd; // 가상 소비 일자
 
-    private int mainCategoryId; // 상위 카테고리
+    @Schema(description = "카테고리명", example = "식비")
+    private String categoryName; // 하위 카테고리명
 
-    private int subCategoryId; // 하위 카테고리
-
-    private double amount; // 가상 소비 금액
-
-    private String memo; // 메모
+    @Schema(description = "가상 소비 금액", example = "meal")
+    private int amount; // 가상 소비 금액
 
     @Builder
-    public SavingRequest(LocalDateTime savingYmd, int mainCategoryId, int subCategoryId, double amount, String memo) {
+    public SavingRequest(LocalDateTime savingYmd, String categoryName, int amount) {
         this.savingYmd = savingYmd;
-        this.mainCategoryId = mainCategoryId;
-        this.subCategoryId = subCategoryId;
+        this.categoryName = categoryName;
         this.amount = amount;
-        this.memo = memo;
     }
 }

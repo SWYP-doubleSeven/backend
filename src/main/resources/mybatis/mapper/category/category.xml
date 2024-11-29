@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO">
+    <!-- 하위 카테고리명 조회 -->
+    <select id="selectSubCategoryNames" resultType="string">
+        SELECT SUB_CATEGORY_NAME
+        FROM SUB_CATEGORY
+        ORDER BY MAIN_CATEGORY_ID, SUB_CATEGORY_ID
+    </select>
+</mapper>

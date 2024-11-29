@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@MapperScan(basePackages = "com.swyp.doubleSeven.domain.*.dao")
+@MapperScan(basePackages = "com.swyp.doubleSeven.domain.**.dao")
 public class DoubleSevenApplication {
 
 	public static void main(String[] args) {

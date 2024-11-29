@@ -3,20 +3,15 @@ package com.swyp.doubleSeven.domain.saving.service;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
 import com.swyp.doubleSeven.domain.saving.dao.SavingDAO;
 import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
-import com.swyp.doubleSeven.domain.saving.dto.request.SavingUpdateRequest;
 import com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarDayInfoResponse;
 import com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarResponse;
 import com.swyp.doubleSeven.domain.saving.dto.response.SavingListResponse;
 import com.swyp.doubleSeven.domain.saving.dto.response.SavingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,15 +22,14 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 등록
     @Override
-    public SavingResponse createVirtualItem (SavingRequest savingRequest) {
+    public void createVirtualItem (SavingRequest savingRequest) {
         savingDAO.insertSaving(savingRequest);
-        return savingDAO.selectSaving(SavingResponse.builder().build().getSavingId());
     }
 
     // 가상 소비 조회 (월별 => 일자별 합계)
     @Override
-    public SavingCalendarResponse getVirtualItemMonthly (int year, int month) {
-        List<SavingCalendarDayInfoResponse> days = savingDAO.selectSavingMonthly(year, month);
+    public SavingCalendarResponse getVirtualItemMonthly (int year, int month, String categoryName) {
+        List<SavingCalendarDayInfoResponse> days = savingDAO.selectSavingMonthly(year, month, categoryName);
 
         return SavingCalendarResponse.builder()
                 .year(year)
@@ -46,31 +40,24 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 조회 (리스트)
     @Override
-    public List<SavingListResponse> getVirtualItemList(int year, int month, SortType sortType) {
+    public SavingListResponse getVirtualItemList(int year, int month, SortType sortType) {
         return savingDAO.selectSavingList(year, month, sortType);
     }
 
 
-    /*// 가상 소비 조회 (캘린더/리스트)
-    @Override
-    public List<SavingListResponse> getVirtualItemList (LocalDate yearMonth, Integer subCategoryId, SortType sortType) {
-        return savingDAO.selectSavingList(yearMonth, subCategoryId, sortType);
-    }*/
-
     // 가상 소비 단건 조회
     @Override
-    public SavingResponse getVirtualItem (Integer savingId, Integer memberId) {
-        SavingResponse saving = savingDAO.selectSaving(savingId);
-        if (saving == null) {
+    public SavingResponse getVirtualItem (Integer savingId) {
+        SavingResponse virtualItemResult = savingDAO.selectSaving(savingId);
+        if (virtualItemResult == null) {
             throw new RuntimeException("해당 가상소비 내역이 존재하지 않습니다.");
         }
-        return saving;
+        return virtualItemResult;
     }
 
-    // Service
     @Override
-    public void updateVirtualItem (Integer savingId, SavingUpdateRequest savingUpdateRequest) {
-        int result = savingDAO.updateSaving(savingId, savingUpdateRequest);
+    public void updateVirtualItem(Integer savingId, SavingRequest savingRequest) {
+        int result = savingDAO.updateSaving(savingId, savingRequest);
         if (result == 0) {
             throw new RuntimeException("수정할 가상소비 내역이 존재하지 않습니다.");
         }
