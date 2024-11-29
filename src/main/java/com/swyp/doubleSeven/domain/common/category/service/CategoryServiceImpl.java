@@ -1,7 +1,7 @@
 package com.swyp.doubleSeven.domain.common.category.service;
 
 import com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO;
-import com.swyp.doubleSeven.domain.common.category.dto.response.subCategoryResponse;
+import com.swyp.doubleSeven.domain.common.category.dto.response.SubCategoryResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,10 +17,10 @@ public class CategoryServiceImpl implements CategoryService{
 
     // 하위 카테고리명 조회
     @Override
-    public subCategoryResponse getSubCategoryNames () {
+    public SubCategoryResponse getSubCategoryNames () {
         List<String> subCategoryNames = categoryDAO.selectSubCategoryNames();
 
-        return subCategoryResponse.builder()
+        return SubCategoryResponse.builder()
                 .categoryNames(subCategoryNames)
                 .build();
     }
