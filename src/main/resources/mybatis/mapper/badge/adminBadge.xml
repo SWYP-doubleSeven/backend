@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.swyp.doubleSeven.domain.badge.dao.BadgeDAO">
+<mapper namespace="com.swyp.doubleSeven.domain.badge.dao.AdminBadgeDAO">
 
     <!-- resultMap -->
     <resultMap id="BadgeResultMap" type="com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse">
@@ -12,6 +12,7 @@
         <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
+        <result property="count" column="COUNT"/>
         <result property="rgstId" column="RGST_ID"/>
         <result property="rgstDt" column="RGST_DT"/>
         <result property="updtId" column="UPDT_ID"/>
@@ -65,40 +66,31 @@
         WHERE BADGE_ID = #{badgeId}
     </delete>
 
-
-    <!-- 뱃지 단건 조회 -->
-    <select id="getBadge" parameterType="java.lang.Integer" resultMap="BadgeResultMap">
-        SELECT
-            BADGE_ID,
-            BADGE_NAME,
-            EMBLEM_PATH,
-            BADGE_TYPE,
-            MAIN_CATEGORY_ID,
-            OPERATOR,
-            VALUE,
-            RGST_ID,
-            DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
-            UPDT_ID,
-            DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
-        FROM BADGE
-        WHERE BADGE_ID = #{badgeId}
-    </select>
-
     <!-- 전체 뱃지 목록 조회 -->
     <select id="getBadgeList" parameterType="BadgeSearchCriteria" resultMap="BadgeResultMap">
         SELECT
-            BADGE_ID,
-            BADGE_NAME,
-            EMBLEM_PATH,
-            BADGE_TYPE,
-            MAIN_CATEGORY_ID,
-            OPERATOR,
-            VALUE,
-            RGST_ID,
-            DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
+            A.BADGE_ID,
+            A.BADGE_NAME,
+            A.EMBLEM_PATH,
+            A.BADGE_TYPE,
+            A.MAIN_CATEGORY_ID,
+            A.OPERATOR,
+            A.VALUE,
+            A.RGST_ID,
+            DATE_FORMAT(A.RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
             UPDT_ID,
-            DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
-        FROM BADGE
+            DATE_FORMAT(A.UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT,
+            IFNULL(B.COUNT, 0) AS COUNT
+        FROM BADGE A
+        LEFT OUTER JOIN (
+            SELECT
+                BADGE_ID,
+                COUNT(MEMBER_ID) AS COUNT
+            FROM
+                BADGE_ACQUIRE
+            GROUP BY BADGE_ID
+        ) B
+        ON A.BADGE_ID = B.BADGE_ID
         WHERE 1=1
         <if test="badgeName != null">
             AND BADGE_NAME LIKE '%' || #{badgeName} || '%'
