@@ -1,36 +1,34 @@
 package com.swyp.doubleSeven.domain.saving.dto.response;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
+@Builder
 @NoArgsConstructor
+@Schema(description = "가상 소비 응답")
 public class SavingResponse {
+    @Schema(description = "가상 소비 ID", example = "1")
+    private Integer savingId;
 
-    private Integer savingId; // 가상 소비 ID
+    @Schema(description = "가상 소비 일자", example = "2024-03-27T10:00:00")
+    private LocalDateTime savingYmd;
 
-    private LocalDateTime savingYmd; // 가상 소비 일자
+    @Schema(description = "가상 소비 금액", example = "10000")
+    private int amount;
 
-    private int mainCategoryId; // 상위 카테고리
-
-    private int subCategoryId; // 하위 카테고리
-
-    private double amount; // 가상 소비 금액
-
-    private String memo; // 메모
+    @Schema(description = "카테고리명", example = "meal")
+    private String categoryName;
 
     @Builder
-    public SavingResponse(Integer savingId, LocalDateTime savingYmd, int mainCategoryId, int subCategoryId, double amount, String memo) {
+    public SavingResponse(Integer savingId, LocalDateTime savingYmd, int amount, String categoryName) {
         this.savingId = savingId;
         this.savingYmd = savingYmd;
-        this.mainCategoryId = mainCategoryId;
-        this.subCategoryId = subCategoryId;
         this.amount = amount;
-        this.memo = memo;
+        this.categoryName = categoryName;
     }
 }
