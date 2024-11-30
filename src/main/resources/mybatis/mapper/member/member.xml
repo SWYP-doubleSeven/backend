@@ -6,7 +6,7 @@
 <mapper namespace="com/swyp/doubleSeven/domain/member/service/MemberService">
 
     <!-- 이메일로 회원 조회 -->
-    <select id="selectMemberByEmail" parameterType="String" resultType="com.example.domain.Member">
+    <select id="selectMemberByEmail" parameterType="String" resultType="com.swyp.doubleSeven.domain.member.Member">
         SELECT MEMBER_ID,
                MEMBER_NICKNAME,
                MEMBER_NAME,
@@ -24,7 +24,7 @@
     </select>
 
     <!-- 회원 삽입 -->
-    <insert id="insertMember" parameterType="com.example.domain.Member">
+    <insert id="insertMember" parameterType="com.swyp.doubleSeven.domain.member.Member">
         INSERT INTO MEMBER (MEMBER_NICKNAME,
                             MEMBER_NAME,
                             EMAIL,
@@ -48,7 +48,7 @@
     </insert>
 
     <!-- 회원 업데이트 -->
-    <update id="updateMember" parameterType="com.example.domain.Member">
+    <update id="updateMember" parameterType="com.swyp.doubleSeven.domain.member.Member">
         UPDATE MEMBER
         SET MEMBER_NAME = #{memberName},
             UPDT_ID     = #{updtId},
