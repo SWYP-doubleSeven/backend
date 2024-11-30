@@ -1,6 +1,7 @@
 package com.swyp.doubleSeven.domain.member.controller;
 
 import com.swyp.doubleSeven.domain.member.login.LoginForm;
+import com.swyp.doubleSeven.domain.member.login.socialType.SocialLoginType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
