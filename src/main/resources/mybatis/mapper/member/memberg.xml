@@ -19,86 +19,7 @@
         <result property="dltnYn" column="DLTN_YN"/>
         <result property="rgstId" column="RGST_ID"/>
         <result property="rgstDt" column="RGST_DT"/>
-        <result property="updtId" column="UPDT_ID"/><?xml version="1.0" encoding="UTF-8"?>
-        <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-        <mapper namespace="com.swyp.doubleSeven.domain.member.dao.MemberDao">
-
-            <!-- Member ResultMap 정의 -->
-            <resultMap id="memberResultMap" type="com.swyp.doubleSeven.domain.member.Member">
-                <!-- 기본 키 매핑 -->
-                <id property="memberId" column="MEMBER_ID"/>
-
-                <!-- 일반 필드 매핑 -->
-                <result property="memberNickname" column="MEMBER_NICKNAME"/>
-                <result property="memberName" column="MEMBER_NAME"/>
-                <result property="email" column="EMAIL"/>
-                <result property="role" column="ROLE"/>
-                <result property="oauthProvider" column="OAUTH_PROVIDER"/>
-                <result property="dltnYn" column="DLTN_YN"/>
-                <result property="rgstId" column="RGST_ID"/>
-                <result property="rgstDt" column="RGST_DT"/>
-                <result property="updtId" column="UPDT_ID"/>
-                <result property="updtDt" column="UPDT_DT"/>
-            </resultMap>
-
-            <!-- 이메일로 회원 조회 -->
-            <select id="selectMemberByEmail" parameterType="String" resultMap="memberResultMap">
-                SELECT MEMBER_ID,
-                MEMBER_NICKNAME,
-                MEMBER_NAME,
-                EMAIL,
-                ROLE,
-                OAUTH_PROVIDER,
-                DLTN_YN,
-                RGST_ID,
-                RGST_DT,
-                UPDT_ID,
-                UPDT_DT
-                FROM MEMBER
-                WHERE EMAIL = #{email}
-                AND DLTN_YN = 'N'
-            </select>
-
-            <!-- 회원 삽입 -->
-            <insert id="insertMember" parameterType="com.swyp.doubleSeven.domain.member.Member">
-                INSERT INTO MEMBER (
-                MEMBER_NICKNAME,
-                MEMBER_NAME,
-                EMAIL,
-                ROLE,
-                OAUTH_PROVIDER,
-                DLTN_YN,
-                RGST_ID,
-                RGST_DT,
-                UPDT_ID,
-                UPDT_DT
-                ) VALUES (
-                #{memberNickname},
-                #{memberName},
-                #{email},
-                #{role},
-                #{oauthProvider},
-                #{dltnYn},
-                #{rgstId},
-                NOW(),
-                #{updtId},
-                NOW()
-                )
-            </insert>
-
-            <!-- 회원 업데이트 -->
-            <update id="updateMember" parameterType="com.swyp.doubleSeven.domain.member.Member">
-                UPDATE MEMBER
-                SET MEMBER_NAME = #{memberName},
-                UPDT_ID     = #{updtId},
-                UPDT_DT     = NOW()
-                WHERE MEMBER_ID = #{memberId}
-            </update>
-
-        </mapper>
+        <result property="updtId" column="UPDT_ID"/>
         <result property="updtDt" column="UPDT_DT"/>
     </resultMap>
 
@@ -157,3 +78,176 @@
     </update>
 
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper-->
+<!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+
+<!--<mapper namespace="com.swyp.doubleSeven.domain.member.dao.MemberDao">-->
+
+<!--    &lt;!&ndash; Member ResultMap 정의 &ndash;&gt;-->
+<!--    <resultMap id="memberResultMap" type="com.swyp.doubleSeven.domain.member.Member">-->
+<!--        &lt;!&ndash; 기본 키 매핑 &ndash;&gt;-->
+<!--        <id property="memberId" column="MEMBER_ID"/>-->
+
+<!--        &lt;!&ndash; 일반 필드 매핑 &ndash;&gt;-->
+<!--        <result property="memberNickname" column="MEMBER_NICKNAME"/>-->
+<!--        <result property="memberName" column="MEMBER_NAME"/>-->
+<!--        <result property="email" column="EMAIL"/>-->
+<!--        <result property="role" column="ROLE"/>-->
+<!--        <result property="oauthProvider" column="OAUTH_PROVIDER"/>-->
+<!--        <result property="dltnYn" column="DLTN_YN"/>-->
+<!--        <result property="rgstId" column="RGST_ID"/>-->
+<!--        <result property="rgstDt" column="RGST_DT"/>-->
+<!--        <result property="updtId" column="UPDT_ID"/><?xml version="1.0" encoding="UTF-8"?>-->
+<!--        <!DOCTYPE mapper-->
+<!--        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+
+<!--        <mapper namespace="com.swyp.doubleSeven.domain.member.dao.MemberDao">-->
+
+<!--            &lt;!&ndash; Member ResultMap 정의 &ndash;&gt;-->
+<!--            <resultMap id="memberResultMap" type="com.swyp.doubleSeven.domain.member.Member">-->
+<!--                &lt;!&ndash; 기본 키 매핑 &ndash;&gt;-->
+<!--                <id property="memberId" column="MEMBER_ID"/>-->
+
+<!--                &lt;!&ndash; 일반 필드 매핑 &ndash;&gt;-->
+<!--                <result property="memberNickname" column="MEMBER_NICKNAME"/>-->
+<!--                <result property="memberName" column="MEMBER_NAME"/>-->
+<!--                <result property="email" column="EMAIL"/>-->
+<!--                <result property="role" column="ROLE"/>-->
+<!--                <result property="oauthProvider" column="OAUTH_PROVIDER"/>-->
+<!--                <result property="dltnYn" column="DLTN_YN"/>-->
+<!--                <result property="rgstId" column="RGST_ID"/>-->
+<!--                <result property="rgstDt" column="RGST_DT"/>-->
+<!--                <result property="updtId" column="UPDT_ID"/>-->
+<!--                <result property="updtDt" column="UPDT_DT"/>-->
+<!--            </resultMap>-->
+
+<!--            &lt;!&ndash; 이메일로 회원 조회 &ndash;&gt;-->
+<!--            <select id="selectMemberByEmail" parameterType="String" resultMap="memberResultMap">-->
+<!--                SELECT MEMBER_ID,-->
+<!--                MEMBER_NICKNAME,-->
+<!--                MEMBER_NAME,-->
+<!--                EMAIL,-->
+<!--                ROLE,-->
+<!--                OAUTH_PROVIDER,-->
+<!--                DLTN_YN,-->
+<!--                RGST_ID,-->
+<!--                RGST_DT,-->
+<!--                UPDT_ID,-->
+<!--                UPDT_DT-->
+<!--                FROM MEMBER-->
+<!--                WHERE EMAIL = #{email}-->
+<!--                AND DLTN_YN = 'N'-->
+<!--            </select>-->
+
+<!--            &lt;!&ndash; 회원 삽입 &ndash;&gt;-->
+<!--            <insert id="insertMember" parameterType="com.swyp.doubleSeven.domain.member.Member">-->
+<!--                INSERT INTO MEMBER (-->
+<!--                MEMBER_NICKNAME,-->
+<!--                MEMBER_NAME,-->
+<!--                EMAIL,-->
+<!--                ROLE,-->
+<!--                OAUTH_PROVIDER,-->
+<!--                DLTN_YN,-->
+<!--                RGST_ID,-->
+<!--                RGST_DT,-->
+<!--                UPDT_ID,-->
+<!--                UPDT_DT-->
+<!--                ) VALUES (-->
+<!--                #{memberNickname},-->
+<!--                #{memberName},-->
+<!--                #{email},-->
+<!--                #{role},-->
+<!--                #{oauthProvider},-->
+<!--                #{dltnYn},-->
+<!--                #{rgstId},-->
+<!--                NOW(),-->
+<!--                #{updtId},-->
+<!--                NOW()-->
+<!--                )-->
+<!--            </insert>-->
+
+<!--            &lt;!&ndash; 회원 업데이트 &ndash;&gt;-->
+<!--            <update id="updateMember" parameterType="com.swyp.doubleSeven.domain.member.Member">-->
+<!--                UPDATE MEMBER-->
+<!--                SET MEMBER_NAME = #{memberName},-->
+<!--                UPDT_ID     = #{updtId},-->
+<!--                UPDT_DT     = NOW()-->
+<!--                WHERE MEMBER_ID = #{memberId}-->
+<!--            </update>-->
+
+<!--        </mapper>-->
+<!--        <result property="updtDt" column="UPDT_DT"/>-->
+<!--    </resultMap>-->
+
+<!--    &lt;!&ndash; 이메일로 회원 조회 &ndash;&gt;-->
+<!--    <select id="selectMemberByEmail" parameterType="String" resultMap="memberResultMap">-->
+<!--        SELECT MEMBER_ID,-->
+<!--               MEMBER_NICKNAME,-->
+<!--               MEMBER_NAME,-->
+<!--               EMAIL,-->
+<!--               ROLE,-->
+<!--               OAUTH_PROVIDER,-->
+<!--               DLTN_YN,-->
+<!--               RGST_ID,-->
+<!--               RGST_DT,-->
+<!--               UPDT_ID,-->
+<!--               UPDT_DT-->
+<!--        FROM MEMBER-->
+<!--        WHERE EMAIL = #{email}-->
+<!--          AND DLTN_YN = 'N'-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 회원 삽입 &ndash;&gt;-->
+<!--    <insert id="insertMember" parameterType="com.swyp.doubleSeven.domain.member.Member">-->
+<!--        INSERT INTO MEMBER (-->
+<!--            MEMBER_NICKNAME,-->
+<!--            MEMBER_NAME,-->
+<!--            EMAIL,-->
+<!--            ROLE,-->
+<!--            OAUTH_PROVIDER,-->
+<!--            DLTN_YN,-->
+<!--            RGST_ID,-->
+<!--            RGST_DT,-->
+<!--            UPDT_ID,-->
+<!--            UPDT_DT-->
+<!--        ) VALUES (-->
+<!--                     #{memberNickname},-->
+<!--                     #{memberName},-->
+<!--                     #{email},-->
+<!--                     #{role},-->
+<!--                     #{oauthProvider},-->
+<!--                     #{dltnYn},-->
+<!--                     #{rgstId},-->
+<!--                     NOW(),-->
+<!--                     #{updtId},-->
+<!--                     NOW()-->
+<!--                 )-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 회원 업데이트 &ndash;&gt;-->
+<!--    <update id="updateMember" parameterType="com.swyp.doubleSeven.domain.member.Member">-->
+<!--        UPDATE MEMBER-->
+<!--        SET MEMBER_NAME = #{memberName},-->
+<!--            UPDT_ID     = #{updtId},-->
+<!--            UPDT_DT     = NOW()-->
+<!--        WHERE MEMBER_ID = #{memberId}-->
+<!--    </update>-->
+
+<!--</mapper>-->
