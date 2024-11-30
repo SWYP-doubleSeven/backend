@@ -1,14 +1,14 @@
 package com.swyp.doubleSeven.domain.member.kakao.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Getter
 public class MemberResponse {
     private Long memberId;
     private String memberKeyId;
