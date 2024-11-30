@@ -1,9 +1,16 @@
 package com.swyp.doubleSeven.domain.member.login.socialLogin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +36,13 @@ public class GoogleOauth implements SocialOauth{
     @Value("${spring.OAuth2.google.scope}")
     private String GOOGLE_DATA_ACCESS_SCOPE;
 
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    private static final String GOOGLE_SNS_TOKEN_BASE_URL = "https://oauth2.googleapis.com/token";
+    private static final String GOOGLE_SNS_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
+
+
+
 
     @Override
     public String getOauthRedirectUrl() {
@@ -51,5 +65,63 @@ public class GoogleOauth implements SocialOauth{
          * &client_id="할당받은 id"&redirect_uri="access token 처리")
          * 로 Redirect URL을 생성하는 로직을 구성
          * */
+    }
+
+    // 액세스 토큰 요청 메서드 추가
+    public String requestAccessToken(String code) throws JsonProcessingException {
+        // HTTP 요청을 위한 헤더와 바디 설정
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        parameters.add("code", code);
+        parameters.add("client_id", GOOGLE_SNS_CLIENT_ID);
+        parameters.add("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+        parameters.add("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
+        parameters.add("grant_type", "authorization_code");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(parameters, headers);
+
+        // 액세스 토큰 요청
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(
+                GOOGLE_SNS_TOKEN_BASE_URL,
+                httpEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            // 응답에서 액세스 토큰 추출
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseEntity.getBody());
+            return jsonNode.get("access_token").asText();
+        } else {
+            throw new RuntimeException("구글 OAuth 액세스 토큰 요청 실패");
+        }
+    }
+
+    // 사용자 정보 요청 메서드 추가
+    public Map<String, Object> getUserInfo(String accessToken) throws JsonProcessingException {
+        // HTTP 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+
+        // 사용자 정보 요청
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                GOOGLE_SNS_USER_INFO_URL,
+                HttpMethod.GET,
+                httpEntity,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            // 응답에서 사용자 정보 추출
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readValue(responseEntity.getBody(), Map.class);
+        } else {
+            throw new RuntimeException("구글 OAuth 사용자 정보 요청 실패");
+        }
     }
 }
