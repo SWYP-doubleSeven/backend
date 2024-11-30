@@ -11,7 +11,7 @@
         <result property="memberName" column="MEMBER_NAME" />
         <result property="email" column="EMAIL" />
         <result property="role" column="ROLE" />
-        <result property="oauthProvider" column="OAUTH_PROVIDER" />
+        <result property="loginType" column="LOGIN_TYPE" />
         <result property="dltnYn" column="DLTN_YN" />
         <result property="rgstDt" column="RGST_DT" />
         <result property="updtDt" column="UPDT_DT" />
@@ -22,27 +22,48 @@
     <select id="findMemberByOauthProviderAndMemberId" resultMap="MemberResultMap">
         SELECT *
         FROM MEMBER
-        WHERE OAUTH_PROVIDER = #{oauthProvider}
+        WHERE LOGIN_TYPE = #{loginType}
           AND MEMBER_KEY_ID = #{memberKeyId}
     </select>
 
     <!-- 사용자 등록/업데이트 -->
-    <insert id="upsertMember">
+    <insert id="insertMember">
         INSERT INTO MEMBER (
-            MEMBER_KEY_ID, MEMBER_NICKNAME, MEMBER_NAME, EMAIL, ROLE,
-            OAUTH_PROVIDER, DLTN_YN, RGST_ID, RGST_DT, UPDT_ID, UPDT_DT
+            MEMBER_KEY_ID,
+            MEMBER_NICKNAME,
+            MEMBER_NAME,
+            EMAIL,
+            ROLE,
+            LOGIN_TYPE,
+            DLTN_YN,
+            RGST_ID,
+            RGST_DT,
+            UPDT_ID,
+            UPDT_DT
         ) VALUES (
-                     #{memberKeyId}, #{memberNickname}, #{memberName}, #{email}, #{role},
-                     #{oauthProvider}, #{dltnYn}, #{rgstId}, #{rgstDt}, #{updtId}, #{updtDt}
-                 )
-            ON DUPLICATE KEY UPDATE
-                                 MEMBER_NICKNAME = #{memberNickname},
-                                 EMAIL = #{email},
-                                 ROLE = #{role},
-                                 DLTN_YN = #{dltnYn},
-                                 UPDT_ID = #{updtId},
-                                 UPDT_DT = #{updtDt};
+            #{memberKeyId},
+            #{memberNickname},
+            #{memberName},
+            #{email},
+            #{role},
+            #{loginType},
+            #{dltnYn},
+            #{rgstId},
+            #{rgstDt},
+            #{updtId},
+            #{updtDt}
+        )
     </insert>
+
+    <!--로그인시 사용자 정보 업데이트-->
+    <update id="updateMember">
+        UPDATE MEMBER SET
+            ROLE = #{role},
+            LOGIN_TYPE = #{loginType},
+            UPDT_ID = #{updtId},
+            UPDT_DT = #{updtDt}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
 
 
 </mapper>

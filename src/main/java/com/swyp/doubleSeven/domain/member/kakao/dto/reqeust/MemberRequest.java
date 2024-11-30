@@ -16,11 +16,11 @@ public class MemberRequest {
     private String memberName;
     private String email;
     private String role;
-    private String oauthProvider;
+    private String loginType;
     private String dltnYn;
-    private int rgstId;
+    private Long rgstId;
     private LocalDateTime rgstDt;
-    private int updtId;
+    private Long updtId;
     private LocalDateTime updtDt;
 }
 

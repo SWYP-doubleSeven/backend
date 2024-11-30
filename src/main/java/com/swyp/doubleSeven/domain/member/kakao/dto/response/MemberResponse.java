@@ -16,7 +16,7 @@ public class MemberResponse {
     private String memberName;
     private String email;
     private String role;
-    private String oauthProvider;
+    private String loginType;
     private String dltnYn;
     private LocalDateTime rgstDt;
     private LocalDateTime updtDt;
