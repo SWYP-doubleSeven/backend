@@ -16,13 +16,6 @@ spring:
     password: ${{secrets.db_password}}
   profiles:
     include: oauth
-  OAuth2:  #social login
-    google:
-      url: https://accounts.google.com/o/oauth2/v2/auth
-      client-id : 706072512947-9re2csup517dockpeem4a7tq777gvt9d.apps.googleusercontent.com
-      client-secret: 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
-      callback-url: http://localhost:8080/login/oauth2/code/google
-      scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
 
 
 
