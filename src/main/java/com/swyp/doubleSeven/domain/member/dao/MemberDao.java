@@ -1,10 +1,10 @@
-package com.swyp.doubleSeven.domain.member.service;
+package com.swyp.doubleSeven.domain.member.dao;
 
 import com.swyp.doubleSeven.domain.member.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface MemberService {
+public interface MemberDao {
 
     Member selectMemberByEmail(String email);
 
@@ -12,11 +12,11 @@ public interface MemberService {
 
     void updateMember(Member member);
 
-    Member findByUsername(String username);
-
-    Member findByEmail(String email);
-
-    Member findByPhone(String phone);
+//    Member findByUsername(String username);
+//
+//    Member findByEmail(String email);
+//
+//    Member findByPhone(String phone);
 
 
 

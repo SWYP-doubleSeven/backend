@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swyp.doubleSeven.domain.member.Member;
 import com.swyp.doubleSeven.domain.member.login.socialLogin.GoogleOauth;
 import com.swyp.doubleSeven.domain.member.login.socialType.SocialLoginType;
-import com.swyp.doubleSeven.domain.member.service.MemberService;
+import com.swyp.doubleSeven.domain.member.dao.MemberDao;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ public class LoginServiceImpl implements LoginService { //필드에 MemberServic
 
     private final GoogleOauth googleOauth;
     private final HttpServletResponse response;
-    MemberService memberMapper;
+    MemberDao memberMapper;
 
     @Override
     public Member login(Member member) {
