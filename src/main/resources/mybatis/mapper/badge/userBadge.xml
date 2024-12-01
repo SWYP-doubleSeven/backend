@@ -9,7 +9,7 @@
         <result property="badgeName" column="BADGE_NAME"/>
         <result property="emblemPath" column="EMBLEM_PATH"/>
         <result property="badgeType" column="BADGE_TYPE"/>
-        <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+        <result property="badgeDescription" column="BADGE_DESCRIPTION"/>
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
         <result property="acquireYN" column="ACQUIRE_YN"/>
@@ -26,7 +26,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
-            A.MAIN_CATEGORY_ID,
+            A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
             A.RGST_ID,
@@ -49,7 +49,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
-            A.MAIN_CATEGORY_ID,
+            A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
             A.RGST_ID,

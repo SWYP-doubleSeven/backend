@@ -14,9 +14,9 @@ public class BadgeRequest {
     private String badgeName;
     private String emblemPath;
     private String badgeType;
-    private Integer mainCategoryId;
+    private String badgeDescription;
     private String operator;
-    private Integer value;
+    private String value;
     private Integer memberId;
 
 

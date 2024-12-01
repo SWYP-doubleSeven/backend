@@ -1,4 +1,4 @@
-package com.swyp.doubleSeven.domain.badgeAcquire.dto.response;
+package com.swyp.doubleSeven.domain.badgeCount.dto.response;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BadgeAcquireResponse {
+public class AttendanceResponse {
     private Integer memberId; // 사용자 id
     private String lastLoginDate; // 마지막 출석일
     private Integer count; // 출석 횟수
