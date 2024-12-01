@@ -18,7 +18,7 @@ public class CommonAspect {
     private final BadgeAcquireService badgeAcquireService;
 
     /* 로그인시 연속출석 기록 */
-    @Before("execution(* com.swyp.doubleSeven.domain.member.kakao.controller.MemberController.kakaoLogin(..))")
+    @Before("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
     public void afterLogin() {
         // todo : 전체 로그인기능 구현 후 경로 합치기
 //        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
