@@ -1,7 +1,7 @@
-package com.swyp.doubleSeven.domain.member.kakao.dao;
+package com.swyp.doubleSeven.domain.member.dao;
 
-import com.swyp.doubleSeven.domain.member.kakao.dto.reqeust.MemberRequest;
-import com.swyp.doubleSeven.domain.member.kakao.dto.response.MemberResponse;
+import com.swyp.doubleSeven.domain.member.dto.reqeust.MemberRequest;
+import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

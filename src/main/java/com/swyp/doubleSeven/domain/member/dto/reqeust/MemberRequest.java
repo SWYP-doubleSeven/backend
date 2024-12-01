@@ -1,4 +1,4 @@
-package com.swyp.doubleSeven.domain.member.kakao.dto.reqeust;
+package com.swyp.doubleSeven.domain.member.dto.reqeust;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

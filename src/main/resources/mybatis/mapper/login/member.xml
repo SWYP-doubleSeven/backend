@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.swyp.doubleSeven.domain.member.kakao.dao.MemberDAO">
+<mapper namespace="com.swyp.doubleSeven.domain.member.dao.MemberDAO">
+
+    <!-- ★★ 구글 소셜 로그인 ★★ -->
+
+    <!-- ★★ 카카오 소셜 로그인 ★★ -->
 
     <!-- resultMap -->
-    <resultMap id="MemberResultMap" type="com.swyp.doubleSeven.domain.member.kakao.dto.response.MemberResponse">
+    <resultMap id="MemberResultMap" type="com.swyp.doubleSeven.domain.member.dto.response.MemberResponse">
         <id property="memberId" column="MEMBER_ID" />
         <result property="memberKeyId" column="MEMBER_KEY_ID" />
         <result property="memberNickname" column="MEMBER_NICKNAME" />
@@ -64,6 +68,10 @@
             UPDT_DT = #{updtDt}
         WHERE MEMBER_ID = #{memberId}
     </update>
+
+
+    <!-- ★★ 게스트 로그인 ★★ -->
+
 
 
 </mapper>
