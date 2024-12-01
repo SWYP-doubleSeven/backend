@@ -1,14 +1,11 @@
-package com.swyp.doubleSeven.domain.member.kakao.controller;
+package com.swyp.doubleSeven.domain.member.controller;
 
-import com.swyp.doubleSeven.domain.member.kakao.dto.response.MemberResponse;
-import com.swyp.doubleSeven.domain.member.kakao.service.MemberService;
+import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
+import com.swyp.doubleSeven.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")

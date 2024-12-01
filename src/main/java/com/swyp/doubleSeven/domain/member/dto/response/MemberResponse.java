@@ -1,4 +1,4 @@
-package com.swyp.doubleSeven.domain.member.kakao.dto.response;
+package com.swyp.doubleSeven.domain.member.dto.response;
 
 import lombok.*;
 

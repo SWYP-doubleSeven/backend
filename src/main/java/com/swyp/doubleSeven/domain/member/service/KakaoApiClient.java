@@ -1,8 +1,8 @@
-package com.swyp.doubleSeven.domain.member.kakao.service;
+package com.swyp.doubleSeven.domain.member.service;
 
-import com.swyp.doubleSeven.domain.member.kakao.dto.response.KakaoMemberResponse;
-import com.swyp.doubleSeven.domain.member.kakao.dto.response.KakaoTokenResponse;
-import com.swyp.doubleSeven.domain.member.kakao.dto.response.KakaoUserDTO;
+import com.swyp.doubleSeven.domain.member.dto.response.KakaoMemberResponse;
+import com.swyp.doubleSeven.domain.member.dto.response.KakaoTokenResponse;
+import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
