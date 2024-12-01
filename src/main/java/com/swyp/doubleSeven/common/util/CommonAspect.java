@@ -1,11 +1,14 @@
 package com.swyp.doubleSeven.common.util;
 
+import com.swyp.doubleSeven.domain.badgeCount.dto.request.BadgeCountRequest;
 import com.swyp.doubleSeven.domain.badgeCount.service.BadgeCountService;
+import com.swyp.doubleSeven.domain.common.enums.BadgeType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Aspect
 @Component
@@ -16,7 +19,7 @@ public class CommonAspect {
 
     private final BadgeCountService badgeCountService;
 
-    /* 로그인시 연속출석 기록 */
+    /* 로그인시 연속출석 기록, 출석카운트 증가 */
     @Before("execution(* com.swyp.doubleSeven.domain.member.kakao.controller.MemberController.kakaoLogin(..))")
     public void afterLogin() {
         // todo : 전체 로그인기능 구현 후 경로 합치기
@@ -25,7 +28,14 @@ public class CommonAspect {
         if(memberId == null) {
             throw new IllegalStateException("세션에 memberId가 없습니다. 로그인 상태를 확인하세요.");
         }
-
-        badgeCountService.updateAttendance(memberId);
+        int result = badgeCountService.upsertMemberAttendance(memberId);
+        if(result > 0) { // 당일 로그인 2회이상->카운트X
+            BadgeCountRequest badgeCountRequest = BadgeCountRequest.builder()
+                    .memberId(memberId)
+                    .badgeType(BadgeType.ATTENDANCE.getName())
+                    .count(1)
+                    .build();
+            badgeCountService.upsertBadgeCount(badgeCountRequest);
+        }
     }
 }
