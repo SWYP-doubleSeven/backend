@@ -22,10 +22,14 @@ public class BadgeAcquireServiceImpl implements BadgeAcquireService {
         if(memberAttendance == null) { // insert
             result = badgeAcquireDAO.insertAttendance(memberId);
         } else { // update
-            BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
-            badgeAcquireRequest.setMemberId(memberId);
-            badgeAcquireRequest.setCount(memberAttendance.getCount());
-            badgeAcquireRequest.setConsecutiveDays(memberAttendance.getConsecutiveDays());
+            if(memberAttendance.getTodayLogin() == 'Y') return; // 오늘 로그인했으면 건너뛰기
+
+            BadgeAcquireRequest badgeAcquireRequest = BadgeAcquireRequest.builder()
+                    .memberId(memberId)
+                    .lastLoginDate(memberAttendance.getLastLoginDate())
+                    .count(memberAttendance.getCount())
+                    .consecutiveDays(memberAttendance.getConsecutiveDays())
+                    .build();
             result = badgeAcquireDAO.updateAttendance(badgeAcquireRequest);
         }
         if(result == 0) {

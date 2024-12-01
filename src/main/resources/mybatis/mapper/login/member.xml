@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.member.kakao.dao.MemberDAO">
+
+    <!-- resultMap -->
+    <resultMap id="MemberResultMap" type="com.swyp.doubleSeven.domain.member.kakao.dto.response.MemberResponse">
+        <id property="memberId" column="MEMBER_ID" />
+        <result property="memberKeyId" column="MEMBER_KEY_ID" />
+        <result property="memberNickname" column="MEMBER_NICKNAME" />
+        <result property="memberName" column="MEMBER_NAME" />
+        <result property="email" column="EMAIL" />
+        <result property="role" column="ROLE" />
+        <result property="loginType" column="LOGIN_TYPE" />
+        <result property="dltnYn" column="DLTN_YN" />
+        <result property="rgstDt" column="RGST_DT" />
+        <result property="updtDt" column="UPDT_DT" />
+    </resultMap>
+
+
+    <!-- 사용자 조회 -->
+    <select id="findMemberByOauthProviderAndMemberId" resultMap="MemberResultMap">
+        SELECT *
+        FROM MEMBER
+        WHERE LOGIN_TYPE = #{loginType}
+          AND MEMBER_KEY_ID = #{memberKeyId}
+    </select>
+
+    <!-- 사용자 등록/업데이트 -->
+    <insert id="insertMember">
+        INSERT INTO MEMBER (
+            MEMBER_KEY_ID,
+            MEMBER_NICKNAME,
+            MEMBER_NAME,
+            EMAIL,
+            ROLE,
+            LOGIN_TYPE,
+            DLTN_YN,
+            RGST_ID,
+            RGST_DT,
+            UPDT_ID,
+            UPDT_DT
+        ) VALUES (
+            #{memberKeyId},
+            #{memberNickname},
+            #{memberName},
+            #{email},
+            #{role},
+            #{loginType},
+            #{dltnYn},
+            #{rgstId},
+            #{rgstDt},
+            #{updtId},
+            #{updtDt}
+        )
+    </insert>
+
+    <!--로그인시 사용자 정보 업데이트-->
+    <update id="updateMember">
+        UPDATE MEMBER SET
+            ROLE = #{role},
+            LOGIN_TYPE = #{loginType},
+            UPDT_ID = #{updtId},
+            UPDT_DT = #{updtDt}
+        WHERE MEMBER_ID = #{memberId}
+    </update>
+
+
+</mapper>
