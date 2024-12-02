@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.saving.service;
 
+import com.swyp.doubleSeven.common.util.CommonAspect;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
 import com.swyp.doubleSeven.domain.saving.dao.SavingDAO;
 import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
@@ -19,11 +20,17 @@ import java.util.List;
 public class SavingServiceImpl implements SavingService{
 
     private final SavingDAO savingDAO;
+    private final CommonAspect commonAspect;
 
     // 가상 소비 등록
     @Override
-    public void createVirtualItem (SavingRequest savingRequest) {
-        savingDAO.insertSaving(savingRequest);
+    public int createVirtualItem (SavingRequest savingRequest) {
+        int result = savingDAO.insertSaving(savingRequest);
+        if(result >0) {
+            commonAspect.afterSaving(savingRequest);
+        }
+
+        return result;
     }
 
     // 가상 소비 조회 (월별 => 일자별 합계)

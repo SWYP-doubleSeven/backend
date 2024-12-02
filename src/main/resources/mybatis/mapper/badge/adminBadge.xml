@@ -9,7 +9,7 @@
         <result property="badgeName" column="BADGE_NAME"/>
         <result property="emblemPath" column="EMBLEM_PATH"/>
         <result property="badgeType" column="BADGE_TYPE"/>
-        <result property="mainCategoryId" column="MAIN_CATEGORY_ID"/>
+        <result property="badgeDescription" column="BADGE_DESCRIPTION"/>
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
         <result property="count" column="COUNT"/>
@@ -25,7 +25,7 @@
             BADGE_NAME,
             EMBLEM_PATH,
             BADGE_TYPE,
-            MAIN_CATEGORY_ID,
+            BADGE_DESCRIPTION,
             OPERATOR,
             VALUE,
             RGST_ID,
@@ -36,7 +36,7 @@
             #{badgeName},
             #{emblemPath},
             #{badgeType},
-            #{mainCategoryId},
+            #{badgeDescription},
             #{operator},
             #{value},
             #{memberId},
@@ -52,7 +52,7 @@
             BADGE_NAME = #{badgeName},
             EMBLEM_PATH = #{emblemPath},
             BADGE_TYPE = #{badgeType},
-            MAIN_CATEGORY_ID = #{mainCategoryId},
+            BADGE_DESCRIPTION = #{badgeDescription},
             OPERATOR = #{operator},
             VALUE = #{value},
             UPDT_ID = #{memberId},
@@ -73,7 +73,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
-            A.MAIN_CATEGORY_ID,
+            A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
             A.RGST_ID,
@@ -93,19 +93,39 @@
         ON A.BADGE_ID = B.BADGE_ID
         WHERE 1=1
         <if test="badgeName != null">
-            AND BADGE_NAME LIKE '%' || #{badgeName} || '%'
+            AND BADGE_NAME LIKE CONCAT('%', #{badgeName}, '%')
         </if>
         <if test="badgeType != null">
             AND BADGE_TYPE = #{badgeType}
         </if>
-        <if test="mainCategoryId != null">
-            AND MAIN_CATEGORY_ID = #{mainCategoryId}
-        </if>
+        ORDER BY BADGE_ID ASC
+    </select>
 
-        <if test="sortBy != null and sortOrder != null">
-            ORDER BY ${sortBy} ${sortOrder}
-        </if>
-        LIMIT #{limit} OFFSET #{offset}
+    <!-- 뱃지 단건 조회 -->
+    <select id="getBadge" parameterType="badgeRequest" resultMap="BadgeResultMap">
+        SELECT
+            A.BADGE_ID,
+            A.BADGE_NAME,
+            A.EMBLEM_PATH,
+            A.BADGE_TYPE,
+            A.BADGE_DESCRIPTION,
+            A.OPERATOR,
+            A.VALUE,
+            A.RGST_ID,
+            DATE_FORMAT(A.RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
+            A.UPDT_ID,
+            DATE_FORMAT(A.UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
+        FROM BADGE A
+        LEFT OUTER JOIN (
+            SELECT
+                BADGE_ID,
+                COUNT(MEMBER_ID) AS COUNT
+            FROM BADGE_ACQUIRE
+            GROUP BY BADGE_ID
+        ) B
+        ON A.BADGE_ID = B.BADGE_ID
+        WHERE 1=1
+          AND A.BADGE_ID = #{badgeId}
     </select>
 
 </mapper>
