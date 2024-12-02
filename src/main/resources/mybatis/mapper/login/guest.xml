@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.swyp.doubleSeven.domain.member.dao.GuestDAO">
+    <!-- 게스트 회원가입 -->
+    <insert id="signInGuest" parameterType="com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest" useGeneratedKeys="true" keyProperty="memberId">
+        INSERT INTO MEMBER (
+            MEMBER_KEY_ID,
+            MEMBER_NICKNAME,
+            ROLE,
+            LOGIN_TYPE
+        ) VALUES (
+                     #{memberKeyId},
+                     #{memberNickname},
+                     #{role},
+                     #{loginType}
+                 )
+    </insert>
+
+    <!-- 게스트 유저 이력 확인 -->
+    <select id="selectMemberKeyId" resultType="com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse">
+        SELECT
+            MEMBER_ID as memberId,
+            MEMBER_KEY_ID as memberKeyId,
+            MEMBER_NICKNAME as memberNickname
+        FROM MEMBER
+        WHERE MEMBER_KEY_ID = #{memberKeyId}
+    </select>
+
+    <!-- 쿠키 만료 게스트 ID 조회 -->
+    <select id="selectExpiredGuestIds" resultType="com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest">
+        SELECT
+            MEMBER_ID as memberId,
+            MEMBER_KEY_ID as memberKeyId
+        FROM MEMBER
+        WHERE LOGIN_TYPE = 'GUEST'
+          AND RGST_DT &lt; #{expirationDate}
+    </select>
+
+    <!-- 쿠키 만료된 게스트 데이터 삭제 (Saving Table) -->
+    <delete id="deleteSavingsByGuestIds">
+        DELETE FROM SAVING
+        WHERE MEMBER_ID IN
+        <foreach item="memberId" collection="list" open="(" separator="," close=")">
+            #{memberId}
+        </foreach>
+    </delete>
+
+    <!-- 쿠키 만료된 게스트 데이터 삭데 (Member Table) -->
+    <delete id="deleteExpiredGuests">
+        DELETE FROM MEMBER
+        WHERE LOGIN_TYPE = 'GUEST'
+          AND RGST_DT &lt; #{expirationDate}
+    </delete>
+</mapper>

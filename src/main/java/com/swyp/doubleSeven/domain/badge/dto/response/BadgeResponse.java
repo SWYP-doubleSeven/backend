@@ -14,9 +14,10 @@ public class BadgeResponse {
     private String badgeName;        // 뱃지 이름
     private String emblemPath;       // 엠블럼 경로
     private String badgeType;        // 뱃지 타입
-    private Integer mainCategoryId;  // 대카테고리 ID
+    private String badgeDescription;  // 뱃지 설명
     private String operator;         // 비교연산자
-    private Integer value;           // 값
+    private String value;           // 값
+    private int count;              // 뱃지를 가진 유저의 수
     private Integer rgstId;         // 등록자 ID
     private String rgstDt;    // 등록일시
     private Integer updtId;          // 수정자 ID
