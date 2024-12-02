@@ -24,8 +24,8 @@ public class KakaoApiClient {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "489a2f33bf9d90c59950291ca077adc9");
-        params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
-//        params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+//        params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
+        params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
         params.add("code", authorizationCode);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
