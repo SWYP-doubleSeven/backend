@@ -3,6 +3,15 @@
 
 <mapper namespace="com.swyp.doubleSeven.domain.badgeAcquire.dao.BadgeAcquireDAO">
 
-
-
+    <!--매달1일에 최고저축액 멤버 등록-->
+    <insert id="insertBadgeAcquireByTopMoney" parameterType="java.lang.Integer">
+        INSERT INTO BADGE_ACQUIRE(MEMBER_ID, BADGE_ID, GET_DATE)
+        SELECT
+            MEMBER_ID,
+            #{badgeId},
+            NOW()
+        FROM SAVING
+        WHERE RGST_DT BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND LAST_DAY(CURDATE())
+        GROUP BY MEMBER_ID
+    </insert>
 </mapper>

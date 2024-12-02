@@ -35,7 +35,7 @@ public class UserBadgeController {
     @GetMapping("/list")
     @Operation(summary = "사용자-뱃지 목록조회", description = "사용자가 뱃지 목록을 조회합니다")
     public ResponseEntity<List<BadgeResponse>> getBadgeList() {
-        Integer memberId = 4; // todo : session에서 가져오는걸로 수정(-)
+        Integer memberId = 1; // todo : session에서 가져오는걸로 수정(-)
         return ResponseEntity.status(HttpStatus.OK).body(service.getBadgeList(memberId));
     }
 }

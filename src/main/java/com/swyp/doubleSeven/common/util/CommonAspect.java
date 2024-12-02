@@ -3,6 +3,7 @@ package com.swyp.doubleSeven.common.util;
 import com.swyp.doubleSeven.domain.badgeCount.dto.request.BadgeCountRequest;
 import com.swyp.doubleSeven.domain.badgeCount.service.BadgeCountService;
 import com.swyp.doubleSeven.domain.common.enums.BadgeType;
+import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,24 @@ public class CommonAspect {
                     .build();
             badgeCountService.upsertBadgeCount(badgeCountRequest);
         }
+    }
+
+    public void afterSaving(SavingRequest savingRequest) {
+//        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
+        Integer memberId = 3; // todo
+        BadgeCountRequest badgeCountRequest = new BadgeCountRequest();
+        if(memberId == null) {
+            throw new IllegalStateException("세션에 memberId가 없습니다. 로그인 상태를 확인하세요.");
+        }
+
+        badgeCountRequest.setMemberId(memberId);
+        badgeCountRequest.setBadgeType(BadgeType.LOG.getName());
+        badgeCountRequest.setCount(1);
+        badgeCountRequest.setMemberId(memberId);
+        badgeCountService.upsertBadgeCount(badgeCountRequest); // 기록 카운트
+
+        badgeCountRequest.setCount(savingRequest.getAmount());
+        badgeCountRequest.setBadgeType(BadgeType.MONEY.getName());
+        badgeCountService.upsertBadgeCount(badgeCountRequest); // 금액 카운트
     }
 }

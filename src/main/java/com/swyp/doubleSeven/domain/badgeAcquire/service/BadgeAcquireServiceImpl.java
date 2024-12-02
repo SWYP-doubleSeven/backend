@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class BadgeAcquireServiceImpl implements BadgeAcquireService {
 
-    // todo : 로그인 구현시 BadgeAcquireDAO 메서드 추가(-)
-
     private final BadgeAcquireDAO badgeAcquireDAO;
+
+    public int insertBadgeAcquireByTopMoney(Integer badgeId) {
+        return badgeAcquireDAO.insertBadgeAcquireByTopMoney(badgeId);
+    }
 
 }

@@ -25,7 +25,7 @@ public class MemberController {
         session.setAttribute("memberNickname", memberResponse.getMemberNickname());
         session.setAttribute("loginType", memberResponse.getLoginType());
         session.setAttribute("role", memberResponse.getRole());
-
+        // todo : response같이 전달(-)
         return ResponseEntity.ok("Kakao login successful");
     }
 }

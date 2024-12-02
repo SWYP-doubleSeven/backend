@@ -11,7 +11,7 @@ import java.util.List;
 public interface SavingService {
     
     // 가상 소비 등록
-    void createVirtualItem (SavingRequest savingRequest);
+    int createVirtualItem (SavingRequest savingRequest);
 
     // 가상 소비 조회 (월별 => 일자별 합계)
     SavingCalendarResponse getVirtualItemMonthly (int year, int month, String categoryName);

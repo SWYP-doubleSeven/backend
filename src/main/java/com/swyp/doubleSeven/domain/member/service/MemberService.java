@@ -2,7 +2,7 @@ package com.swyp.doubleSeven.domain.member.service;
 
 import com.swyp.doubleSeven.domain.common.enums.Role;
 import com.swyp.doubleSeven.domain.member.dao.MemberDAO;
-import com.swyp.doubleSeven.domain.member.dto.reqeust.MemberRequest;
+import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
