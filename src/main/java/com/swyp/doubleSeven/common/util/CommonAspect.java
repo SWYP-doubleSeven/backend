@@ -23,7 +23,8 @@ public class CommonAspect {
     private final BadgeCountService badgeCountService;
 
     /* 로그인시 연속출석 기록, 출석카운트 증가 */
-    @After("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
+
+//    @After("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))") // todo 주석해제
     public void afterLogin() {
         // todo : 전체 로그인기능 구현 후 경로 합치기
 //        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
