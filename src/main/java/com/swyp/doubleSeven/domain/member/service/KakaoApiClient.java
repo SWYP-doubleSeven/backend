@@ -3,6 +3,7 @@ package com.swyp.doubleSeven.domain.member.service;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoMemberResponse;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoTokenResponse;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -10,6 +11,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 @Component
+@Slf4j
 public class KakaoApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -28,9 +30,14 @@ public class KakaoApiClient {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
 
-        ResponseEntity<KakaoTokenResponse> response = restTemplate.postForEntity(url, request, KakaoTokenResponse.class);
+        try {
+            ResponseEntity<KakaoTokenResponse> response = restTemplate.postForEntity(url, request, KakaoTokenResponse.class);
+            return response.getBody().getAccessToken();
+        } catch(Exception e) {
+            log.error("카카오 api호출 실패 : ", e);
+            throw new RuntimeException("카카오api호출 실패", e);
+        }
 
-        return response.getBody().getAccessToken();
     }
 
     public KakaoUserDTO getUserInfo(String accessToken) {
