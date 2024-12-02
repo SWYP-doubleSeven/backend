@@ -7,6 +7,8 @@ import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,7 @@ public class CommonAspect {
     private final BadgeCountService badgeCountService;
 
     /* 로그인시 연속출석 기록, 출석카운트 증가 */
-    @Before("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
+    @After("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
     public void afterLogin() {
         // todo : 전체 로그인기능 구현 후 경로 합치기
 //        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
