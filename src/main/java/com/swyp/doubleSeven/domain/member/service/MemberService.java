@@ -39,9 +39,11 @@ public class MemberService {
                 .updtId(0L)
                 .updtDt(LocalDateTime.now());
 
+        log.debug("4번 실행");
         if(existingMember == null) {
             // 신규 회원 처리
             memberDAO.insertMember(memberRequestBuilder.build());
+            log.debug("5번 실행");
         } else {
             // 기존 회원 처리
             memberRequestBuilder.memberId(existingMember.getMemberId())
@@ -50,6 +52,7 @@ public class MemberService {
                     .email(existingMember.getEmail());
 
             memberDAO.updateMember(memberRequestBuilder.build());
+            log.debug("6번 실행");
         }
 
         // MemberResponse 생성

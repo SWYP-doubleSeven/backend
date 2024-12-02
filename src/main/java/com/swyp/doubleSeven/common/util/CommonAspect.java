@@ -23,9 +23,9 @@ public class CommonAspect {
     private final BadgeCountService badgeCountService;
 
     /* 로그인시 연속출석 기록, 출석카운트 증가 */
-
 //    @After("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
     public void afterLogin(Integer memberId) {
+
         if(memberId == null) {
             throw new IllegalStateException("세션에 memberId가 없습니다. 로그인 상태를 확인하세요.");
         }

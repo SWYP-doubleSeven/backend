@@ -10,9 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Logger;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
     private final CommonAspect commonAspect;
@@ -29,7 +32,6 @@ public class MemberController {
         session.setAttribute("memberNickname", memberResponse.getMemberNickname());
         session.setAttribute("loginType", memberResponse.getLoginType());
         session.setAttribute("role", memberResponse.getRole());
-
         commonAspect.afterLogin(memberResponse.getMemberId().intValue());
         return ResponseEntity.ok(memberResponse);
     }
