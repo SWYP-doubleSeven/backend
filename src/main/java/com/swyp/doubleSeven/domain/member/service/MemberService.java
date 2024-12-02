@@ -6,6 +6,7 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,13 @@ public class MemberService {
     private final KakaoApiClient kakaoApiClient;
     private final MemberDAO memberDAO;
 
-    public String getKakaoAccessToken(String authorizationCode) {
-        return kakaoApiClient.requestAccessToken(authorizationCode);
+    public String getKakaoAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
+        return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
     }
 
     public MemberResponse processKakaoUser(String accessToken) {
         KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        log.debug("2번 실행");
         MemberResponse existingMember = memberDAO.findMemberByOauthProviderAndMemberId("KAKAO", kakaoUser.getKeyId());
-        log.debug("3번 실행");
         MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
                 .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
                 .loginType(LoginType.KAKAO.getType())
