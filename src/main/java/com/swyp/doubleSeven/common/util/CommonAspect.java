@@ -43,6 +43,7 @@ public class CommonAspect {
 //        }
 //    }
 
+
     public void afterSaving(SavingRequest savingRequest) {
 //        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
         Integer memberId = 3; // todo
