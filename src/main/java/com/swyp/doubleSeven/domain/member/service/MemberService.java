@@ -6,6 +6,7 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,15 +20,13 @@ public class MemberService {
     private final KakaoApiClient kakaoApiClient;
     private final MemberDAO memberDAO;
 
-    public String getKakaoAccessToken(String authorizationCode) {
-        return kakaoApiClient.requestAccessToken(authorizationCode);
+    public String getKakaoAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
+        return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
     }
 
     public MemberResponse processKakaoUser(String accessToken) {
         KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        log.debug("2번 실행");
         MemberResponse existingMember = memberDAO.findMemberByOauthProviderAndMemberId("KAKAO", kakaoUser.getKeyId());
-        log.debug("3번 실행");
         MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
                 .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
                 .loginType(LoginType.KAKAO.getType())
@@ -40,11 +39,9 @@ public class MemberService {
                 .updtId(0L)
                 .updtDt(LocalDateTime.now());
 
-        log.debug("4번 실행");
         if(existingMember == null) {
             // 신규 회원 처리
             memberDAO.insertMember(memberRequestBuilder.build());
-            log.debug("5번 실행");
         } else {
             // 기존 회원 처리
             memberRequestBuilder.memberId(existingMember.getMemberId())
@@ -53,7 +50,6 @@ public class MemberService {
                     .email(existingMember.getEmail());
 
             memberDAO.updateMember(memberRequestBuilder.build());
-            log.debug("6번 실행");
         }
 
         // MemberResponse 생성
