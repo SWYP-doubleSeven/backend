@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Schema(description = "가상 소비 응답")
 public class SavingResponse {
+
+    @Schema(description = "멤버 ID", example = "1")
+    private Integer memberId;
+
     @Schema(description = "가상 소비 ID", example = "1")
     private Integer savingId;
 
@@ -25,7 +29,8 @@ public class SavingResponse {
     private String categoryName;
 
     @Builder
-    public SavingResponse(Integer savingId, LocalDateTime savingYmd, int amount, String categoryName) {
+    public SavingResponse(Integer memberId, Integer savingId, LocalDateTime savingYmd, int amount, String categoryName) {
+        this.memberId = memberId;
         this.savingId = savingId;
         this.savingYmd = savingYmd;
         this.amount = amount;
