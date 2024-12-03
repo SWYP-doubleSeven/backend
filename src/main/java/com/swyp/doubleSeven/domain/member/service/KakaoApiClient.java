@@ -41,7 +41,6 @@ public class KakaoApiClient {
             log.error("카카오 api호출 실패 : ", e);
             throw new RuntimeException("카카오api호출 실패", e);
         }
-
     }
 
     public KakaoUserDTO getUserInfo(String accessToken) {
