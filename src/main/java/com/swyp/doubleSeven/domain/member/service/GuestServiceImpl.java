@@ -2,8 +2,8 @@ package com.swyp.doubleSeven.domain.member.service;
 
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
 import com.swyp.doubleSeven.domain.member.dao.GuestDAO;
-import com.swyp.doubleSeven.domain.member.dto.reqeust.guest.ExpiredGuestRequest;
-import com.swyp.doubleSeven.domain.member.dto.reqeust.guest.GuestLoginRequest;
+import com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest;
+import com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

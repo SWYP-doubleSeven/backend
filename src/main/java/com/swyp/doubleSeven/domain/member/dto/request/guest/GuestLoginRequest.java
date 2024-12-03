@@ -1,4 +1,4 @@
-package com.swyp.doubleSeven.domain.member.dto.reqeust.guest;
+package com.swyp.doubleSeven.domain.member.dto.request.guest;
 
 import lombok.Builder;
 import lombok.Getter;

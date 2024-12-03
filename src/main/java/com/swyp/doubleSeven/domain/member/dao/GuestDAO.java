@@ -1,7 +1,7 @@
 package com.swyp.doubleSeven.domain.member.dao;
 
-import com.swyp.doubleSeven.domain.member.dto.reqeust.guest.ExpiredGuestRequest;
-import com.swyp.doubleSeven.domain.member.dto.reqeust.guest.GuestLoginRequest;
+import com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest;
+import com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse;
 import org.apache.ibatis.annotations.Mapper;
 

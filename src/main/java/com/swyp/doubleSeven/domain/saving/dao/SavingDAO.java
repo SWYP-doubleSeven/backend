@@ -14,7 +14,7 @@ import java.util.List;
 public interface SavingDAO {
 
     // 가상 소비 등록
-    void insertSaving (@Param("savingRequest") SavingRequest savingRequest);
+    int insertSaving (@Param("savingRequest") SavingRequest savingRequest);
 
     // 가상 소비 조회 (월별 => 일자별 합계)
     List<SavingCalendarDayInfoResponse> selectSavingMonthly (int year, int month, String categoryName, Integer memberId);

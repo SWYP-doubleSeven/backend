@@ -3,7 +3,7 @@
 
 <mapper namespace="com.swyp.doubleSeven.domain.member.dao.GuestDAO">
     <!-- 게스트 회원가입 -->
-    <insert id="signInGuest" parameterType="com.swyp.doubleSeven.domain.member.dto.reqeust.guest.GuestLoginRequest" useGeneratedKeys="true" keyProperty="memberId">
+    <insert id="signInGuest" parameterType="com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest" useGeneratedKeys="true" keyProperty="memberId">
         INSERT INTO MEMBER (
             MEMBER_KEY_ID,
             MEMBER_NICKNAME,
@@ -28,7 +28,7 @@
     </select>
 
     <!-- 쿠키 만료 게스트 ID 조회 -->
-    <select id="selectExpiredGuestIds" resultType="com.swyp.doubleSeven.domain.member.dto.reqeust.guest.ExpiredGuestRequest">
+    <select id="selectExpiredGuestIds" resultType="com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest">
         SELECT
             MEMBER_ID as memberId,
             MEMBER_KEY_ID as memberKeyId
