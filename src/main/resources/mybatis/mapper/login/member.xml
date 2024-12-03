@@ -69,6 +69,16 @@
         WHERE MEMBER_ID = #{memberId}
     </update>
 
+    <!--중복 닉네임 검증-->
+    <select id="isSameNickname" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT
+            CASE
+                WHEN COUNT(*) > 0 THEN 'true'
+                ELSE 'false'
+                END AS RESULT
+        FROM MEMBER
+        WHERE MEMBER_NICKNAME = #{nickname}
+    </select>
 
     <!-- ★★ 게스트 로그인 ★★ -->
 

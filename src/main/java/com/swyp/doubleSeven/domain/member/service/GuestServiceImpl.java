@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.member.service;
 
+import com.swyp.doubleSeven.domain.common.enums.LoginType;
 import com.swyp.doubleSeven.domain.member.dao.GuestDAO;
 import com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest;
 import com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest;
@@ -62,10 +63,21 @@ public class GuestServiceImpl implements GuestService{
         Cookie guestCookie = new Cookie("memberKeyId", member.getMemberKeyId());
         guestCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
         guestCookie.setPath("/");
+
+        Cookie memberIdCookie = new Cookie("memberId", member.getMemberId().toString());
+        memberIdCookie.setMaxAge(7 * 24 * 60 * 60); // memberKeyId와 동일한 유효기간 설정
+        memberIdCookie.setPath("/");
+
+        Cookie loginTypeCookie = new Cookie("loginType", LoginType.GUEST.name());
+        loginTypeCookie.setMaxAge(7 * 24 * 60 * 60); // memberKeyId와 동일한 유효기간 설정
+        loginTypeCookie.setPath("/");
         // guestCookie.setHttpOnly(true); // JavaScript에서 접근 방지가 필요한 경우
         // guestCookie.setSecure(true); // HTTPS 필요한 경우
 
         response.addCookie(guestCookie);
+        response.addCookie(memberIdCookie);
+        response.addCookie(loginTypeCookie);
+
 
         return new GuestLoginResponse(member.getMemberId(),
                 member.getMemberKeyId(),

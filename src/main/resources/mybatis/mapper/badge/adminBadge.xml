@@ -98,6 +98,9 @@
         <if test="badgeType != null">
             AND BADGE_TYPE = #{badgeType}
         </if>
+        <if test="value != null">
+            AND VALUE = #{value}
+        </if>
         ORDER BY BADGE_ID ASC
     </select>
 

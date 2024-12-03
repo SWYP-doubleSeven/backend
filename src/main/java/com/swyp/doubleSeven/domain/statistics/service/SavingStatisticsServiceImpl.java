@@ -18,8 +18,8 @@ public class SavingStatisticsServiceImpl implements SavingStatisticsService {
     private final SavingStatisticsDAO statisticsDAO;
 
     @Override
-    public MonthlyTotalResponse getMonthlyTotal(int year, int month) {
-        long total = statisticsDAO.selectMonthlyTotal(year, month);
+    public MonthlyTotalResponse getMonthlyTotal(int year, int month, Integer memberId) {
+        long total = statisticsDAO.selectMonthlyTotal(year, month, memberId);
         return MonthlyTotalResponse.builder()
                 .year(year)
                 .month(month)
@@ -28,13 +28,13 @@ public class SavingStatisticsServiceImpl implements SavingStatisticsService {
     }
 
     @Override
-    public List<CategoryStatisticsResponse> getCategoryStatistics(int year, int month) {
-        return statisticsDAO.selectCategoryStatistics(year, month);
+    public List<CategoryStatisticsResponse> getCategoryStatistics(int year, int month, Integer memberId) {
+        return statisticsDAO.selectCategoryStatistics(year, month, memberId);
     }
 
     @Override
-    public List<HourlyStatisticsResponse> getHourlyStatistics(int year, int month) {
-        return statisticsDAO.selectHourlyStatistics(year, month);
+    public List<HourlyStatisticsResponse> getHourlyStatistics(int year, int month, Integer memberId) {
+        return statisticsDAO.selectHourlyStatistics(year, month, memberId);
     }
 
 }

@@ -1,8 +1,10 @@
 package com.swyp.doubleSeven.domain.badgeAcquire.controller;
 
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
+import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.badge.service.AdminBadgeService;
+import com.swyp.doubleSeven.domain.badgeAcquire.dto.request.BadgeAcquireRequest;
 import com.swyp.doubleSeven.domain.badgeAcquire.service.BadgeAcquireService;
 import com.swyp.doubleSeven.domain.common.enums.BadgeType;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +42,78 @@ public class BadgeAcquireController {
                 .memberId(0)
                 .build();
         BadgeResponse badgeResponse = adminBadgeService.insertBadge(badgeRequest); // 이달의 저축왕 뱃지 생성
-        badgeAcquireService.insertBadgeAcquireByTopMoney(badgeResponse.getBadgeId()); // 이달의 저축왕 뱃지 선정
+
+        List<Integer> maxMoneyMemberList = badgeAcquireService.getMaxMoneyMemberList(); // max값이 같다면 중복선정 가능
+        if(maxMoneyMemberList.size() == 0) return;
+        for(Integer memberId: maxMoneyMemberList) {
+            BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
+            badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
+            badgeAcquireRequest.setMemberId(memberId);
+            badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest); // 이달의 저축왕 뱃지 선정
+        }
+    }
+
+    public void insertBadgeAcquireByGoodStart(Integer memberId) {
+        LocalDate cureentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String yyyyMMdd = cureentDate.format(formatter);
+
+        BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
+        badgeSearchCriteria.setBadgeType("DATE");
+        badgeSearchCriteria.setValue(yyyyMMdd);
+        BadgeResponse badgeResponse = null;
+        List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
+        if(badgeResponseList.size() > 0) {
+            badgeResponse = badgeResponseList.get(0);
+        };
+        if(badgeResponse == null) {
+            BadgeRequest badgeRequest = BadgeRequest.builder()
+                    .badgeName("굿 스타트")
+                    .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_good+start.png")
+                    .badgeType("DATE")
+                    .operator("=")
+                    .value(yyyyMMdd)
+                    .memberId(0)
+                    .build();
+            badgeResponse = adminBadgeService.insertBadge(badgeRequest);
+        }
+
+        BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
+        badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
+        badgeAcquireRequest.setMemberId(memberId);
+        badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest); // 이달의 저축왕 뱃지 선정
+    }
+
+    public void insertBadgeAcquireBySavingDay(Integer memberId) {
+        LocalDate cureentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String yyyyMMdd = cureentDate.format(formatter);
+
+        BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
+        badgeSearchCriteria.setBadgeType("DATE");
+        badgeSearchCriteria.setValue(yyyyMMdd);
+
+        BadgeResponse badgeResponse = null;
+        List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
+        if(badgeResponseList.size() > 0) {
+            badgeResponse = badgeResponseList.get(0);
+        };
+        if(badgeResponse == null) {
+            BadgeRequest badgeRequest = BadgeRequest.builder()
+                    .badgeName("세계 저축의 날")
+                    .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_savings+day.png")
+                    .badgeType("DATE")
+                    .operator("=")
+                    .value(yyyyMMdd)
+                    .memberId(0)
+                    .build();
+            badgeResponse = adminBadgeService.insertBadge(badgeRequest);
+        }
+
+        BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
+        badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
+        badgeAcquireRequest.setMemberId(memberId);
+        badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest); // 이달의 저축왕 뱃지 선정
     }
 
 }
