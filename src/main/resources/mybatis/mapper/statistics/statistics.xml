@@ -9,6 +9,7 @@
         FROM SAVING
         WHERE YEAR(SAVING_YMD) = #{year}
           AND MONTH(SAVING_YMD) = #{month}
+          AND MEMBER_ID = #{memberId}
     </select>
 
     <!-- 카테고리별 통계 조회 -->
@@ -22,6 +23,7 @@
                      JOIN SUB_CATEGORY s2 ON s1.SUB_CATEGORY_ID = s2.SUB_CATEGORY_ID
             WHERE YEAR(s1.SAVING_YMD) = #{year}
               AND MONTH(s1.SAVING_YMD) = #{month}
+              AND MEMBER_ID = #{memberId}
             GROUP BY s2.SUB_CATEGORY_ID, s2.SUB_CATEGORY_NAME
         )
         SELECT
@@ -41,6 +43,7 @@
         FROM SAVING
         WHERE YEAR(SAVING_YMD) = #{year}
           AND MONTH(SAVING_YMD) = #{month}
+          AND MEMBER_ID = #{memberId}
         GROUP BY HOUR(SAVING_YMD)
         ORDER BY hour
     </select>

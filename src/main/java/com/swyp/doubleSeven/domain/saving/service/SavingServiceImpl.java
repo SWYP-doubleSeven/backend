@@ -1,5 +1,8 @@
 package com.swyp.doubleSeven.domain.saving.service;
 
+import com.swyp.doubleSeven.common.aspect.AuthenticationAspect;
+import com.swyp.doubleSeven.common.exception.BusinessException;
+import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
 import com.swyp.doubleSeven.domain.saving.dao.SavingDAO;
 import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
@@ -28,8 +31,8 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 조회 (월별 => 일자별 합계)
     @Override
-    public SavingCalendarResponse getVirtualItemMonthly (int year, int month, String categoryName) {
-        List<SavingCalendarDayInfoResponse> days = savingDAO.selectSavingMonthly(year, month, categoryName);
+    public SavingCalendarResponse getVirtualItemMonthly (int year, int month, String categoryName, Integer memberId) {
+        List<SavingCalendarDayInfoResponse> days = savingDAO.selectSavingMonthly(year, month, categoryName, memberId);
 
         return SavingCalendarResponse.builder()
                 .year(year)
@@ -40,17 +43,17 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 조회 (리스트)
     @Override
-    public SavingListResponse getVirtualItemList(int year, int month, SortType sortType) {
-        return savingDAO.selectSavingList(year, month, sortType);
+    public SavingListResponse getVirtualItemList(int year, int month, SortType sortType, Integer memberId) {
+        return savingDAO.selectSavingList(year, month, sortType, memberId);
     }
 
 
     // 가상 소비 단건 조회
     @Override
-    public SavingResponse getVirtualItem (Integer savingId) {
-        SavingResponse virtualItemResult = savingDAO.selectSaving(savingId);
+    public SavingResponse getVirtualItem (Integer savingId, Integer memberId) {
+        SavingResponse virtualItemResult = savingDAO.selectSaving(savingId, memberId);
         if (virtualItemResult == null) {
-            throw new RuntimeException("해당 가상소비 내역이 존재하지 않습니다.");
+            throw new BusinessException(Error.BAD_REQUEST);
         }
         return virtualItemResult;
     }
@@ -65,13 +68,22 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 삭제
     @Override
-    public int deleteVirtualItem (Integer savingId) {
-        int result = savingDAO.deleteSaving(savingId);
+    public int deleteVirtualItem (Integer savingId, Integer memberId) {
+        int result = savingDAO.deleteSaving(savingId, memberId);
 
         if (result == 0) {
             throw new RuntimeException("삭제할 가상소비 내역이 존재하지 않습니다.");
         }
 
         return result;
+    }
+
+    public static SavingRequest setSaving (SavingRequest request, Integer memberId) {
+        return SavingRequest.builder()
+                .memberId(memberId)
+                .savingYmd(request.getSavingYmd())
+                .categoryName(request.getCategoryName())
+                .amount(request.getAmount())
+                .build();
     }
 }

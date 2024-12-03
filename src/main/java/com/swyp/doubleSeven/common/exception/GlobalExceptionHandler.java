@@ -27,4 +27,14 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse("INTERNAL_SERVER_ERROR", "서버에서 문제가 발생했습니다.");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
+
+    // BusinessException 핸들러 추가
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ErrorResponse errorResponse = ErrorResponse.of(errorCode);
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(errorResponse);
+    }
 }
