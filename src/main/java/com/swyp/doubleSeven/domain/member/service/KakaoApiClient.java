@@ -27,6 +27,7 @@ public class KakaoApiClient {
         params.add("grant_type", "authorization_code");
         params.add("client_id", "489a2f33bf9d90c59950291ca077adc9");
         params.add("code", authorizationCode);
+
         params.add("redirect_uri", "http://localhost:3000/loginNick");
         /*if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
             params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
