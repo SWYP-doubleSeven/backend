@@ -10,4 +10,6 @@ public interface MemberDAO {
     MemberResponse findMemberByOauthProviderAndMemberId(@Param("loginType") String loginType, @Param("memberKeyId") Long memberKeyId);
     void insertMember(MemberRequest memberRequest);
     void updateMember(MemberRequest memberRequest);
+
+    String isSameNickname(String nickname);
 }
