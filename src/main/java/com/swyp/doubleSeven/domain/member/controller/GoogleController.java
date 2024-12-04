@@ -20,13 +20,18 @@ public class GoogleController {
 
     private final GoogleLoginService googleLoginService;
 
-    @GetMapping("/google-login")
+    @GetMapping("/google-login") //이걸 void 로 하고 밑에 메서드 리턴을 차라리 ResponseEntity<MemberResponse> 로 해야할듯
     public ResponseEntity<MemberResponse> googleLogin(@RequestParam("code") String code, HttpSession session,
                                                       HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {//추후에 리퀘파람 code 는 유연하게 주석 할수도
-        googleLoginService.request(LoginType.GOOGLE , response);
+        googleLoginService.request(LoginType.GOOGLE, response);
 
+    }
 
-
+    @GetMapping("/login/oauth2/code/google")
+    public void callback(
+            @RequestParam(name = "code") String code
+    ) throws IOException { //인가 코드 날라옴
+        googleLoginService.oauthLogin(LoginType.GOOGLE,code);
 
     }
 }
