@@ -53,67 +53,65 @@ public class BadgeAcquireController {
         }
     }
 
-    public void insertBadgeAcquireByGoodStart(Integer memberId) {
-        LocalDate cureentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String yyyyMMdd = cureentDate.format(formatter);
+    public void insertBadgeAcquireAfterLogin(Integer memberId, String yyyymmdd) {
 
-        BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
-        badgeSearchCriteria.setBadgeType("DATE");
-        badgeSearchCriteria.setValue(yyyyMMdd);
-        BadgeResponse badgeResponse = null;
-        List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
-        if(badgeResponseList.size() > 0) {
-            badgeResponse = badgeResponseList.get(0);
-        };
-        if(badgeResponse == null) {
-            BadgeRequest badgeRequest = BadgeRequest.builder()
-                    .badgeName("굿 스타트")
-                    .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_good+start.png")
-                    .badgeType("DATE")
-                    .operator("=")
-                    .value(yyyyMMdd)
-                    .memberId(0)
-                    .build();
-            badgeResponse = adminBadgeService.insertBadge(badgeRequest);
+        if ("01-01".equals(yyyymmdd.substring(5)) || "10-31".equals(yyyymmdd.substring(5))) {
+            BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
+            badgeSearchCriteria.setBadgeType("DATE");
+            badgeSearchCriteria.setValue(yyyymmdd);
+
+            BadgeResponse badgeResponse = null;
+            List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
+            if(badgeResponseList.size() > 0) {
+                badgeResponse = badgeResponseList.get(0);
+            };
+
+            if(badgeResponse == null) {
+                if ("01-01".equals(yyyymmdd.substring(5))) {
+                    BadgeRequest badgeRequest = BadgeRequest.builder()
+                            .badgeName("굿 스타트")
+                            .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_good+start.png")
+                            .badgeType("DATE")
+                            .operator("=")
+                            .value(yyyymmdd)
+                            .memberId(0)
+                            .build();
+                    badgeResponse = adminBadgeService.insertBadge(badgeRequest);
+                } else {
+                    BadgeRequest badgeRequest = BadgeRequest.builder()
+                            .badgeName("세계 저축의 날")
+                            .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_savings+day.png")
+                            .badgeType("DATE")
+                            .operator("=")
+                            .value(yyyymmdd)
+                            .memberId(0)
+                            .build();
+                    badgeResponse = adminBadgeService.insertBadge(badgeRequest);
+                }
+            }
+            BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
+            badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
+            badgeAcquireRequest.setMemberId(memberId);
+            badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest);
         }
 
         BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
-        badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
         badgeAcquireRequest.setMemberId(memberId);
-        badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest); // 이달의 저축왕 뱃지 선정
+        badgeAcquireRequest.setBadgeType(BadgeType.ATTENDANCE.getName());
+        badgeAcquireService.insertBadgeAcquireAfterLogin(badgeAcquireRequest);
+
+        badgeAcquireRequest.setBadgeType(BadgeType.CONSECUTIVE_ATTENDANCE.getName());
+        badgeAcquireService.insertBadgeAcquireAfterLogin(badgeAcquireRequest);
     }
 
-    public void insertBadgeAcquireBySavingDay(Integer memberId) {
-        LocalDate cureentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String yyyyMMdd = cureentDate.format(formatter);
-
-        BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
-        badgeSearchCriteria.setBadgeType("DATE");
-        badgeSearchCriteria.setValue(yyyyMMdd);
-
-        BadgeResponse badgeResponse = null;
-        List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
-        if(badgeResponseList.size() > 0) {
-            badgeResponse = badgeResponseList.get(0);
-        };
-        if(badgeResponse == null) {
-            BadgeRequest badgeRequest = BadgeRequest.builder()
-                    .badgeName("세계 저축의 날")
-                    .emblemPath("https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_savings+day.png")
-                    .badgeType("DATE")
-                    .operator("=")
-                    .value(yyyyMMdd)
-                    .memberId(0)
-                    .build();
-            badgeResponse = adminBadgeService.insertBadge(badgeRequest);
-        }
-
+    public void insertBadgeAcquireAfterSaving(Integer memberId) {
         BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
-        badgeAcquireRequest.setBadgeId(badgeResponse.getBadgeId());
         badgeAcquireRequest.setMemberId(memberId);
-        badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest); // 이달의 저축왕 뱃지 선정
+        badgeAcquireRequest.setBadgeType(BadgeType.LOG.getName());
+        badgeAcquireService.insertBadgeAcquireAfterSaving(badgeAcquireRequest);
+
+        badgeAcquireRequest.setBadgeType(BadgeType.MONEY.getName());
+        badgeAcquireService.insertBadgeAcquireAfterSaving(badgeAcquireRequest);
     }
 
 }

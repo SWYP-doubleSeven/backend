@@ -10,5 +10,9 @@ public class BadgeAcquireRequest {
 
     private Integer memberId;
     private Integer badgeId;
-    private String getDate;
+    private String badgeType;
+
+    public String getBadgeType() {
+        return this.badgeType;
+    }
 }
