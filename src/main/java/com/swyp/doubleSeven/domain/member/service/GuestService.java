@@ -9,4 +9,7 @@ public interface GuestService {
     GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response);
 
     void deleteExpiredGuestData();
+
+    // 소셜 로그인 연동 유도를 위한 counting
+    boolean countSaving(Integer memberId);
 }
