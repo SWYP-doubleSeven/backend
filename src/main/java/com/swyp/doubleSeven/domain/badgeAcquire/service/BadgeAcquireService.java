@@ -9,4 +9,7 @@ public interface BadgeAcquireService {
     int insertBadgeAcquire(BadgeAcquireRequest badgeAcquireRequest);
 
     List<Integer> getMaxMoneyMemberList();
+
+    int insertBadgeAcquireAfterSaving(BadgeAcquireRequest badgeAcquireRequest);
+    int insertBadgeAcquireAfterLogin(BadgeAcquireRequest badgeAcquireRequest);
 }
