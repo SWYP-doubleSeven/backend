@@ -1,5 +1,8 @@
 package com.swyp.doubleSeven.domain.saving.controller;
 
+import com.swyp.doubleSeven.common.aspect.AuthenticationUtil;
+import com.swyp.doubleSeven.common.aspect.anotation.AuthCheck;
+import com.swyp.doubleSeven.common.aspect.anotation.VaildateResourceOwner;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
 import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
 import com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarResponse;
@@ -14,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -31,14 +35,19 @@ public class SavingController {
 
     private final SavingService savingService;
 
+    private final AuthenticationUtil authenticationUtil;
+
+
     // 가상 소비 등록
     @Operation(summary = "가상 소비 등록", description = "새로운 가상 소비 항목을 등록합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "가상 소비 등록 성공"),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @AuthCheck
     @PostMapping
     public ResponseEntity<Void> createVirtualItem (@RequestBody SavingRequest savingRequest) {
+        log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
         savingService.createVirtualItem(savingRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -50,13 +59,17 @@ public class SavingController {
                     content = @Content(schema = @Schema(implementation = SavingCalendarResponse.class))),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @VaildateResourceOwner
+    //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping ("/calendar/{year}/{month}")
     public ResponseEntity<SavingCalendarResponse> getVirtualItemMonthly (
             @Parameter(description = "조회할 연도 (예: 2024)", in = ParameterIn.PATH) @PathVariable int year,
             @Parameter(description = "조회할 월 (1-12)", in = ParameterIn.PATH) @PathVariable int month,
             @Parameter(description = "카테고리 필터 (예: meal, taxi)", required = false)
             @RequestParam(required = false) String categoryName) {
-        return ResponseEntity.ok(savingService.getVirtualItemMonthly(year, month, categoryName));
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+
+        return ResponseEntity.ok(savingService.getVirtualItemMonthly(year, month, categoryName, currentMemberId));
     }
 
     // 가상 소비 조회 (리스트)
@@ -66,15 +79,17 @@ public class SavingController {
                     content = @Content(schema = @Schema(implementation = SavingResponse.class))),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @VaildateResourceOwner
+    //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/list/{year}/{month}")
     public ResponseEntity<SavingListResponse> getSavingList(
             @Parameter(description = "조회할 연도 (예: 2024)", in = ParameterIn.PATH) @PathVariable int year,
             @Parameter(description = "조회할 월 (1-12)", in = ParameterIn.PATH) @PathVariable int month,
             @Parameter(description = "정렬 기준 (latest:최신순, oldest:오래된순, amount_desc:금액높은순, amount_asc:금액낮은순)")
             @RequestParam(required = false, defaultValue = "latest") String sort) {
-
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         SortType sortType = validateAndGetSortType(sort);
-        return ResponseEntity.ok(savingService.getVirtualItemList(year, month, sortType));
+        return ResponseEntity.ok(savingService.getVirtualItemList(year, month, sortType, currentMemberId));
     }
 
     // enum 맵핑
@@ -88,10 +103,15 @@ public class SavingController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @VaildateResourceOwner
+    //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/{savingId}")
     public ResponseEntity<SavingResponse> getVirtualItem (
-            @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId) {
-        return ResponseEntity.ok(savingService.getVirtualItem(savingId));
+            @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId,
+            HttpServletRequest request) {
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+
+        return ResponseEntity.ok(savingService.getVirtualItem(savingId, currentMemberId));
     }
 
     // 가상 소비 수정
@@ -100,10 +120,15 @@ public class SavingController {
             @ApiResponse(responseCode = "200", description = "수정 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @VaildateResourceOwner
+    //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PutMapping("/{savingId}")
     public ResponseEntity<Void> updateVirtualItem (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId,
             @Parameter(description = "수정할 가상 소비 정보") @RequestBody SavingRequest savingRequest) {
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        savingRequest.setMemberId(currentMemberId);
+        log.info("가상소비 수정 getMemberid: {}", savingRequest.getMemberId());
         savingService.updateVirtualItem(savingId, savingRequest);
         return ResponseEntity.ok().build();
     }
@@ -114,10 +139,14 @@ public class SavingController {
             @ApiResponse(responseCode = "204", description = "삭제 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @VaildateResourceOwner
+    //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @DeleteMapping("/{savingId}")
     public ResponseEntity<Void> deleteVirtualItem (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId) {
-        savingService.deleteVirtualItem(savingId);
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        log.info("가상소비 삭제 memberid: {}", currentMemberId);
+        savingService.deleteVirtualItem(savingId, currentMemberId);
         return ResponseEntity.noContent().build();
     }
 

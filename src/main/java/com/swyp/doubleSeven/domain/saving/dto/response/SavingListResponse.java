@@ -13,6 +13,9 @@ import java.util.List;
 @Schema(description = "가상 소비 목록 응답")
 public class SavingListResponse {
 
+    @Schema(description = "멤버 ID", example = "1")
+    private Integer memberId;
+
     @Schema(description = "가상 소비 목록")
     private List<SavingResponse> items;
 
@@ -20,7 +23,8 @@ public class SavingListResponse {
     private long totalAmount;
 
     @Builder
-    public SavingListResponse(List<SavingResponse> items, long totalAmount) {
+    public SavingListResponse(Integer memberId, List<SavingResponse> items, long totalAmount) {
+        this.memberId = memberId;
         this.items = items;
         this.totalAmount = totalAmount;
     }

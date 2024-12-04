@@ -24,4 +24,7 @@ public interface GuestDAO {
 
     // 쿠키 만료된 게스트 데이터 삭데 (Member Table)
     void deleteExpiredGuests (LocalDateTime expirationDate);
+
+    // 소셜 로그인 연동 유도를 위한 counting
+    int countSaving (Integer memberId);
 }

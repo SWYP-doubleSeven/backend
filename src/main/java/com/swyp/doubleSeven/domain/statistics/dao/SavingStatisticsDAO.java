@@ -10,10 +10,10 @@ import java.util.List;
 public interface SavingStatisticsDAO {
 
     // 월별 총액 조회
-    long selectMonthlyTotal(int year, int month);
+    long selectMonthlyTotal(int year, int month, Integer memberId);
 
     // 카테고리별 통계 조회
-    List<CategoryStatisticsResponse> selectCategoryStatistics(int year, int month);
+    List<CategoryStatisticsResponse> selectCategoryStatistics(int year, int month, Integer memberId);
 
-    List<HourlyStatisticsResponse> selectHourlyStatistics(int year, int month);
+    List<HourlyStatisticsResponse> selectHourlyStatistics(int year, int month, Integer memberId);
 }
