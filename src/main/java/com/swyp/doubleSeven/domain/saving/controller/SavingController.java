@@ -56,12 +56,14 @@ public class SavingController {
     }
 
     // 가상 소비 조회 (월별 => 일자별 합계)
-    @Operation(summary = "캘린더뷰", description = "특정 연월의 기록을 캘린더 형식으로 조회가능합니다.")
+    @Operation(summary = "캘린더뷰", description = "특정 연월의 기록을 캘린더 형식으로 조회가능합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(schema = @Schema(implementation = SavingCalendarResponse.class))),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping ("/calendar/{year}/{month}")
@@ -76,12 +78,14 @@ public class SavingController {
     }
 
     // 가상 소비 조회 (리스트)
-    @Operation(summary = "가상 소비 목록 조회", description = "가상 소비 목록을 조회합니다.")
+    @Operation(summary = "가상 소비 목록 조회", description = "가상 소비 목록을 조회합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(schema = @Schema(implementation = SavingResponse.class))),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/list/{year}/{month}")
@@ -101,11 +105,13 @@ public class SavingController {
     }
 
     // 가상 소비 단건 조회
-    @Operation(summary = "가상 소비 상세 조회", description = "특정 가상 소비의 상세 정보를 조회합니다.")
+    @Operation(summary = "가상 소비 상세 조회", description = "특정 가상 소비의 상세 정보를 조회합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/{savingId}")
@@ -118,11 +124,13 @@ public class SavingController {
     }
 
     // 가상 소비 수정
-    @Operation(summary = "가상 소비 수정", description = "특정 가상 소비의 정보를 수정합니다.")
+    @Operation(summary = "가상 소비 수정", description = "특정 가상 소비의 정보를 수정합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PutMapping("/{savingId}")
@@ -137,11 +145,13 @@ public class SavingController {
     }
 
     // 가상 소비 삭제
-    @Operation(summary = "가상 소비 삭제", description = "특정 가상 소비를 삭제합니다.")
+    @Operation(summary = "가상 소비 삭제", description = "특정 가상 소비를 삭제합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "삭제 성공"),
             //@ApiResponse(responseCode = "404", description = "가상 소비를 찾을 수 없음")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @DeleteMapping("/{savingId}")
