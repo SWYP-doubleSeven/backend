@@ -36,9 +36,9 @@ public class MemberService {
                 .email(kakaoUser.getEmail())
                 .role(Role.MEMBER.getType())
                 .dltnYn("N")
-                .rgstId(0L)
+                .rgstId(0)
                 .rgstDt(LocalDateTime.now())
-                .updtId(0L)
+                .updtId(0)
                 .updtDt(LocalDateTime.now());
 
         if (existingMember == null) {
@@ -47,7 +47,7 @@ public class MemberService {
         } else {
             // 기존 회원 처리
             memberRequestBuilder.memberId(existingMember.getMemberId())
-                    .updtId("GUEST".equals(existingMember.getLoginType()) ? 0L : existingMember.getMemberId())
+                    .updtId("GUEST".equals(existingMember.getLoginType()) ? 0 : existingMember.getMemberId())
                     .memberNickname(existingMember.getMemberNickname())
                     .email(existingMember.getEmail());
 

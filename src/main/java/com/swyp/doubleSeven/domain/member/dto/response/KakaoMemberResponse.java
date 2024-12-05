@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Data
 public class KakaoMemberResponse {
-    private Long id;
+    private String keyId;
     private Map<String, String> properties;
     @JsonProperty("kakao_account")
     private KakaoAccount kakaoAccount;
