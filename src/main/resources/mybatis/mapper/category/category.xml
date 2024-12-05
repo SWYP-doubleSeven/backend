@@ -8,4 +8,29 @@
         FROM SUB_CATEGORY
         ORDER BY MAIN_CATEGORY_ID, SUB_CATEGORY_ID
     </select>
+
+
+    <!-- 캘린더뷰: 카테고리 정렬 -->
+    <resultMap id="categoryOrderMap" type="com.swyp.doubleSeven.domain.common.category.dto.response.CategoryOrderResponse">
+        <result property="categoryName" column="SUB_CATEGORY_NAME"/>
+        <result property="categoryTotalAmount" column="TOTAL_AMOUNT"/>
+    </resultMap>
+
+    <select id="selectMonthlyCategoryOrder" resultMap="categoryOrderMap">
+        SELECT
+            sub.SUB_CATEGORY_NAME,
+            COALESCE(SUM(s.AMOUNT), 0) as TOTAL_AMOUNT
+        FROM SUB_CATEGORY sub
+                 LEFT JOIN SAVING s ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
+            AND s.MEMBER_ID = #{memberId}
+            AND YEAR(s.SAVING_YMD) = #{year}
+            AND MONTH(s.SAVING_YMD) = #{month}
+        GROUP BY
+            sub.SUB_CATEGORY_ID,
+            sub.SUB_CATEGORY_NAME
+        HAVING TOTAL_AMOUNT > 0
+        ORDER BY
+            TOTAL_AMOUNT DESC
+    </select>
+
 </mapper>

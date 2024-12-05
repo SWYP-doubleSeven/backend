@@ -63,6 +63,7 @@
             AND B.MEMBER_ID = #{memberId}
         WHERE 1=1
         AND NOT(A.BADGE_TYPE = 'MAX_MONEY' AND B.BADGE_ID IS NULL)
+        AND NOT(A.BADGE_TYPE = 'DATE' AND B.BADGE_ID IS NULL)
     </select>
 
 </mapper>

@@ -52,4 +52,11 @@
         WHERE LOGIN_TYPE = 'GUEST'
           AND RGST_DT &lt; #{expirationDate}
     </delete>
+
+    <!-- 소셜 로그인 연동 유도를 위한 counting -->
+    <select id ="countSaving">
+        SELECT COUNT(*)
+        FROM SAVING
+        WHERE MEMBER_ID = #{memberId}
+    </select>
 </mapper>

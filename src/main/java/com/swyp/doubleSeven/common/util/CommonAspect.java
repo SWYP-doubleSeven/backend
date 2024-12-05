@@ -21,7 +21,6 @@ public class CommonAspect {
     private final BadgeAcquireController badgeAcquireController;
 
     /* 로그인시 연속출석 기록, 출석카운트 증가 */
-//    @After("execution(* com.swyp.doubleSeven.domain.member.controller.MemberController.kakaoLogin(..))")
     public void afterLogin(Integer memberId) {
 
         if(memberId == null) {
@@ -40,11 +39,10 @@ public class CommonAspect {
             badgeCountController.upsertBadgeCount(badgeCountRequest);
 
             LocalDate cureentDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-            String mmdd = cureentDate.format(formatter);
-            if("01-01".equals(mmdd)) badgeAcquireController.insertBadgeAcquireByGoodStart(memberId);
-            if("10-31".equals(mmdd)) badgeAcquireController.insertBadgeAcquireBySavingDay(memberId);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String yyyymmdd = cureentDate.format(formatter);
 
+            badgeAcquireController.insertBadgeAcquireAfterLogin(memberId, yyyymmdd);
         }
     }
 
@@ -65,5 +63,7 @@ public class CommonAspect {
         badgeCountRequest.setCount(savingRequest.getAmount());
         badgeCountRequest.setBadgeType(BadgeType.MONEY.getName());
         badgeCountController.upsertBadgeCount(badgeCountRequest); // 금액 카운트
+
+        badgeAcquireController.insertBadgeAcquireAfterSaving(memberId);
     }
 }
