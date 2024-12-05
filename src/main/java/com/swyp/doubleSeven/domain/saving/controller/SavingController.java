@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +40,13 @@ public class SavingController {
 
 
     // 가상 소비 등록
-    @Operation(summary = "가상 소비 등록", description = "새로운 가상 소비 항목을 등록합니다.")
+    @Operation(summary = "가상 소비 등록", description = "새로운 가상 소비 항목을 등록합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "가상 소비 등록 성공"),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
+    @SecurityRequirement(name = "cookieAuth")
     @AuthCheck
     @PostMapping
     public ResponseEntity<Void> createVirtualItem (@RequestBody SavingRequest savingRequest) {

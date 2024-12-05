@@ -2,6 +2,7 @@ package com.swyp.doubleSeven.domain.common.category.service;
 
 import com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO;
 import com.swyp.doubleSeven.domain.common.category.dto.response.SubCategoryResponse;
+import com.swyp.doubleSeven.domain.common.category.dto.response.CategoryOrderResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,4 +25,11 @@ public class CategoryServiceImpl implements CategoryService{
                 .categoryNames(subCategoryNames)
                 .build();
     }
+
+    // 카테고리 정렬
+    @Override
+    public List<CategoryOrderResponse> getMonthlyCategoryRank(Integer memberId, int year, int month) {
+        return categoryDAO.selectMonthlyCategoryOrder(memberId, year, month);
+    }
+
 }
