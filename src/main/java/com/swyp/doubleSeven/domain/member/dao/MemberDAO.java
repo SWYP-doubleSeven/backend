@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface MemberDAO {
-    MemberResponse findMemberByOauthProviderAndMemberId(@Param("loginType") String loginType, @Param("memberKeyId") Long memberKeyId);
+    MemberResponse findMemberByOauthProviderAndMemberId(@Param("loginType") String loginType, @Param("memberKeyId") String memberKeyId);
     void insertMember(MemberRequest memberRequest);
     void updateMember(MemberRequest memberRequest);
 

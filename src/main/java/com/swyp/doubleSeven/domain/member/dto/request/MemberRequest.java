@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class MemberRequest {
-    private Long memberId;
+    private Integer memberId;
     private String memberKeyId;
     private String memberNickname;
     private String memberName;
@@ -20,9 +20,9 @@ public class MemberRequest {
     private String role;
     private String loginType;
     private String dltnYn;
-    private Long rgstId;
+    private Integer rgstId;
     private LocalDateTime rgstDt;
-    private Long updtId;
+    private Integer updtId;
     private LocalDateTime updtDt;
 }
 
