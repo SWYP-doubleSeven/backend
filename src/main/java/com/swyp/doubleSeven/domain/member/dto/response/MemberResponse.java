@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class MemberResponse {
-    private Long memberId;
+    private Integer memberId;
     private String memberKeyId;
     private String memberNickname;
     private String memberName;

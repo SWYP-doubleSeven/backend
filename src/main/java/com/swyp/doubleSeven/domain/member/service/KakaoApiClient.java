@@ -56,7 +56,7 @@ public class KakaoApiClient {
 
         KakaoMemberResponse memberResponse = response.getBody();
         return new KakaoUserDTO(
-                memberResponse.getId(), // keyId
+                memberResponse.getKeyId(), // keyId
                 memberResponse.getProperties().get("nickname"),
                 memberResponse.getKakaoAccount().getEmail()
         );
