@@ -17,6 +17,9 @@ public class SavingCalendarDayInfoResponse {
     @Schema(description = "일", example = "27")
     private int day;
 
+    @Schema(description = "해당 일자 총액", example = "50000")
+    private int dayTotalAmount;
+
     @Schema(description = "카테고리별 리스트")
     private List<CategorySummary> categorySummaries;
 
