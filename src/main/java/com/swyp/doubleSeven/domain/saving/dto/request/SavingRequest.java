@@ -17,6 +17,8 @@ public class SavingRequest {
     @Schema(description = "멤버 ID", example = "1")
     private Integer memberId;
 
+    private Integer savingId;
+
     @Schema(description = "가상 소비 일자", example = "2024-03-27T10:00:00")
     private LocalDateTime savingYmd; // 가상 소비 일자
 

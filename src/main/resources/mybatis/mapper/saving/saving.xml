@@ -12,7 +12,7 @@
         </resultMap>
 
         <!-- 가상 소비 등록 -->
-        <insert id="insertSaving" useGeneratedKeys="true" keyProperty="memberId">
+        <insert id="insertSaving" useGeneratedKeys="true" keyProperty="savingId">
             INSERT INTO SAVING (
                 MEMBER_ID,
                 SAVING_YMD,
@@ -25,18 +25,18 @@
                 UPDT_DT
             )
             SELECT
-                #{savingRequest.memberId}, <!-- 임시 MEMBER_ID -->
-                #{savingRequest.savingYmd},
-                #{savingRequest.amount},
+                #{memberId},
+                #{savingYmd},
+                #{amount},
                 mc.MAIN_CATEGORY_ID,
                 sc.SUB_CATEGORY_ID,
-                #{savingRequest.memberId}, <!-- 임시 RGST_ID -->
+                #{memberId},
                 CURRENT_TIMESTAMP,
-                #{savingRequest.memberId}, <!-- 임시 UPDT_ID -->
+                #{memberId},
                 CURRENT_TIMESTAMP
             FROM SUB_CATEGORY sc
-            JOIN MAIN_CATEGORY mc ON sc.MAIN_CATEGORY_ID = mc.MAIN_CATEGORY_ID
-            WHERE sc.SUB_CATEGORY_NAME = #{savingRequest.categoryName}
+                     JOIN MAIN_CATEGORY mc ON sc.MAIN_CATEGORY_ID = mc.MAIN_CATEGORY_ID
+            WHERE sc.SUB_CATEGORY_NAME = #{categoryName}
         </insert>
 
         <resultMap id="monthlySavingMap" type="com.swyp.doubleSeven.domain.saving.dto.response.SavingCalendarDayInfoResponse">
