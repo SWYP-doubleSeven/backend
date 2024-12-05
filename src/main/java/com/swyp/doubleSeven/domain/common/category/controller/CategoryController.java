@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +50,8 @@ public class CategoryController {
     }
 
     // 카테고리 정렬
-    @Operation(summary = "카테고리 정렬", description = "해당월에 카테고리별 총액이 높은 순으로 응답합니다.")
+    @Operation(summary = "카테고리 정렬", description = "해당월에 카테고리별 총액이 높은 순으로 응답합니다.",
+            security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -57,6 +59,7 @@ public class CategoryController {
                     content = @Content(schema = @Schema(implementation = CategoryOrderResponse.class))
             )
     })
+    @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
     @GetMapping("/order-monthly-rank/{year}/{month}")
     public ResponseEntity<List<CategoryOrderResponse>> getMonthlyCategoryRank (
