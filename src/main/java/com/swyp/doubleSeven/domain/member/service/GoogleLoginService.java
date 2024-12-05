@@ -23,7 +23,7 @@ public class GoogleLoginService {
     private final MemberDAO memberRepo;
     private final HttpServletResponse response;
 
-    public void request(LoginType socialLoginType, HttpServletResponse response) throws IOException {
+    public void request(LoginType socialLoginType) throws IOException {
         //매개변수의 Resposne 그냥 필드에 박하 넣을수도 있음
 
 
@@ -46,6 +46,8 @@ public class GoogleLoginService {
                 Map<String, Object> userInfo = googleOauth.getUserInfo(accessToken);
                 // 사용자 정보 처리 (회원가입 또는 로그인)
                 handleUserInfo(userInfo);
+
+                log.info("그럼 여기?");
                 // 로그인 성공 후 리다이렉트 또는 토큰 발급 등
                 response.sendRedirect("/home"); // 예시로 홈 페이지로 리다이렉트
             } catch (JsonProcessingException e) {
@@ -63,12 +65,15 @@ public class GoogleLoginService {
     private void handleUserInfo(Map<String, Object> userInfo) {
         String email = (String) userInfo.get("email");
         String name = (String) userInfo.get("name");
+        log.info("의심");
         String memberKeyId = (String) userInfo.get("id"); // OAuth 제공자의 사용자 고유 ID
         String loginType = "GOOGLE"; // 로그인 유형 설정 (예: "GOOGLE")
 
-        // 데이터베이스에서 사용자 조회
-        MemberResponse existingMember = memberRepo.findMemberByOauthProviderAndMemberId(loginType, memberKeyId);
+        log.info("의심1");
 
+        // 데이터베이스에서 사용자 조회
+        MemberResponse existingMember = memberRepo.findMemberByOauthProviderAndMemberId(loginType, Long.valueOf(memberKeyId));
+        log.info("is it here?");
         // MemberRequest 빌더를 사용하여 회원 정보 생성
         MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
                 .memberKeyId(memberKeyId)
@@ -93,6 +98,8 @@ public class GoogleLoginService {
             // 필요에 따라 회원 정보 업데이트 로직 추가
             log.debug("기존 회원 로그인 처리");
         }
+
+        //return;
 
         // 세션 또는 토큰을 통해 로그인 상태 유지
         // 예를 들어, 세션에 사용자 정보 저장
