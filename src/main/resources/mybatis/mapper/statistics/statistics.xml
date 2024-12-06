@@ -37,14 +37,14 @@
     <!-- 시간대별 통계 조회 -->
     <select id="selectHourlyStatistics" resultType="com.swyp.doubleSeven.domain.statistics.dto.response.HourlyStatisticsResponse">
         SELECT
-            HOUR(SAVING_YMD) as hour,
+            HOUR(RGST_DT) as hour,
             SUM(AMOUNT) as amount,
             COUNT(*) as count
         FROM SAVING
         WHERE YEAR(SAVING_YMD) = #{year}
           AND MONTH(SAVING_YMD) = #{month}
           AND MEMBER_ID = #{memberId}
-        GROUP BY HOUR(SAVING_YMD)
+        GROUP BY HOUR(RGST_DT)
         ORDER BY hour
     </select>
 </mapper>
