@@ -3,15 +3,31 @@
 
 <mapper namespace="com.swyp.doubleSeven.domain.badgeAcquire.dao.BadgeAcquireDAO">
 
-    <!--매달1일에 최고저축액 멤버 등록-->
-    <insert id="insertBadgeAcquireByTopMoney" parameterType="java.lang.Integer">
-        INSERT INTO BADGE_ACQUIRE(MEMBER_ID, BADGE_ID, GET_DATE)
+    <insert id="insertBadgeAcquire" parameterType="BadgeAcquireRequest">
+        INSERT INTO BADGE_ACQUIRE (MEMBER_ID, BADGE_ID, GET_DATE)
+        SELECT #{memberId}, #{badgeId}, NOW()
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM BADGE_ACQUIRE
+            WHERE MEMBER_ID = #{memberId} AND BADGE_ID = #{badgeId}
+        )
+    </insert>
+
+    <select id="getMaxMoneyMemberList" resultType="java.util.ArrayList">
         SELECT
-            MEMBER_ID,
-            #{badgeId},
-            NOW()
+            MEMBER_ID
         FROM SAVING
         WHERE RGST_DT BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND LAST_DAY(CURDATE())
         GROUP BY MEMBER_ID
-    </insert>
+        HAVING SUM(AMOUNT) = (
+            SELECT MAX(TOTAL_AMOUNT)
+            FROM (
+                     SELECT SUM(AMOUNT) AS TOTAL_AMOUNT
+                     FROM SAVING
+                     WHERE RGST_DT BETWEEN DATE_FORMAT(CURDATE(), '%Y-%m-01') AND LAST_DAY(CURDATE())
+                     GROUP BY MEMBER_ID
+                 ) AS SUBQUERY
+        )
+    </select>
 </mapper>

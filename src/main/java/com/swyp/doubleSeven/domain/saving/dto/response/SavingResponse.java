@@ -5,18 +5,26 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @Schema(description = "가상 소비 응답")
 public class SavingResponse {
+
+    @Schema(description = "멤버 ID", example = "1")
+    private Integer memberId;
+
     @Schema(description = "가상 소비 ID", example = "1")
     private Integer savingId;
 
-    @Schema(description = "가상 소비 일자", example = "2024-03-27T10:00:00")
-    private LocalDateTime savingYmd;
+    @Schema(description = "가상 소비 일자", example = "2024-03-27")
+    private LocalDate savingYmd;
+
+    private LocalTime savingTime;
 
     @Schema(description = "가상 소비 금액", example = "10000")
     private int amount;
@@ -25,9 +33,11 @@ public class SavingResponse {
     private String categoryName;
 
     @Builder
-    public SavingResponse(Integer savingId, LocalDateTime savingYmd, int amount, String categoryName) {
+    public SavingResponse(Integer memberId, Integer savingId, LocalDate savingYmd, LocalTime savingTime, int amount, String categoryName) {
+        this.memberId = memberId;
         this.savingId = savingId;
         this.savingYmd = savingYmd;
+        this.savingTime = savingTime;
         this.amount = amount;
         this.categoryName = categoryName;
     }

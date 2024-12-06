@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.member.service;
 
+import com.swyp.doubleSeven.domain.common.enums.LoginType;
 import com.swyp.doubleSeven.domain.member.dao.GuestDAO;
 import com.swyp.doubleSeven.domain.member.dto.request.guest.ExpiredGuestRequest;
 import com.swyp.doubleSeven.domain.member.dto.request.guest.GuestLoginRequest;
@@ -22,7 +23,8 @@ public class GuestServiceImpl implements GuestService{
 
     private final GuestDAO guestDAO;
 
-    @Override public GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response) {
 
         // 쿠키에서 memberKeyId 확인
         Cookie[] cookies = request.getCookies();
@@ -60,12 +62,23 @@ public class GuestServiceImpl implements GuestService{
 
         // 쿠키 설정
         Cookie guestCookie = new Cookie("memberKeyId", member.getMemberKeyId());
-        guestCookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+        guestCookie.setMaxAge(60 * 60 * 24 * 30); // 7일
         guestCookie.setPath("/");
+
+        Cookie memberIdCookie = new Cookie("memberId", member.getMemberId().toString());
+        memberIdCookie.setMaxAge(60 * 60 * 24 * 30); // memberKeyId와 동일한 유효기간 설정
+        memberIdCookie.setPath("/");
+
+        Cookie loginTypeCookie = new Cookie("loginType", LoginType.GUEST.name());
+        loginTypeCookie.setMaxAge(60 * 60 * 24 * 30); // memberKeyId와 동일한 유효기간 설정
+        loginTypeCookie.setPath("/");
         // guestCookie.setHttpOnly(true); // JavaScript에서 접근 방지가 필요한 경우
         // guestCookie.setSecure(true); // HTTPS 필요한 경우
 
         response.addCookie(guestCookie);
+        response.addCookie(memberIdCookie);
+        response.addCookie(loginTypeCookie);
+
 
         return new GuestLoginResponse(member.getMemberId(),
                 member.getMemberKeyId(),
@@ -76,9 +89,9 @@ public class GuestServiceImpl implements GuestService{
     @Override
     @Transactional
     public void deleteExpiredGuestData () {
-        // 7일이 지난 게스트 데이터 삭제
-        // 7일전 구하기
-        LocalDateTime expirationDate = LocalDateTime.now().minusDays(7);
+        // 30일이 지난 게스트 데이터 삭제
+        // 30일전 구하기
+        LocalDateTime expirationDate = LocalDateTime.now().minusDays(30);
 
         // 만료된 게스트 목록 조회
         List<ExpiredGuestRequest> expiredGuests = guestDAO.selectExpiredGuestIds (expirationDate);
@@ -95,5 +108,14 @@ public class GuestServiceImpl implements GuestService{
             // Member 테이블 데이터 삭제
             guestDAO.deleteExpiredGuests (expirationDate);
         }
+    }
+
+    // 소셜 로그인 연동 유도를 위한 counting
+    @Override
+    public boolean countSaving (Integer memberId) {
+        int result = guestDAO.countSaving(memberId);
+
+        // 0건을 제외한 짝수일때 true return
+        return result > 0 && result % 2 == 0;
     }
 }

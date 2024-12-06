@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface SavingStatisticsService {
 
-    MonthlyTotalResponse getMonthlyTotal(int year, int month);
+    MonthlyTotalResponse getMonthlyTotal(int year, int month, Integer memberId);
 
-    List<CategoryStatisticsResponse> getCategoryStatistics(int year, int month);
+    List<CategoryStatisticsResponse> getCategoryStatistics(int year, int month, Integer memberId);
 
-    List<HourlyStatisticsResponse> getHourlyStatistics(int year, int month);
+    List<HourlyStatisticsResponse> getHourlyStatistics(int year, int month, Integer memberId);
 }
