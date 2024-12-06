@@ -2,6 +2,7 @@ package com.swyp.doubleSeven.domain.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
+import com.swyp.doubleSeven.domain.common.enums.Role;
 import com.swyp.doubleSeven.domain.member.dao.MemberDAO;
 import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
@@ -67,24 +68,27 @@ public class GoogleLoginService {
         String name = (String) userInfo.get("name");
         log.info("의심");
         String memberKeyId = (String) userInfo.get("id"); // OAuth 제공자의 사용자 고유 ID
+        String memberKeyIdFirst8 = memberKeyId.substring(0, 8);
         String loginType = "GOOGLE"; // 로그인 유형 설정 (예: "GOOGLE")
 
         log.info("의심1");
+        System.out.println(memberKeyId);
 
         // 데이터베이스에서 사용자 조회
-        MemberResponse existingMember = memberRepo.findMemberByOauthProviderAndMemberId(loginType, Long.valueOf(memberKeyId));
+        MemberResponse existingMember = memberRepo.findMemberByMemberKeyId(memberKeyId);
         log.info("is it here?");
+        System.out.println(existingMember);
         // MemberRequest 빌더를 사용하여 회원 정보 생성
         MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
                 .memberKeyId(memberKeyId)
                 .loginType(loginType)
                 .memberNickname(name)
                 .email(email)
-                .role("ROLE_USER") // 권한 설정
+                .role(Role.MEMBER.getType()) // 권한 설정
                 .dltnYn("N")
-                .rgstId(0L)
+                .rgstId(0)
                 .rgstDt(LocalDateTime.now())
-                .updtId(0L)
+                .updtId(0)
                 .updtDt(LocalDateTime.now());
 
         log.debug("회원 처리 시작");
@@ -92,11 +96,16 @@ public class GoogleLoginService {
         if (existingMember == null) {
             // 신규 회원 가입 처리
             memberRepo.insertMember(memberRequestBuilder.build());
-            log.debug("신규 회원 가입 완료");
+            log.info("신규 회원 가입 완료");
         } else {
             // 기존 회원 로그인 처리
             // 필요에 따라 회원 정보 업데이트 로직 추가
-            log.debug("기존 회원 로그인 처리");
+            memberRequestBuilder.memberId(existingMember.getMemberId())
+                    //.updtId("GUEST".equals(existingMember.getLoginType()) ? 0L : existingMember.getMemberId())
+                    .memberNickname(existingMember.getMemberNickname())
+                    .email(existingMember.getEmail());
+            memberRepo.updateMember(memberRequestBuilder.build());
+            log.info("기존 회원 로그인 처리");
         }
 
         //return;
