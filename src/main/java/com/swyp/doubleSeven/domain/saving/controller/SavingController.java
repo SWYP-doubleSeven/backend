@@ -49,10 +49,9 @@ public class SavingController {
     @SecurityRequirement(name = "cookieAuth")
     @AuthCheck
     @PostMapping
-    public ResponseEntity<Void> createVirtualItem (@RequestBody SavingRequest savingRequest) {
+    public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest) {
         log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
-        savingService.createVirtualItem(savingRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(savingService.createVirtualItem(savingRequest));
     }
 
     // 가상 소비 조회 (월별 => 일자별 합계)

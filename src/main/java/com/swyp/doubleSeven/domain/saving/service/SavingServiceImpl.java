@@ -28,13 +28,22 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 등록
     @Override
-    public int createVirtualItem (SavingRequest savingRequest) {
+    public SavingResponse createVirtualItem (SavingRequest savingRequest) {
         int result = savingDAO.insertSaving(savingRequest);
         if(result >0) {
             List<BadgeResponse> badgeResponseList = commonAspect.afterSaving(savingRequest);
         }
 
-        return result;
+        // Insert 성공 후 로그로 확인
+        log.info("Insert 후 생성된 savingId: {}", savingRequest.getSavingId());
+
+        return SavingResponse.builder()
+                .memberId(savingRequest.getMemberId())
+                .savingId(savingRequest.getSavingId())
+                .savingYmd(savingRequest.getSavingYmd())
+                .amount(savingRequest.getAmount())
+                .categoryName(savingRequest.getCategoryName())
+                .build();
     }
 
     // 가상 소비 조회 (월별 => 일자별 합계)
