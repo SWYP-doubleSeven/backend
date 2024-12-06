@@ -14,4 +14,8 @@ public interface UserBadgeDAO {
 
     // 뱃지 목록 조회
     List<BadgeResponse> getBadgeList(Integer memberId);
+
+    List<BadgeResponse> getBadgeIdAfterSaving(BadgeRequest badgeRequest);
+
+    List<BadgeResponse> getBadgeIdAfterLogin(BadgeRequest badgeRequest);
 }

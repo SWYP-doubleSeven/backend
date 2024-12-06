@@ -2,6 +2,7 @@ package com.swyp.doubleSeven.domain.saving.service;
 
 import com.swyp.doubleSeven.common.aspect.AuthenticationAspect;
 import com.swyp.doubleSeven.common.exception.BusinessException;
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.common.util.CommonAspect;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
@@ -30,7 +31,7 @@ public class SavingServiceImpl implements SavingService{
     public int createVirtualItem (SavingRequest savingRequest) {
         int result = savingDAO.insertSaving(savingRequest);
         if(result >0) {
-            commonAspect.afterSaving(savingRequest);
+            List<BadgeResponse> badgeResponseList = commonAspect.afterSaving(savingRequest);
         }
 
         return result;

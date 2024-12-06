@@ -27,7 +27,7 @@ public class MemberService {
 
     public MemberResponse processKakaoUser(String accessToken) {
         KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        MemberResponse existingMember = memberDAO.findMemberByOauthProviderAndMemberId("KAKAO", kakaoUser.getKeyId());
+        MemberResponse existingMember = memberDAO.findMemberByOauthProviderAndMemberId("KAKAO", String.valueOf(kakaoUser.getKeyId()));
 
         MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
                 .memberKeyId(String.valueOf(kakaoUser.getKeyId()))

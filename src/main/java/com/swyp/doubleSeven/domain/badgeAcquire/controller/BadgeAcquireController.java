@@ -4,6 +4,7 @@ import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.badge.service.AdminBadgeService;
+import com.swyp.doubleSeven.domain.badge.service.UserBadgeService;
 import com.swyp.doubleSeven.domain.badgeAcquire.dto.request.BadgeAcquireRequest;
 import com.swyp.doubleSeven.domain.badgeAcquire.service.BadgeAcquireService;
 import com.swyp.doubleSeven.domain.common.enums.BadgeType;
@@ -25,6 +26,8 @@ public class BadgeAcquireController {
 
     private final BadgeAcquireService badgeAcquireService;
     private final AdminBadgeService adminBadgeService;
+
+    private final UserBadgeService userBadgeService;
 
     // 매달1일에 최고저축액 멤버 등록
     @Scheduled(cron = "0 0 0 1 * ?") // 매월 1일 0시 0분 0초에 실행
@@ -53,7 +56,7 @@ public class BadgeAcquireController {
         }
     }
 
-    public void insertBadgeAcquireAfterLogin(Integer memberId, String yyyymmdd) {
+    public List<BadgeResponse> insertBadgeAcquireAfterLogin(Integer memberId, String yyyymmdd) {
 
         if ("01-01".equals(yyyymmdd.substring(5)) || "10-31".equals(yyyymmdd.substring(5))) {
             BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
@@ -95,23 +98,30 @@ public class BadgeAcquireController {
             badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest);
         }
 
+        BadgeRequest badgeRequest = new BadgeRequest();
+        badgeRequest.setMemberId(memberId);
+        List<BadgeResponse> badgeList = userBadgeService.getBadgeIdAfterLogin(badgeRequest);
+
         BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
         badgeAcquireRequest.setMemberId(memberId);
-        badgeAcquireRequest.setBadgeType(BadgeType.ATTENDANCE.getName());
-        badgeAcquireService.insertBadgeAcquireAfterLogin(badgeAcquireRequest);
-
-        badgeAcquireRequest.setBadgeType(BadgeType.CONSECUTIVE_ATTENDANCE.getName());
-        badgeAcquireService.insertBadgeAcquireAfterLogin(badgeAcquireRequest);
+        for(int i = 0; i< badgeList.size(); i++) {
+            badgeAcquireRequest.setBadgeId(badgeList.get(i).getBadgeId());
+            badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest);
+        }
+        return badgeList;
     }
 
-    public void insertBadgeAcquireAfterSaving(Integer memberId) {
+    public List<BadgeResponse> insertBadgeAcquireAfterSaving(Integer memberId) {
+        BadgeRequest badgeRequest = new BadgeRequest();
+        badgeRequest.setMemberId(memberId);
+        List<BadgeResponse> badgeList = userBadgeService.getBadgeIdAfterSaving(badgeRequest);
+
         BadgeAcquireRequest badgeAcquireRequest = new BadgeAcquireRequest();
         badgeAcquireRequest.setMemberId(memberId);
-        badgeAcquireRequest.setBadgeType(BadgeType.LOG.getName());
-        badgeAcquireService.insertBadgeAcquireAfterSaving(badgeAcquireRequest);
-
-        badgeAcquireRequest.setBadgeType(BadgeType.MONEY.getName());
-        badgeAcquireService.insertBadgeAcquireAfterSaving(badgeAcquireRequest);
+        for(int i = 0; i< badgeList.size(); i++) {
+            badgeAcquireRequest.setBadgeId(badgeList.get(i).getBadgeId());
+            badgeAcquireService.insertBadgeAcquire(badgeAcquireRequest);
+        }
+        return badgeList;
     }
-
 }
