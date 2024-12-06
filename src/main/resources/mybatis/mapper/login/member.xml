@@ -22,16 +22,41 @@
     </resultMap>
 
 
-    <!-- 사용자 조회 -->
-    <select id="findMemberByOauthProviderAndMemberId" resultMap="MemberResultMap">
-        SELECT *
+    <select id="findMemberByMemberId" resultMap="MemberResultMap">
+        SELECT
+            MEMBER_ID
+             , MEMBER_NICKNAME
+             , MEMBER_NAME
+             , EMAIL
+             , ROLE
+             , LOGIN_TYPE
+             , DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT
+             , DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
         FROM MEMBER
-        WHERE LOGIN_TYPE = #{loginType}
-          AND MEMBER_KEY_ID = #{memberKeyId}
+        WHERE MEMBER_ID = #{memberId}
+        AND DLTN_YN = 'N'
+    </select>
+
+
+    <!-- memberKeyId 이용해 사용자 조회 -->
+    <select id="findMemberByMemberKeyId" resultMap="MemberResultMap">
+        SELECT
+            MEMBER_ID
+            , MEMBER_NICKNAME
+            , MEMBER_NAME
+            , EMAIL
+            , ROLE
+            , LOGIN_TYPE
+            , DATE_FORMAT(RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT
+            , DATE_FORMAT(UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT
+        FROM MEMBER
+        WHERE 1=1
+            AND MEMBER_KEY_ID = #{memberKeyId}
+            AND DLTN_YN = 'N'
     </select>
 
     <!-- 사용자 등록/업데이트 -->
-    <insert id="insertMember">
+    <insert id="insertMember" parameterType="MemberRequest" useGeneratedKeys="true" keyProperty="memberId">
         INSERT INTO MEMBER (
             MEMBER_KEY_ID,
             MEMBER_NICKNAME,
@@ -60,10 +85,11 @@
     </insert>
 
     <!--로그인시 사용자 정보 업데이트-->
-    <update id="updateMember">
+    <update id="updateMember" parameterType="MemberRequest">
         UPDATE MEMBER SET
             ROLE = #{role},
             LOGIN_TYPE = #{loginType},
+            MEMBER_NICKNAME = #{memberNickname},
             UPDT_ID = #{updtId},
             UPDT_DT = #{updtDt}
         WHERE MEMBER_ID = #{memberId}
