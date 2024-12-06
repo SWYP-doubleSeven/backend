@@ -28,4 +28,13 @@ public class UserBadgeServiceImpl implements UserBadgeService {
     }
 
 
+    @Override
+    public List<BadgeResponse> getBadgeIdAfterSaving(BadgeRequest badgeRequest) {
+        return userBadgeDAO.getBadgeIdAfterSaving(badgeRequest);
+    }
+
+    @Override
+    public List<BadgeResponse> getBadgeIdAfterLogin(BadgeRequest badgeRequest) {
+        return userBadgeDAO.getBadgeIdAfterLogin(badgeRequest);
+    }
 }

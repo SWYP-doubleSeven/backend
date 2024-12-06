@@ -26,6 +26,4 @@ public interface AdminBadgeDAO {
     // 전체 뱃지 목록 조회
     List<BadgeResponse> getBadgeList(BadgeSearchCriteria criteria);
 
-    // 전체 뱃지 목록 조회
-    ResponseEntity<List<BadgeResponse>> getUserBadgeList(Integer memberId);
 }
