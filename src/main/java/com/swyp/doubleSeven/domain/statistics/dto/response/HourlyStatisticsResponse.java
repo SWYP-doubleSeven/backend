@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalTime;
+
 @Getter
 @Builder
 @Schema(description = "시간대별 절약 통계 응답")

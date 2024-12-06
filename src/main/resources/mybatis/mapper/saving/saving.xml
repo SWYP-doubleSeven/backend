@@ -7,6 +7,7 @@
             <id property="memberId" column="MEMBER_ID"/>
             <id property="savingId" column="SAVING_ID"/>
             <result property="savingYmd" column="SAVING_YMD"/>
+            <result property="savingTime" column="SAVING_TIME" typeHandler="com.swyp.doubleSeven.domain.saving.handler.StringToLocalTimeTypeHandler"/>
             <result property="categoryName" column="SUB_CATEGORY_NAME"/>
             <result property="amount" column="AMOUNT"/>
         </resultMap>
@@ -51,6 +52,7 @@
                 <id property="savingId" column="SAVING_ID"/>
                 <result property="memberId" column="MEMBER_ID"/>
                 <result property="savingYmd" column="SAVING_YMD"/>
+                <result property="savingTime" column="SAVING_TIME" typeHandler="com.swyp.doubleSeven.domain.saving.handler.StringToLocalTimeTypeHandler"/>
                 <result property="categoryName" column="SUB_CATEGORY_NAME"/>
                 <result property="amount" column="AMOUNT"/>
             </collection>
@@ -93,9 +95,10 @@
                 s.MEMBER_ID,
                 DAY(s.SAVING_YMD) as day,
                 dt.DAY_TOTAL_AMOUNT,
-                dt.COUNT,  -- COUNT 컬럼 추가
+                dt.COUNT,
                 s.SAVING_ID,
-                DATE_FORMAT(s.SAVING_YMD, '%Y-%m-%d %H:%i:%s') as SAVING_YMD,
+                s.SAVING_YMD as SAVING_YMD,
+                DATE_FORMAT(s.RGST_DT, '%H:%i') as SAVING_TIME,
                 sub.SUB_CATEGORY_NAME,
                 s.AMOUNT,
                 fc.CATEGORY_TOTAL_AMOUNT
@@ -110,7 +113,7 @@
             <if test="categoryName != null and categoryName != ''">
                 AND sub.SUB_CATEGORY_NAME = #{categoryName}
             </if>
-            ORDER BY day ASC, fc.first_appearance ASC, s.SAVING_YMD ASC
+            ORDER BY day ASC, fc.first_appearance ASC, SAVING_TIME ASC
         </select>
 
 
@@ -158,6 +161,7 @@
                 <collection property="items" ofType="com.swyp.doubleSeven.domain.saving.dto.response.SavingResponse">
                     <id property="savingId" column="SAVING_ID"/>
                     <result property="memberId" column="MEMBER_ID"/>
+                    <result property="savingTime" column="SAVING_TIME" typeHandler="com.swyp.doubleSeven.domain.saving.handler.StringToLocalTimeTypeHandler"/>
                     <result property="savingYmd" column="SAVING_YMD"/>
                     <result property="amount" column="AMOUNT"/>
                     <result property="categoryName" column="SUB_CATEGORY_NAME"/>
@@ -173,6 +177,7 @@
                     s.SAVING_ID,
                     DAY(s.SAVING_YMD) as day,
                     s.SAVING_YMD,
+                    DATE_FORMAT(s.RGST_DT, '%H:%i') as SAVING_TIME,
                     s.AMOUNT,
                     sub.SUB_CATEGORY_NAME,
                     (
@@ -191,8 +196,8 @@
             SELECT *
             FROM DailyData
             ORDER BY
-                day DESC,  -- 일자는 최신순
-                SAVING_YMD ASC  -- 같은 일자 내에서는 등록순
+                day DESC,
+                SAVING_TIME ASC
         </select>
 
         <!-- 가상 소비 단건 조회 -->
@@ -201,6 +206,7 @@
                 s.MEMBER_ID,
                 s.SAVING_ID,
                 s.SAVING_YMD,
+                DATE_FORMAT(s.RGST_DT, '%H:%i') as SAVING_TIME,
                 s.AMOUNT,
                 s.MEMO,
                 s.MAIN_CATEGORY_ID,
