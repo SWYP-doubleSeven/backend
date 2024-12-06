@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.saving.dto.response;
 
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -32,13 +34,17 @@ public class SavingResponse {
     @Schema(description = "카테고리명", example = "meal")
     private String categoryName;
 
+    @Schema(description = "획득한 뱃지 목록")
+    private List<BadgeResponse> badgeResponseList;
+
     @Builder
-    public SavingResponse(Integer memberId, Integer savingId, LocalDate savingYmd, LocalTime savingTime, int amount, String categoryName) {
+    public SavingResponse(Integer memberId, Integer savingId, LocalDate savingYmd, LocalTime savingTime, int amount, String categoryName, List<BadgeResponse> badgeResponseList) {
         this.memberId = memberId;
         this.savingId = savingId;
         this.savingYmd = savingYmd;
         this.savingTime = savingTime;
         this.amount = amount;
         this.categoryName = categoryName;
+        this.badgeResponseList = badgeResponseList;
     }
 }
