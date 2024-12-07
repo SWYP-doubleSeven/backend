@@ -10,6 +10,7 @@
         WHERE YEAR(SAVING_YMD) = #{year}
           AND MONTH(SAVING_YMD) = #{month}
           AND MEMBER_ID = #{memberId}
+          AND IS_DELETE = 'N'
     </select>
 
     <!-- 카테고리별 통계 조회 -->
@@ -24,6 +25,7 @@
             WHERE YEAR(s1.SAVING_YMD) = #{year}
               AND MONTH(s1.SAVING_YMD) = #{month}
               AND MEMBER_ID = #{memberId}
+              AND IS_DELETE = 'N'
             GROUP BY s2.SUB_CATEGORY_ID, s2.SUB_CATEGORY_NAME
         )
         SELECT
@@ -44,6 +46,7 @@
         WHERE YEAR(SAVING_YMD) = #{year}
           AND MONTH(SAVING_YMD) = #{month}
           AND MEMBER_ID = #{memberId}
+          AND IS_DELETE = 'N'
         GROUP BY HOUR(RGST_DT)
         ORDER BY hour
     </select>
