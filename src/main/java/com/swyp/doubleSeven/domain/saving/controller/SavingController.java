@@ -41,21 +41,54 @@ public class SavingController {
     private final AuthenticationUtil authenticationUtil;
 
     // 가상 소비 등록
-    @Operation(summary = "가상 소비 등록", description = "새로운 가상 소비 항목을 등록합니다.",
+    @Operation(summary = "가상 소비 등록", description = "새로운 가상 소비 항목을 등록합니다. " +
+            "글을 등록함과 동시에 뱃지 획득 조건에 달성하면 badgeResponseList에 응답값이 존재하고, 획득하는 뱃지가 없다면 []를 응답합니다.",
             security = {@SecurityRequirement(name = "cookieAuth")})
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "가상 소비 등록 성공",
-                    content = @Content(mediaType = "application/json",
-                            examples = @ExampleObject(value = """
-                            {
-                                "memberId": 15,
-                                "savingId": 124,
-                                "savingYmd": "2024-12-03",
-                                "amount": 56330,
-                                "categoryName": "meal"
-                            }
-                            """)))
-    })
+    @ApiResponse(
+            responseCode = "201",
+            description = "가상 소비 등록 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = SavingResponse.class),
+                    examples = @ExampleObject(
+                            value = """
+            {
+                "memberId": 15,
+                "savingId": 129,
+                "savingYmd": "2024-12-03",
+                "amount": 56330,
+                "categoryName": "meal",
+                "badgeResponseList": [
+                    {
+                        "badgeId": 2,
+                        "badgeName": "가치를 새기다",
+                        "emblemPath": "https://aws.s3.address/badge_image/badge_mark+the+moment.png",
+                        "badgeType": "LOG",
+                        "badgeDescription": "처음 가계부 작성",
+                        "operator": ">=",
+                        "value": "1",
+                        "count": 0,
+                        "rgstDt": "2024-11-30 20:54:05",
+                        "acquireYN": "Y"
+                    },
+                    {
+                        "badgeId": 5,
+                        "badgeName": "절약의 시작",
+                        "emblemPath": "https://aws.s3.address/badge_image/badge_saving+start.png",
+                        "badgeType": "MONEY",
+                        "badgeDescription": "만원 이상 절약",
+                        "operator": ">=",
+                        "value": "10000",
+                        "count": 0,
+                        "rgstDt": "2024-11-30 20:54:05",
+                        "acquireYN": "Y"
+                    }
+                ]
+            }
+            """
+                    )
+            )
+    )
     @SecurityRequirement(name = "cookieAuth")
     @AuthCheck
     @PostMapping
