@@ -23,11 +23,4 @@ public class BadgeAcquireServiceImpl implements BadgeAcquireService {
         return badgeAcquireDAO.getMaxMoneyMemberList();
     }
 
-    public int insertBadgeAcquireAfterSaving(BadgeAcquireRequest badgeAcquireRequest) {
-        return badgeAcquireDAO.insertBadgeAcquireAfterSaving(badgeAcquireRequest);
-    }
-    public int insertBadgeAcquireAfterLogin(BadgeAcquireRequest badgeAcquireRequest) {
-        return badgeAcquireDAO.insertBadgeAcquireAfterLogin(badgeAcquireRequest);
-    }
-
 }

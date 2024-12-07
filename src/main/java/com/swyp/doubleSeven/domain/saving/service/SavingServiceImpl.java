@@ -3,7 +3,7 @@ package com.swyp.doubleSeven.domain.saving.service;
 import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO;
 import com.swyp.doubleSeven.domain.common.category.error.CategoryError;
-import com.swyp.doubleSeven.domain.common.category.service.CategoryService;
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.common.util.CommonAspect;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,9 +39,10 @@ public class SavingServiceImpl implements SavingService{
     public SavingResponse createVirtualItem (SavingRequest savingRequest) {
         int result = savingDAO.insertSaving(savingRequest);
 
+        List<BadgeResponse> badgeResponseList = new ArrayList<>();
         if(result >0) {
             incrementCategoryCount(savingRequest);
-            commonAspect.afterSaving(savingRequest);
+            badgeResponseList = commonAspect.afterSaving(savingRequest);
         }
 
         // Insert 성공 후 로그로 확인
@@ -53,6 +54,7 @@ public class SavingServiceImpl implements SavingService{
                 .savingYmd(savingRequest.getSavingYmd())
                 .amount(savingRequest.getAmount())
                 .categoryName(savingRequest.getCategoryName())
+                .badgeResponseList(badgeResponseList)
                 .build();
     }
 

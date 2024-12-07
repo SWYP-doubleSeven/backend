@@ -1,8 +1,10 @@
 package com.swyp.doubleSeven.domain.member.dto.response;
 
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,4 +22,5 @@ public class MemberResponse {
     private String dltnYn;
     private LocalDateTime rgstDt;
     private LocalDateTime updtDt;
+    private List<BadgeResponse> badgeResponseList;
 }
