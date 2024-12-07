@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -30,8 +31,9 @@ public class SavingServiceImpl implements SavingService{
     @Override
     public SavingResponse createVirtualItem (SavingRequest savingRequest) {
         int result = savingDAO.insertSaving(savingRequest);
+        List<BadgeResponse> badgeResponseList = new ArrayList<>();
         if(result >0) {
-            List<BadgeResponse> badgeResponseList = commonAspect.afterSaving(savingRequest);
+            badgeResponseList = commonAspect.afterSaving(savingRequest);
         }
 
         // Insert 성공 후 로그로 확인
@@ -43,6 +45,7 @@ public class SavingServiceImpl implements SavingService{
                 .savingYmd(savingRequest.getSavingYmd())
                 .amount(savingRequest.getAmount())
                 .categoryName(savingRequest.getCategoryName())
+                .badgeResponseList(badgeResponseList)
                 .build();
     }
 

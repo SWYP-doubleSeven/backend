@@ -1,6 +1,7 @@
 package com.swyp.doubleSeven.domain.member.controller;
 
 import com.swyp.doubleSeven.common.util.CommonAspect;
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,7 +33,10 @@ public class MemberController {
         session.setAttribute("memberNickname", memberResponse.getMemberNickname());
         session.setAttribute("loginType", memberResponse.getLoginType());
         session.setAttribute("role", memberResponse.getRole());
-        commonAspect.afterLogin(memberResponse.getMemberId().intValue());
+
+        List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
+        memberResponse.setBadgeResponseList(badgeResponseList);
+
         return ResponseEntity.ok(memberResponse);
     }
 }

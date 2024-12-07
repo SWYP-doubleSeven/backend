@@ -30,8 +30,10 @@ public class KakaoApiClient {
 
 //        params.add("redirect_uri", "http://localhost:3000/loginNick");
         if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
+            log.debug("로컬환경");
             params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
         } else {
+            log.debug("운영환경");
             params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
 
         }

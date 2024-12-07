@@ -24,10 +24,10 @@ public class SavingRequest {
     @Schema(description = "가상 소비 일자", example = "2024-03-27")
     private LocalDate savingYmd; // 가상 소비 일자
 
-    @Schema(description = "카테고리명", example = "식비")
+    @Schema(description = "카테고리명", example = "meal")
     private String categoryName; // 하위 카테고리명
 
-    @Schema(description = "가상 소비 금액", example = "meal")
+    @Schema(description = "가상 소비 금액", example = "10000")
     private int amount; // 가상 소비 금액
 
     @Builder
