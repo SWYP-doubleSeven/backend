@@ -29,14 +29,15 @@ public class KakaoApiClient {
         params.add("code", authorizationCode);
 
 //        params.add("redirect_uri", "http://localhost:3000/loginNick");
-        if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
-            log.debug("로컬환경");
-            params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
-        } else {
-            log.debug("운영환경");
-            params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
-
-        }
+        params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+//        if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
+//            log.debug("로컬환경");
+//            params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
+//        } else {
+//            log.debug("운영환경");
+//            params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+//
+//        }
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         try {
