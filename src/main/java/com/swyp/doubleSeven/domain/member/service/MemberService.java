@@ -21,8 +21,8 @@ public class MemberService {
     private final KakaoApiClient kakaoApiClient;
     private final MemberDAO memberDAO;
 
-    public String getKakaoAccessToken(String authorizationCode) {
-        return kakaoApiClient.requestAccessToken(authorizationCode);
+    public String getKakaoAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
+        return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
     }
 
     public MemberResponse processKakaoUser(String accessToken) {

@@ -7,10 +7,10 @@ server:
 # DataBase
 spring:
   datasource:
-    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-    url: ${{secrets.db_url}}
-    username: ${{secrets.db_username}}
-    password: ${{secrets.db_password}}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db-2voai5-kr.vpc-pub-cdb.ntruss.com/mysql-db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
+    username: ncp-user
+    password: cfvg@#618QL58!Da
   profiles:
     include: oauth
 
@@ -18,3 +18,9 @@ spring:
 mybatis:
   config-location: classpath:mybatis/mybatis-config.xml
   mapper-locations: classpath:mybatis/mapper/**/*.xml
+
+# Logging
+logging:
+  level:
+    com.swyp.doubleSeven: DEBUG  # 패키지 로그 레벨
+    org.mybatis: DEBUG          # MyBatis 로그 활성화

@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String requestAccessToken(String authorizationCode) {
+    public String requestAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
         String url = "https://kauth.kakao.com/oauth/token";
 
         HttpHeaders headers = new HttpHeaders();
@@ -29,15 +29,15 @@ public class KakaoApiClient {
         params.add("code", authorizationCode);
 
 //        params.add("redirect_uri", "http://localhost:3000/loginNick");
-        params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
-//        if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
-//            log.debug("로컬환경");
-//            params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
-//        } else {
-//            log.debug("운영환경");
-//            params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
-//
-//        }
+//        params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+        if(CommonUtil.isLocalEnvironment(httpServletRequest)) {
+            log.debug("로컬환경");
+            params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
+        } else {
+            log.debug("운영환경");
+            params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+
+        }
 
         // 로그 추가
         log.info("Requesting Access Token with Authorization Code: {}", authorizationCode);

@@ -13,10 +13,4 @@ public interface BadgeCountDAO {
     int insertAttendance(Integer memberId);
     AttendanceResponse getAttendance(Integer memberId);
 
-
-    /* 사용자 활동에 따른 기록(BADGE_COUNT 관련) */
-    BadgeCountResponse getBadgeCount(BadgeCountRequest badgeCountRequest);
-    int insertBadgeCount(BadgeCountRequest badgeCountRequest);
-    int updateBadgeCount(BadgeCountRequest badgeCountRequest);
-
 }
