@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 public class KakaoApiClient {
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public String requestAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
+    public String requestAccessToken(String authorizationCode) {
         String url = "https://kauth.kakao.com/oauth/token";
 
         HttpHeaders headers = new HttpHeaders();
