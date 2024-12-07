@@ -17,6 +17,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @Schema(description = "가상 소비 응답")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SavingResponse {
 
     @Schema(description = "멤버 ID", example = "1")
