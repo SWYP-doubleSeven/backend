@@ -7,10 +7,11 @@
 
     <typeAliases>
         <typeAlias alias="SavingRequest" type="com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest"/>
-            <typeAlias alias="BadgeRequest" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest"/>
-            <typeAlias alias="BadgeSearchCriteria" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria"/>
-            <typeAlias alias="BadgeCountRequest" type="com.swyp.doubleSeven.domain.badgeCount.dto.request.BadgeCountRequest"/>
-            <typeAlias alias="BadgeAcquireRequest" type="com.swyp.doubleSeven.domain.badgeAcquire.dto.request.BadgeAcquireRequest"/>
+        <typeAlias alias="BadgeRequest" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest"/>
+        <typeAlias alias="BadgeSearchCriteria" type="com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria"/>
+        <typeAlias alias="BadgeCountRequest" type="com.swyp.doubleSeven.domain.badgeCount.dto.request.BadgeCountRequest"/>
+        <typeAlias alias="BadgeAcquireRequest" type="com.swyp.doubleSeven.domain.badgeAcquire.dto.request.BadgeAcquireRequest"/>
+        <typeAlias alias="MemberRequest" type="com.swyp.doubleSeven.domain.member.dto.request.MemberRequest"/>
     </typeAliases>
 
     <mappers>

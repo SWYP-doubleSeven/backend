@@ -27,41 +27,54 @@ public class MemberService {
 
     public MemberResponse processKakaoUser(String accessToken) {
         KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        MemberResponse existingMember = memberDAO.findMemberByOauthProviderAndMemberId("KAKAO", kakaoUser.getKeyId());
+        MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(String.valueOf(kakaoUser.getKeyId()));
 
-        MemberRequest.MemberRequestBuilder memberRequestBuilder = MemberRequest.builder()
-                .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
-                .loginType(LoginType.KAKAO.getType())
-                .memberNickname(kakaoUser.getNickname())
-                .email(kakaoUser.getEmail())
-                .role(Role.MEMBER.getType())
-                .dltnYn("N")
-                .rgstId(0)
-                .rgstDt(LocalDateTime.now())
-                .updtId(0)
-                .updtDt(LocalDateTime.now());
+        Integer memberId = null;
+        if (existingMember == null) { // 신규 회원 처리
+            MemberRequest newMemberRequest = MemberRequest.builder()
+                    .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
+                    .loginType(LoginType.KAKAO.getType())
+                    .memberNickname(createRandomNickname())
+                    .email(kakaoUser.getEmail())
+                    .role(Role.MEMBER.getType())
+                    .dltnYn("N")
+                    .rgstId(0)
+                    .rgstDt(LocalDateTime.now())
+                    .updtId(0)
+                    .updtDt(LocalDateTime.now())
+                    .build();
 
-        if (existingMember == null) {
-            // 신규 회원 처리
-            memberDAO.insertMember(memberRequestBuilder.build());
+            memberDAO.insertMember(newMemberRequest);
+            memberId = newMemberRequest.getMemberId();
+
         } else {
-            // 기존 회원 처리
-            memberRequestBuilder.memberId(existingMember.getMemberId())
-                    .updtId("GUEST".equals(existingMember.getLoginType()) ? 0 : existingMember.getMemberId())
-                    .memberNickname(existingMember.getMemberNickname())
-                    .email(existingMember.getEmail());
+            memberId = existingMember.getMemberId();
+            if(LoginType.GUEST.getType().equals(existingMember.getLoginType())) {
 
-            memberDAO.updateMember(memberRequestBuilder.build());
+                MemberRequest guestToKakaoMemberRequest = MemberRequest.builder()
+                        .memberId(existingMember.getMemberId())
+                        .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
+                        .loginType(LoginType.KAKAO.getType())
+                        .memberNickname(createRandomNickname())
+                        .email(existingMember.getEmail())
+                        .role(Role.MEMBER.getType())
+                        .dltnYn("N")
+                        .rgstId(0)
+                        .rgstDt(LocalDateTime.now())
+                        .updtId(0)
+                        .updtDt(LocalDateTime.now())
+                        .build();
+
+                memberDAO.updateMember(guestToKakaoMemberRequest);
+            }
         }
 
         // MemberResponse 생성
-        return MemberResponse.builder()
-                .memberId(memberRequestBuilder.memberKeyId(String.valueOf(kakaoUser.getKeyId())).build().getMemberId())
-                .memberNickname(memberRequestBuilder.build().getMemberNickname())
-                .email(memberRequestBuilder.build().getEmail())
-                .role(memberRequestBuilder.build().getRole())
-                .loginType(memberRequestBuilder.build().getLoginType())
-                .build();
+        return memberDAO.findMemberByMemberId(memberId);
+    }
+
+    public MemberResponse findMemberByMemberId(Integer memberId) {
+        return memberDAO.findMemberByMemberId(memberId);
     }
 
     /* 랜덤 닉네임 생성 */
