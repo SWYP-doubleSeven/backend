@@ -1,7 +1,9 @@
 package com.swyp.doubleSeven.domain.saving.service;
 
-import com.swyp.doubleSeven.common.aspect.AuthenticationAspect;
 import com.swyp.doubleSeven.common.exception.BusinessException;
+import com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO;
+import com.swyp.doubleSeven.domain.common.category.error.CategoryError;
+import com.swyp.doubleSeven.domain.common.category.service.CategoryService;
 import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.common.util.CommonAspect;
 import com.swyp.doubleSeven.domain.common.enums.SortType;
@@ -14,7 +16,10 @@ import com.swyp.doubleSeven.domain.saving.dto.response.SavingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -23,13 +28,19 @@ import java.util.List;
 public class SavingServiceImpl implements SavingService{
 
     private final SavingDAO savingDAO;
+
     private final CommonAspect commonAspect;
+
+    private final CategoryDAO categoryDAO;
 
     // 가상 소비 등록
     @Override
+    @Transactional
     public SavingResponse createVirtualItem (SavingRequest savingRequest) {
         int result = savingDAO.insertSaving(savingRequest);
+
         if(result >0) {
+            incrementCategoryCount(savingRequest);
             commonAspect.afterSaving(savingRequest);
         }
 
@@ -59,8 +70,8 @@ public class SavingServiceImpl implements SavingService{
 
     // 가상 소비 조회 (리스트)
     @Override
-    public SavingListResponse getVirtualItemList(int year, int month, SortType sortType, Integer memberId) {
-        return savingDAO.selectSavingList(year, month, sortType, memberId);
+    public SavingListResponse getVirtualItemList(int year, int month, Integer memberId) {
+        return savingDAO.selectSavingList(year, month, memberId);
     }
 
 
@@ -82,7 +93,7 @@ public class SavingServiceImpl implements SavingService{
         }
     }
 
-    // 가상 소비 삭제
+    // 가상 소비 삭제 (소프트 삭제)
     @Override
     public int deleteVirtualItem (Integer savingId, Integer memberId) {
         int result = savingDAO.deleteSaving(savingId, memberId);
@@ -94,6 +105,20 @@ public class SavingServiceImpl implements SavingService{
         return result;
     }
 
+
+    // 가상 소비 복구 (데이터 복구)
+    @Override
+    public int cancleSavingDelete (Integer savingId, Integer memberId) {
+        int result = savingDAO.cancleSavingDelete(savingId, memberId);
+
+        if (result == 0) {
+            throw new BusinessException(Error.BAD_REQUEST);
+        }
+
+        return result;
+    }
+
+
     public static SavingRequest setSaving (SavingRequest request, Integer memberId) {
         return SavingRequest.builder()
                 .memberId(memberId)
@@ -101,5 +126,17 @@ public class SavingServiceImpl implements SavingService{
                 .categoryName(request.getCategoryName())
                 .amount(request.getAmount())
                 .build();
+    }
+
+    // 많이 사용한 순으로 카테고리 정렬
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public int incrementCategoryCount(SavingRequest savingRequest) {
+        int result = categoryDAO.incrementCategoryCount(savingRequest.getMemberId(), savingRequest.getCategoryName());
+        log.info("incrementCategoryCount result: {}, {}", savingRequest.getMemberId(), savingRequest.getCategoryName());
+        if (result == 0) {
+            throw new BusinessException(CategoryError.CATEGORY_COUNT_FAILED);
+        }
+
+        return result;
     }
 }

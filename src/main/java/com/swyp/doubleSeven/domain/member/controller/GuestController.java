@@ -30,7 +30,7 @@ public class GuestController {
             @ApiResponse(responseCode = "200", description = "로그인 성공"),
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
-    @PostMapping("/singin")
+    @PostMapping("/sign-in")
     public ResponseEntity<GuestLoginResponse> signInGuest (
             HttpServletRequest request,
             HttpServletResponse response) {

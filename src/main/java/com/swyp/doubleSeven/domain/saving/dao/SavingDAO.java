@@ -20,12 +20,7 @@ public interface SavingDAO {
     List<SavingCalendarDayInfoResponse> selectSavingMonthly (int year, int month, String categoryName, Integer memberId);
 
     // 가상 소비 조회 (리스트)
-    SavingListResponse selectSavingList (@Param("year") int year,
-                                         @Param("month") int month,
-                                         @Param("sortType") SortType sortType,
-                                         Integer memberId
-
-    );
+    SavingListResponse selectSavingList (@Param("year") int year, @Param("month") int month, Integer memberId);
 
     // 가상 소비 단건 조회
     SavingResponse selectSaving (Integer savingId, Integer memberId);
@@ -35,6 +30,10 @@ public interface SavingDAO {
                       @Param("savingRequest") SavingRequest savingRequest
     );
 
-    // 가상 소비 삭제
+    // 가상 소비 삭제 (소프트 삭제)
     int deleteSaving (Integer savingId, Integer memberId);
+
+    // 가상 소비 복구 (데이터 복구)
+    int cancleSavingDelete (Integer savingId, Integer memberId);
+
 }

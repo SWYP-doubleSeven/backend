@@ -1,11 +1,18 @@
 package com.swyp.doubleSeven.domain.common.category.service;
 
+import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.domain.common.category.dao.CategoryDAO;
 import com.swyp.doubleSeven.domain.common.category.dto.response.SubCategoryResponse;
 import com.swyp.doubleSeven.domain.common.category.dto.response.CategoryOrderResponse;
+import com.swyp.doubleSeven.domain.common.category.error.CategoryError;
+import com.swyp.doubleSeven.domain.common.enums.Error;
+import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
+import com.swyp.doubleSeven.domain.saving.dto.response.SavingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,8 +35,9 @@ public class CategoryServiceImpl implements CategoryService{
 
     // 카테고리 정렬
     @Override
-    public List<CategoryOrderResponse> getMonthlyCategoryRank(Integer memberId, int year, int month) {
-        return categoryDAO.selectMonthlyCategoryOrder(memberId, year, month);
+    public List<CategoryOrderResponse> countByCategory(Integer memberId, int year, int month) {
+        return categoryDAO.countByCategory(memberId, year, month);
     }
+
 
 }
