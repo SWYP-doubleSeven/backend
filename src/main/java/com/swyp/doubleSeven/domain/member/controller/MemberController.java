@@ -26,6 +26,11 @@ public class MemberController {
         /* step 1: 프론트에서 다음 url을 통해 호출
         * https://kauth.kakao.com/oauth/authorize?client_id=489a2f33bf9d90c59950291ca077adc9&redirect_uri=http://localhost:8090/api/auth/kakao-login&response_type=code
         * */
+        // 로그 추가
+        log.info("Received Authorization Code: {}", code);
+        log.info("Redirect URI Expected: http://3.39.123.15:8090/api/auth/kakao-login");
+
+
         String accessToken = memberService.getKakaoAccessToken(code);
         MemberResponse memberResponse = memberService.processKakaoUser(accessToken);
 
