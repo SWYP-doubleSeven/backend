@@ -1,7 +1,9 @@
 package com.swyp.doubleSeven.domain.saving.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,7 @@ public class SavingResponse {
     @Schema(description = "가상 소비 일자", example = "2024-03-27")
     private LocalDate savingYmd;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalTime savingTime;
 
     @Schema(description = "가상 소비 금액", example = "10000")
