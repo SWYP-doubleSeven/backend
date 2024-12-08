@@ -13,15 +13,6 @@
         <result property="todayLogin" column="TODAY_LOGIN"/>
     </resultMap>
 
-   <!-- BadgeCountResponse resultMap -->
-    <resultMap id="BadgeCountResultMap" type="com.swyp.doubleSeven.domain.badgeCount.dto.response.BadgeCountResponse">
-        <id property="countId" column="COUNT_ID"/>
-        <result property="memberId" column="MEMBER_ID"/>
-        <result property="badgeType" column="BADGE_TYPE"/>
-        <result property="count" column="COUNT"/>
-    </resultMap>
-
-
     <!-- 출석기록 조회 -->
     <select id="getAttendance" parameterType="java.lang.Integer" resultMap="AttendanceResultMap">
         SELECT
@@ -61,43 +52,6 @@
              COUNT = COUNT + 1,
              UPDT_DT = NOW()
         WHERE MEMBER_ID = #{memberId}
-    </update>
-
-
-    <!--뱃지카운트 조회-->
-    <select id="getBadgeCount" parameterType="BadgeCountRequest" resultMap="BadgeCountResultMap">
-        SELECT
-            COUNT_ID,
-            MEMBER_ID,
-            BADGE_TYPE,
-            COUNT
-        FROM BADGE_COUNT
-        WHERE 1=1
-        AND MEMBER_ID = #{memberId}
-        AND BADGE_TYPE = #{badgeType}
-    </select>
-
-    <!--뱃지카운트 등록-->
-    <insert id="insertBadgeCount" parameterType="BadgeCountRequest">
-        INSERT INTO BADGE_COUNT (
-            MEMBER_ID,
-            BADGE_TYPE,
-            COUNT
-        ) VALUES (
-            #{memberId},
-            #{badgeType},
-            #{count}
-        )
-    </insert>
-
-    <!--뱃지카운트 수정-->
-    <update id="updateBadgeCount" parameterType="BadgeCountRequest">
-        UPDATE BADGE_COUNT SET
-             `COUNT` = `COUNT` + #{count}
-        WHERE 1=1
-        AND MEMBER_ID = #{memberId}
-        AND BADGE_TYPE = #{badgeType}
-        AND COUNT_ID = #{countId}
     </update>
 
 

@@ -24,4 +24,5 @@ public class BadgeRequest {
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
     }
+    public void setEmblemPath(String emblemPath) {this.emblemPath = emblemPath; }
 }
