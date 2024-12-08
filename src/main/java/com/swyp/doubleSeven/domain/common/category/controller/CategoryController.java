@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -37,27 +38,53 @@ public class CategoryController {
 
     // 하위 카테고리명 조회
     @Operation(summary = "하위 카테고리명 목록 조회", description = "등록된 모든 하위 카테고리의 이름 목록을 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "조회 성공",
-                    content = @Content(schema = @Schema(implementation = SubCategoryResponse.class))
+    @ApiResponse(
+            responseCode = "200",
+            description = "조회 성공",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = CategoryOrderResponse.class),
+                    examples = @ExampleObject(
+                            value = """
+            [
+                {
+                    "categoryName": "meal",
+                    "categoryCount": 5
+                },
+                {
+                    "categoryName": "taxi",
+                    "categoryCount": 1
+                }
+            ]
+            """
+                    )
             )
-    })
+    )
     @GetMapping("/names")
     public ResponseEntity<SubCategoryResponse> getSubCategoryNames () {
         return ResponseEntity.ok(categoryService.getSubCategoryNames());
     }
 
     // 카테고리 정렬
-    @Operation(summary = "카테고리 정렬", description = "해당월에 카테고리별 총액이 높은 순으로 응답합니다.",
+    @Operation(summary = "카테고리 정렬", description = "해당월에 많이 사용한 카테고리 순으로 정렬됩니다.",
             security = {@SecurityRequirement(name = "cookieAuth")})
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
                     description = "조회 성공",
-                    content = @Content(schema = @Schema(implementation = CategoryOrderResponse.class))
-            )
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(value = """
+                                    [
+                                      {
+                                        "categoryName": "meal",
+                                        "categoryCount": 5
+                                      },
+                                      {
+                                        "categoryName": "taxi",
+                                        "categoryCount": 1
+                                      }
+                                    ]
+                            """)))
     })
     @SecurityRequirement(name = "cookieAuth")
     @VaildateResourceOwner
@@ -67,6 +94,6 @@ public class CategoryController {
             @Parameter(description = "조회할 월 (1-12)", in = ParameterIn.PATH) @PathVariable int month
     ) {
         Integer currentMemberId = authenticationUtil.getCurrentMemberId();
-        return ResponseEntity.ok(categoryService.getMonthlyCategoryRank(currentMemberId, year, month));
+        return ResponseEntity.ok(categoryService.countByCategory(currentMemberId, year, month));
     }
 }

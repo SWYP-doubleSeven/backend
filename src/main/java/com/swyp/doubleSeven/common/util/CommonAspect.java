@@ -46,13 +46,9 @@ public class CommonAspect {
     }
 
     public List<BadgeResponse> afterSaving(SavingRequest savingRequest) {
-//        Integer memberId = (Integer)(httpServletRequest.getSession().getAttribute("memberId"));
-        Integer memberId = 3; // todo
-        BadgeCountRequest badgeCountRequest = new BadgeCountRequest();
-        if(memberId == null) {
-            throw new IllegalStateException("세션에 memberId가 없습니다. 로그인 상태를 확인하세요.");
-        }
+        Integer memberId = savingRequest.getMemberId();
 
+        BadgeCountRequest badgeCountRequest = new BadgeCountRequest();
         badgeCountRequest.setMemberId(memberId);
         badgeCountRequest.setBadgeType(BadgeType.LOG.getName());
         badgeCountRequest.setCount(1);
