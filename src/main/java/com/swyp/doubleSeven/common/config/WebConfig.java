@@ -17,6 +17,9 @@ public class WebConfig implements WebMvcConfigurer {
                         HttpMethod.POST.name(),
                         HttpMethod.PUT.name(),
                         HttpMethod.DELETE.name()
-                );
+                )
+                .allowCredentials(true)  // 쿠키 전송을 위한 설정
+                .allowedHeaders("*")     // 모든 헤더 허용
+                .exposedHeaders("*");
     }
 }
