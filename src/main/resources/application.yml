@@ -5,24 +5,14 @@ server:
     context-path: /
 
 # DataBase
-# DataBase
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-2voai5-kr.vpc-pub-cdb.ntruss.com/mysql-db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
-    username: ncp-user
-    password: aa
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ${{secrets.db_url}}
+    username: ${{secrets.db_username}}
+    password: ${{secrets.db_password}}
   profiles:
     include: oauth
-  OAuth2: #social login
-    google:
-      url: https://accounts.google.com/o/oauth2/v2/auth
-      client-id: 706072512947-9re2csup517dockpeem4a7tq777gvt9d.apps.googleusercontent.com
-      client-secret: aa
-      callback-url: http://localhost:8090/login/oauth2/code/google
-      scope: https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile
-
-
 
 # MyBatis
 mybatis:

@@ -42,7 +42,7 @@ public class SavingServiceImpl implements SavingService{
         List<BadgeResponse> badgeResponseList = new ArrayList<>();
         if(result >0) {
             incrementCategoryCount(savingRequest);
-            badgeResponseList = commonAspect.afterSaving(savingRequest);
+            badgeResponseList = commonAspect.afterSaving(savingRequest.getMemberId());
         }
 
         // Insert 성공 후 로그로 확인
