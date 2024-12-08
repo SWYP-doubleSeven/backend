@@ -1,15 +1,10 @@
 package com.swyp.doubleSeven.domain.badgeCount.service;
 
 import com.swyp.doubleSeven.domain.badgeCount.dao.BadgeCountDAO;
-import com.swyp.doubleSeven.domain.badgeCount.dto.request.BadgeCountRequest;
 import com.swyp.doubleSeven.domain.badgeCount.dto.response.AttendanceResponse;
-import com.swyp.doubleSeven.domain.badgeCount.dto.response.BadgeCountResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.sql.SQLException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,19 +23,4 @@ public class BadgeCountServiceImpl implements BadgeCountService {
         }
         return result;
     }
-    public int upsertBadgeCount(BadgeCountRequest badgeCountRequest) {
-        BadgeCountResponse badgeCount = badgeCountDAO.getBadgeCount(badgeCountRequest);
-        int result = 0;
-        if(badgeCount == null) { // insert
-            return badgeCountDAO.insertBadgeCount(badgeCountRequest);
-        } else { // update
-            badgeCountRequest.setCountId(badgeCount.getCountId());
-            return badgeCountDAO.updateBadgeCount(badgeCountRequest);
-        }
-    }
-
-    public BadgeCountResponse getBadgeCount(BadgeCountRequest badgeCountRequest) {
-        return badgeCountDAO.getBadgeCount(badgeCountRequest);
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.badge.controller;
 
+import com.swyp.doubleSeven.common.aspect.AuthenticationUtil;
 import com.swyp.doubleSeven.common.util.CommonUtil;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
@@ -25,6 +26,8 @@ public class UserBadgeController {
 
     private final UserBadgeService service;
 
+    private final AuthenticationUtil authenticationUtil;
+
     @GetMapping("/{badgeId}")
     @Operation(summary = "사용자-뱃지 단건조회", description = "사용자가 뱃지 하나를 조회합니다")
     public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId, HttpServletRequest httpServletRequest, HttpSession session) {
@@ -43,7 +46,7 @@ public class UserBadgeController {
     @GetMapping("/list")
     @Operation(summary = "사용자-뱃지 목록조회", description = "사용자가 뱃지 목록을 조회합니다")
     public ResponseEntity<List<BadgeResponse>> getBadgeList() {
-        Integer memberId = 1; // todo : session에서 가져오는걸로 수정(-)
+        Integer memberId = authenticationUtil.getCurrentMemberId();
         return ResponseEntity.status(HttpStatus.OK).body(service.getBadgeList(memberId));
     }
 }

@@ -28,14 +28,6 @@ public class CommonAspect {
 
         int result = badgeCountController.upsertMemberAttendance(memberId);
         if(result > 0) { // 당일 로그인 2회이상->카운트X
-            BadgeCountRequest badgeCountRequest = BadgeCountRequest.builder()
-                    .memberId(memberId)
-                    .badgeType(BadgeType.ATTENDANCE.getName())
-                    .count(1)
-                    .build();
-
-            badgeCountController.upsertBadgeCount(badgeCountRequest);
-
             LocalDate cureentDate = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String yyyymmdd = cureentDate.format(formatter);
@@ -45,20 +37,7 @@ public class CommonAspect {
         return new ArrayList();
     }
 
-    public List<BadgeResponse> afterSaving(SavingRequest savingRequest) {
-        Integer memberId = savingRequest.getMemberId();
-
-        BadgeCountRequest badgeCountRequest = new BadgeCountRequest();
-        badgeCountRequest.setMemberId(memberId);
-        badgeCountRequest.setBadgeType(BadgeType.LOG.getName());
-        badgeCountRequest.setCount(1);
-        badgeCountRequest.setMemberId(memberId);
-        badgeCountController.upsertBadgeCount(badgeCountRequest); // 기록 카운트
-
-        badgeCountRequest.setCount(savingRequest.getAmount());
-        badgeCountRequest.setBadgeType(BadgeType.MONEY.getName());
-        badgeCountController.upsertBadgeCount(badgeCountRequest); // 금액 카운트
-
+    public List<BadgeResponse> afterSaving(Integer memberId) {
         return badgeAcquireController.insertBadgeAcquireAfterSaving(memberId);
     }
 }
