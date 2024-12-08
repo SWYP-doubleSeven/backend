@@ -1,7 +1,5 @@
 package com.swyp.doubleSeven.domain.badge.controller;
 
-import com.swyp.doubleSeven.common.aspect.AuthInfo;
-import com.swyp.doubleSeven.common.aspect.AuthenticationAspect;
 import com.swyp.doubleSeven.common.aspect.AuthenticationUtil;
 import com.swyp.doubleSeven.common.util.CommonUtil;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;

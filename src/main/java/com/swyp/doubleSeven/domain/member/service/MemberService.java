@@ -25,17 +25,17 @@ public class MemberService {
         return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
     }
 
-    public MemberResponse processKakaoUser(String accessToken) {
-        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(String.valueOf(kakaoUser.getKeyId()));
+    public MemberResponse processKakaoUser(String memberKeyId) {
+//        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
+        MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
 
         Integer memberId = null;
         if (existingMember == null) { // 신규 회원 처리
             MemberRequest newMemberRequest = MemberRequest.builder()
-                    .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
+                    .memberKeyId(String.valueOf(memberKeyId))
                     .loginType(LoginType.KAKAO.getType())
                     .memberNickname(createRandomNickname())
-                    .email(kakaoUser.getEmail())
+                    .email(null)
                     .role(Role.MEMBER.getType())
                     .dltnYn("N")
                     .rgstId(0)
@@ -53,7 +53,7 @@ public class MemberService {
 
                 MemberRequest guestToKakaoMemberRequest = MemberRequest.builder()
                         .memberId(existingMember.getMemberId())
-                        .memberKeyId(String.valueOf(kakaoUser.getKeyId()))
+                        .memberKeyId(memberKeyId)
                         .loginType(LoginType.KAKAO.getType())
                         .memberNickname(createRandomNickname())
                         .email(existingMember.getEmail())
