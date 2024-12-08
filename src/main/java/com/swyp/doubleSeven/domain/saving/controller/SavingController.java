@@ -90,7 +90,7 @@ public class SavingController {
             )
     )
     @SecurityRequirement(name = "cookieAuth")
-    //@AuthCheck
+    @AuthCheck
     @PostMapping
     public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest) {
         log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
@@ -146,7 +146,7 @@ public class SavingController {
                             """)))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping ("/calendar/{year}/{month}")
     public ResponseEntity<SavingCalendarResponse> getVirtualItemMonthly (
@@ -217,7 +217,7 @@ public class SavingController {
                             """)))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/list/{year}/{month}")
     public ResponseEntity<SavingListResponse> getSavingList(
@@ -245,7 +245,7 @@ public class SavingController {
                             """)))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/{savingId}")
     public ResponseEntity<SavingResponse> getVirtualItem (
@@ -265,7 +265,7 @@ public class SavingController {
                             examples = @ExampleObject(value = "가상 소비 수정 성공")))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PutMapping("/{savingId}")
     public ResponseEntity<String> updateVirtualItem (
@@ -287,7 +287,7 @@ public class SavingController {
                             examples = @ExampleObject(value = "가상 소비 삭제 성공")))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @DeleteMapping("/{savingId}")
     public ResponseEntity<String> deleteVirtualItem (
@@ -306,7 +306,7 @@ public class SavingController {
                             examples = @ExampleObject(value = "가상 소비 복구 성공")))
     })
     @SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PatchMapping("/{savingId}")
     public ResponseEntity<String> cancleSavingDelete (
