@@ -17,7 +17,7 @@ public interface SavingService {
     SavingCalendarResponse getVirtualItemMonthly (int year, int month, String categoryName, Integer memberId);
 
     // 가상 소비 조회 (리스트)
-    SavingListResponse getVirtualItemList (int year, int month, SortType sortType, Integer memberId);
+    SavingListResponse getVirtualItemList (int year, int month, Integer memberId);
 
     // 가상 소비 조회 (캘린더/리스트)
     //List<SavingListResponse> getVirtualItemList (LocalDate yearMonth, Integer subCategoryId, SortType sortType);
@@ -28,6 +28,9 @@ public interface SavingService {
     // 가상 소비 수정
     void updateVirtualItem (Integer savingId, SavingRequest savingRequest);
     
-    // 가상 소비 삭제
+    // 가상 소비 삭제 (소프트 삭제)
     int deleteVirtualItem (Integer savingId, Integer memberId);
+
+    // 가상 소비 복구 (데이터 복구)
+    int cancleSavingDelete (Integer savingId, Integer memberId);
 }

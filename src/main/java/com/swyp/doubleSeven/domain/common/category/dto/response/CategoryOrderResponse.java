@@ -6,9 +6,10 @@ import lombok.Getter;
 @Getter
 @Schema(description = "카테고리 정렬 순서 정보")
 public class CategoryOrderResponse {
+
     @Schema(description = "카테고리명", example = "coffee")
     private String categoryName;
 
-    @Schema(description = "카테고리 총액", example = "50000")
-    private long categoryTotalAmount;
+    @Schema(description = "카테고리 사용 횟수", example = "5")
+    private long categoryCount;
 }

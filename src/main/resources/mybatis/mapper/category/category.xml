@@ -16,7 +16,7 @@
         <result property="categoryTotalAmount" column="TOTAL_AMOUNT"/>
     </resultMap>
 
-    <select id="selectMonthlyCategoryOrder" resultMap="categoryOrderMap">
+<!--    <select id="selectMonthlyCategoryOrder" resultMap="categoryOrderMap">
         SELECT
             sub.SUB_CATEGORY_NAME,
             COALESCE(SUM(s.AMOUNT), 0) as TOTAL_AMOUNT
@@ -31,6 +31,36 @@
         HAVING TOTAL_AMOUNT > 0
         ORDER BY
             TOTAL_AMOUNT DESC
+    </select>-->
+
+
+    <!-- Insert Saving시 Category count 테이블에도 insert -->
+    <insert id="incrementCategoryCount">
+        INSERT INTO CATEGORY_COUNT (MEMBER_ID, SUB_CATEGORY_ID, COUNT)
+        SELECT
+            #{memberId},
+            sc.SUB_CATEGORY_ID,
+            1
+        FROM SUB_CATEGORY sc
+        WHERE sc.SUB_CATEGORY_NAME = #{categoryName}
+            ON DUPLICATE KEY UPDATE
+                                 COUNT = CATEGORY_COUNT.COUNT + 1
+    </insert>
+
+    <!-- 자주 사용한 순으로 카테고리 정렬 -->
+    <select id="countByCategory" resultType="com.swyp.doubleSeven.domain.common.category.dto.response.CategoryOrderResponse">
+        SELECT
+            sc.SUB_CATEGORY_NAME as categoryName,
+            COUNT(*) as categoryCount
+        FROM SAVING s
+                 JOIN SUB_CATEGORY sc ON s.SUB_CATEGORY_ID = sc.SUB_CATEGORY_ID
+        WHERE s.IS_DELETE = 'N'
+          AND s.MEMBER_ID = #{memberId}
+          AND YEAR(s.SAVING_YMD) = #{year}
+          AND MONTH(s.SAVING_YMD) = #{month}
+        GROUP BY sc.SUB_CATEGORY_NAME
+        ORDER BY categoryCount DESC
     </select>
+
 
 </mapper>
