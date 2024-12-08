@@ -3,16 +3,44 @@ server:
   port: 8090
   servlet:
     context-path: /
+  tomcat:
+    connection-timeout: 30s # 요청 처리 타임아웃
 
 # DataBase
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-2voai5-kr.vpc-pub-cdb.ntruss.com/mysql-db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Seoul
-    username: ncp-user
-    password: cfvg@#618QL58!Da
+    url: ${{secrets.db_url}}
+    username: ${{secrets.db_username}}
+    password: ${{secrets.db_password}}
   profiles:
     include: oauth
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    async:
+      request-timeout: 30s # 비동기 요청 타임아웃
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+
+# claud
+cloud:
+  aws:
+    s3:
+      bucket: zerocost-image-bucket
+    credentials:
+      access-key: ${{secrets.aws_access_key}}
+      secret-key: ${{secrets.aws_secret_key}}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 # MyBatis
 mybatis:
