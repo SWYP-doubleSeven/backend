@@ -1,9 +1,11 @@
 package com.swyp.doubleSeven.domain.badge.controller;
 
+import com.swyp.doubleSeven.common.aspect.anotation.AuthCheck;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.badge.service.AdminBadgeService;
+import com.swyp.doubleSeven.domain.common.enums.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class AdminBadgeController {
     private final AdminBadgeService adminBadgeService;
 
     @PutMapping
+    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 등록", description = "관리자가 뱃지를 등록합니다")
     public ResponseEntity<BadgeResponse> insertBadge(@RequestBody BadgeRequest badgeRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(adminBadgeService.insertBadge(badgeRequest));

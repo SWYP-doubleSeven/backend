@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 public @interface AuthCheck {
 
     // 허용되는 로그인 타입
-    LoginType[] allowedTypes () default {LoginType.KAKAO, LoginType.GUEST};
+    LoginType[] allowedTypes () default {LoginType.GOOGLE, LoginType.KAKAO, LoginType.GUEST};
 
     // 허용되는 역할
     Role[] allowedRoles () default {Role.ADMIN, Role.MEMBER, Role.GUEST};
