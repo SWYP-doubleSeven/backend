@@ -32,7 +32,7 @@ public class AdminBadgeController {
     private final CommonImageUploader commonImageUploader;
 
     @PutMapping
-    //@AuthCheck(allowedRoles = Role.ADMIN)
+    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 등록", description = "관리자가 뱃지를 등록합니다")
     public ResponseEntity<BadgeResponse> insertBadge(
             @RequestPart(value = "badgeRequest") String badgeRequestJson,
@@ -67,14 +67,14 @@ public class AdminBadgeController {
     }
 
     @PostMapping
-    //@AuthCheck(allowedRoles = Role.ADMIN)
+    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 수정", description = "관리자가 뱃지를 수정합니다")
     public ResponseEntity<BadgeResponse> updateBadge( @RequestBody BadgeRequest badgeRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(adminBadgeService.updateBadge(badgeRequest));
     }
 
     @DeleteMapping("/{badgeId}")
-    //@AuthCheck(allowedRoles = Role.ADMIN)
+    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 삭제", description = "관리자가 뱃지를 삭제합니다")
     public ResponseEntity<BadgeResponse> deleteBadge(@PathVariable Integer badgeId) {
         adminBadgeService.deleteBadge(badgeId);
@@ -82,7 +82,7 @@ public class AdminBadgeController {
     }
 
     @PostMapping("/list")
-    //@AuthCheck(allowedRoles = Role.ADMIN)
+    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "관리자-뱃지 목록조회", description = "관리자가 뱃지 목록을 조회합니다")
     public ResponseEntity<List<BadgeResponse>> getBadgeList(@RequestBody BadgeSearchCriteria criteria) {
         return ResponseEntity.status(HttpStatus.OK).body(adminBadgeService.getBadgeList(criteria));
