@@ -47,7 +47,7 @@ public class SavingStatisticsController {
             )
     })
     @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/monthly-total/{year}/{month}")
     public ResponseEntity<MonthlyTotalResponse> getMonthlyTotal(
@@ -69,7 +69,7 @@ public class SavingStatisticsController {
             )
     })
     @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/category/{year}/{month}")
     public ResponseEntity<List<CategoryStatisticsResponse>> getCategoryStatistics(
@@ -91,7 +91,7 @@ public class SavingStatisticsController {
             )
     })
     @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/hourly/{year}/{month}")
     public ResponseEntity<List<HourlyStatisticsResponse>> getHourlyStatistics(
