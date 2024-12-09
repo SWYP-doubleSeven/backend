@@ -12,7 +12,8 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:3000",
-                        "https://zerocost.swygbro.com")
+                        "https://zerocost.swygbro.com",
+                        "https://zerocost-eta.vercel.app")
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*")
                 .exposedHeaders("Set-Cookie")  // Set-Cookie 헤더 노출
