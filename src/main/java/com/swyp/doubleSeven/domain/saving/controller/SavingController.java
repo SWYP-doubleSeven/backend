@@ -89,11 +89,12 @@ public class SavingController {
                     )
             )
     )
-    @SecurityRequirement(name = "cookieAuth")
-    @AuthCheck
+    //@SecurityRequirement(name = "cookieAuth")
+    //@AuthCheck
     @PostMapping
     public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest) {
-        log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
+        //log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
+        savingRequest.setMemberId(12);
         return ResponseEntity.status(HttpStatus.CREATED).body(savingService.createVirtualItem(savingRequest));
     }
 
@@ -145,8 +146,8 @@ public class SavingController {
                             }
                             """)))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping ("/calendar/{year}/{month}")
     public ResponseEntity<SavingCalendarResponse> getVirtualItemMonthly (
@@ -154,7 +155,7 @@ public class SavingController {
             @Parameter(description = "조회할 월 (1-12)", in = ParameterIn.PATH) @PathVariable int month,
             @Parameter(description = "카테고리 필터 (예: meal, taxi)", required = false)
             @RequestParam(required = false) String categoryName) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;/*authenticationUtil.getCurrentMemberId();*/
 
         return ResponseEntity.ok(savingService.getVirtualItemMonthly(year, month, categoryName, currentMemberId));
     }
@@ -216,14 +217,14 @@ public class SavingController {
                             }
                             """)))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/list/{year}/{month}")
     public ResponseEntity<SavingListResponse> getSavingList(
             @Parameter(description = "조회할 연도 (예: 2024)", in = ParameterIn.PATH) @PathVariable int year,
             @Parameter(description = "조회할 월 (1-12)", in = ParameterIn.PATH) @PathVariable int month) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;/*authenticationUtil.getCurrentMemberId();*/
         return ResponseEntity.ok(savingService.getVirtualItemList(year, month,/*, sortType,*/ currentMemberId));
     }
 
@@ -244,14 +245,14 @@ public class SavingController {
                             }
                             """)))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/{savingId}")
     public ResponseEntity<SavingResponse> getVirtualItem (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId,
             HttpServletRequest request) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;/*authenticationUtil.getCurrentMemberId();*/
 
         return ResponseEntity.ok(savingService.getVirtualItem(savingId, currentMemberId));
     }
@@ -264,14 +265,15 @@ public class SavingController {
                     content = @Content(mediaType = "text/plain",
                             examples = @ExampleObject(value = "가상 소비 수정 성공")))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PutMapping("/{savingId}")
     public ResponseEntity<String> updateVirtualItem (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId,
             @Parameter(description = "수정할 가상 소비 정보") @RequestBody SavingRequest savingRequest) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;
+                //authenticationUtil.getCurrentMemberId();
         savingRequest.setMemberId(currentMemberId);
         log.info("가상소비 수정 getMemberid: {}", savingRequest.getMemberId());
         savingService.updateVirtualItem(savingId, savingRequest);
@@ -286,13 +288,14 @@ public class SavingController {
                     content = @Content(mediaType = "text/plain",
                             examples = @ExampleObject(value = "가상 소비 삭제 성공")))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @DeleteMapping("/{savingId}")
     public ResponseEntity<String> deleteVirtualItem (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;
+                //authenticationUtil.getCurrentMemberId();
         log.info("가상소비 삭제 memberid: {}", currentMemberId);
         savingService.deleteVirtualItem(savingId, currentMemberId);
         return ResponseEntity.ok("가상 소비 삭제 성공");
@@ -305,13 +308,14 @@ public class SavingController {
                     content = @Content(mediaType = "text/plain",
                             examples = @ExampleObject(value = "가상 소비 복구 성공")))
     })
-    @SecurityRequirement(name = "cookieAuth")
-    @VaildateResourceOwner
+    //@SecurityRequirement(name = "cookieAuth")
+    //@VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @PatchMapping("/{savingId}")
     public ResponseEntity<String> cancleSavingDelete (
             @Parameter(description = "가상 소비 ID", in = ParameterIn.PATH) @PathVariable Integer savingId) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 12;
+                //authenticationUtil.getCurrentMemberId();
         log.info("가상소비 복구 memberid: {}", currentMemberId);
         savingService.cancleSavingDelete(savingId, currentMemberId);
         return ResponseEntity.ok("가상 소비 복구 성공");
