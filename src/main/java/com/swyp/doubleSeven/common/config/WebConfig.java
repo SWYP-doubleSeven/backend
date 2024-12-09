@@ -11,15 +11,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods(
-                        HttpMethod.GET.name(),
-                        HttpMethod.POST.name(),
-                        HttpMethod.PUT.name(),
-                        HttpMethod.DELETE.name()
-                )
-                .allowCredentials(true)  // 쿠키 전송을 위한 설정
-                .allowedHeaders("*")     // 모든 헤더 허용
-                .exposedHeaders("*");
+                .allowedOrigins("http://localhost:3000",
+                        "https://zerocost.swygbro.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedHeaders("*")
+                .exposedHeaders("Set-Cookie")  // Set-Cookie 헤더 노출
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }
