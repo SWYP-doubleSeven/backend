@@ -15,4 +15,8 @@ public interface MemberDAO {
     String isSameNickname(String nickname);
 
     int updateMemberInfo(MemberRequest memberRequest);
+
+    int deleteOldMember();
+
+    int withdrawMember(Integer memberId);
 }

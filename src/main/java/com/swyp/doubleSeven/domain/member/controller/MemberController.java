@@ -1,8 +1,10 @@
 package com.swyp.doubleSeven.domain.member.controller;
 
 import com.swyp.doubleSeven.common.aspect.anotation.AuthCheck;
+import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.common.util.CommonAspect;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
+import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.domain.common.enums.Role;
 import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
@@ -47,5 +49,14 @@ public class MemberController {
     public ResponseEntity<MemberResponse> updateMemberInfo(@RequestBody MemberRequest memberRequest) {
         MemberResponse memberResponse = memberService.updateMemberInfo(memberRequest);
         return ResponseEntity.ok().body(memberResponse);
+    }
+
+    @PostMapping("/withdrawal")
+    @AuthCheck(allowedRoles = Role.MEMBER)
+    public int withdraw(@RequestParam("memberId") Integer memberId, HttpSession session) {
+        if((Integer)session.getAttribute("memberId") != memberId) {
+            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+        }
+        return memberService.withdrawMember(memberId);
     }
 }
