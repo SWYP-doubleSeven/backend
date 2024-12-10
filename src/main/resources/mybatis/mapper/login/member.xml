@@ -127,6 +127,14 @@
         ]]>
     </delete>
 
+    <update id="withdrawMember" parameterType="java.lang.Integer">
+        UPDATE MEMBER SET
+            DLTN_YN = 'Y'
+            , UPDT_ID = #{memberId}
+            , UPDT_DT = NOW()
+        WHERE MEMBER_ID = #{memberId}
+        AND ROLE IN ('MEMBER', 'ADMIN')
+    </update>
 
 
 </mapper>

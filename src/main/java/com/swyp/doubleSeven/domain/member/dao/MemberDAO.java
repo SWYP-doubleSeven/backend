@@ -17,4 +17,6 @@ public interface MemberDAO {
     int updateMemberInfo(MemberRequest memberRequest);
 
     int deleteOldMember();
+
+    int withdrawMember(Integer memberId);
 }

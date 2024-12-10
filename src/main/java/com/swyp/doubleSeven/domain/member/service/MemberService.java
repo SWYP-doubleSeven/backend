@@ -110,4 +110,8 @@ public class MemberService {
     public int deleteOldMember() {
         return memberDAO.deleteOldMember();
     }
+
+    public int withdrawMember(Integer memberId) {
+        return memberDAO.withdrawMember(memberId);
+    }
 }
