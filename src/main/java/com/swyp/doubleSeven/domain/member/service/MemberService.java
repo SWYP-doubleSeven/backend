@@ -106,4 +106,8 @@ public class MemberService {
         memberDAO.updateMemberInfo(memberRequest);
         return memberDAO.findMemberByMemberId(memberRequest.getMemberId());
     }
+
+    public int deleteOldMember() {
+        return memberDAO.deleteOldMember();
+    }
 }
