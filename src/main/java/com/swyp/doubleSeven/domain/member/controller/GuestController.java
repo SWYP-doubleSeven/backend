@@ -1,6 +1,8 @@
 package com.swyp.doubleSeven.domain.member.controller;
 
 import com.swyp.doubleSeven.common.aspect.AuthenticationUtil;
+import com.swyp.doubleSeven.domain.common.enums.LoginType;
+import com.swyp.doubleSeven.domain.common.enums.Role;
 import com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse;
 import com.swyp.doubleSeven.domain.member.service.GuestService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.executable.ValidateOnExecution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +36,15 @@ public class GuestController {
     @PostMapping("/sign-in")
     public ResponseEntity<GuestLoginResponse> signInGuest (
             HttpServletRequest request,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            HttpSession session
+            ) {
+        GuestLoginResponse guestLoginResponse = guestService.signInGuest(request, response);
+        session.setAttribute("memberId", guestLoginResponse.getMemberId());
+        session.setAttribute("memberNickname", guestLoginResponse.getMemberNickname());
+        session.setAttribute("loginType", LoginType.GUEST.getType());
+        session.setAttribute("role", Role.GUEST.getType());
+
         return ResponseEntity.ok(guestService.signInGuest(request, response));
     }
 

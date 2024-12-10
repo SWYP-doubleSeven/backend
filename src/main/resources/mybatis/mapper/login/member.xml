@@ -106,6 +106,14 @@
         WHERE MEMBER_NICKNAME = #{nickname}
     </select>
 
+    <update id="updateMemberInfo" parameterType="MemberRequest">
+        UPDATE MEMBER SET
+              MEMBER_NICKNAME = #{memberNickname}
+              , UPDT_ID = #{memberId}
+              , UPDT_DT = NOW()
+          WHERE MEMBER_ID = #{memberId}
+    </update>
+
     <!-- ★★ 게스트 로그인 ★★ -->
 
 
