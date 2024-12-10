@@ -101,4 +101,9 @@ public class MemberService {
 
         return nickname;
     }
+
+    public MemberResponse updateMemberInfo(MemberRequest memberRequest) {
+        memberDAO.updateMemberInfo(memberRequest);
+        return memberDAO.findMemberByMemberId(memberRequest.getMemberId());
+    }
 }

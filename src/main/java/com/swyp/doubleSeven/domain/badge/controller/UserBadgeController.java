@@ -33,7 +33,7 @@ public class UserBadgeController {
     public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId, HttpServletRequest httpServletRequest, HttpSession session) {
 
         if (CommonUtil.isLocalEnvironment(httpServletRequest)) {
-            session.setAttribute("memberId", 1); // IP가 로컬일 때 memberId 설정
+            session.setAttribute("memberId", 1); // IP가 로컬일 때 memberId 설정 // todo
         }
 
         Integer memberId = (Integer)session.getAttribute("memberId");
