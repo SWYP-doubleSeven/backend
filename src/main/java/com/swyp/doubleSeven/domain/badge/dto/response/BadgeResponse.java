@@ -26,6 +26,9 @@ public class BadgeResponse {
     @Schema(description = "뱃지 타입", example = "LOG")
     private String badgeType;
 
+    @Schema(description = "뱃지 한글 타입", example = "제로코스트와 함께")
+    private String badgeTypeKr;
+
     @Schema(description = "뱃지 설명", example = "처음 가계부 작성")
     private String badgeDescription;
 

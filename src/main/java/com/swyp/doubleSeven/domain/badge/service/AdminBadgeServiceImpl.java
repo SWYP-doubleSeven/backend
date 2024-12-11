@@ -2,7 +2,6 @@ package com.swyp.doubleSeven.domain.badge.service;
 
 import com.swyp.doubleSeven.domain.badge.dao.AdminBadgeDAO;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
-import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,8 +56,8 @@ public class AdminBadgeServiceImpl implements AdminBadgeService {
 
     // 뱃지 목록 조회
     @Override
-    public List<BadgeResponse> getBadgeList(BadgeSearchCriteria criteria) {
-        return adminBadgeDAO.getBadgeList(criteria);
+    public List<BadgeResponse> getBadgeList() {
+        return adminBadgeDAO.getBadgeList();
     }
 
 
