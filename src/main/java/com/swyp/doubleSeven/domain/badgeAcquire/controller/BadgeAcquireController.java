@@ -1,7 +1,6 @@
 package com.swyp.doubleSeven.domain.badgeAcquire.controller;
 
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
-import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.badge.service.AdminBadgeService;
 import com.swyp.doubleSeven.domain.badge.service.UserBadgeService;
@@ -59,12 +58,9 @@ public class BadgeAcquireController {
     public List<BadgeResponse> insertBadgeAcquireAfterLogin(Integer memberId, String yyyymmdd) {
 
         if ("01-01".equals(yyyymmdd.substring(5)) || "10-31".equals(yyyymmdd.substring(5))) {
-            BadgeSearchCriteria badgeSearchCriteria = new BadgeSearchCriteria();
-            badgeSearchCriteria.setBadgeType("DATE");
-            badgeSearchCriteria.setValue(yyyymmdd);
 
             BadgeResponse badgeResponse = null;
-            List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList(badgeSearchCriteria);
+            List<BadgeResponse> badgeResponseList = adminBadgeService.getBadgeList();
             if(badgeResponseList.size() > 0) {
                 badgeResponse = badgeResponseList.get(0);
             };
