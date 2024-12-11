@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface GuestService {
-    GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response);
+    GuestLoginResponse signInGuest(HttpServletRequest request/*, HttpServletResponse response*/);
 
     void deleteExpiredGuestData();
 
