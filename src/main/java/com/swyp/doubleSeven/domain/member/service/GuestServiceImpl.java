@@ -24,7 +24,44 @@ public class GuestServiceImpl implements GuestService{
     private final GuestDAO guestDAO;
 
     @Override
-    public GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response) {
+    public GuestLoginResponse signInGuest(HttpServletRequest request) {    // response 파라미터 제거
+        // 쿠키에서 memberKeyId 확인
+        Cookie[] cookies = request.getCookies();
+        String existingMemberKeyId = null;
+
+        // 세션에 memberKeyId가 있다면 해당 멤버 정보 조회
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("memberKeyId".equals(cookie.getName())) {
+                    existingMemberKeyId = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        // 기존 쿠키가 있는 경우
+        if (existingMemberKeyId != null) {
+            GuestLoginResponse existingMember = guestDAO.selectMemberKeyId(existingMemberKeyId);
+            if (existingMember != null) {
+                return existingMember;
+            }
+        }
+
+        // 새로운 게스트 생성
+        String memberKeyId = UUID.randomUUID().toString();
+        GuestLoginRequest member = GuestLoginRequest.builder()
+                .memberKeyId(memberKeyId)
+                .memberNickname("Guest_" + memberKeyId.substring(0, 8))
+                .role("GUEST")
+                .loginType("GUEST")
+                .build();
+
+        guestDAO.signInGuest(member);
+
+        // 쿠키 설정 코드 모두 제거하고 응답 객체만 반환
+        return new GuestLoginResponse(member.getMemberId(), member.getMemberKeyId(), member.getMemberNickname());
+    }
+    /*public GuestLoginResponse signInGuest(HttpServletRequest request, HttpServletResponse response) {
 
         // 쿠키에서 memberKeyId 확인
         Cookie[] cookies = request.getCookies();
@@ -83,7 +120,7 @@ public class GuestServiceImpl implements GuestService{
         return new GuestLoginResponse(member.getMemberId(),
                 member.getMemberKeyId(),
                 member.getMemberNickname());
-    }
+    }*/
 
     // 쿠키 만료된 게스트 데이터 제거
     @Override
