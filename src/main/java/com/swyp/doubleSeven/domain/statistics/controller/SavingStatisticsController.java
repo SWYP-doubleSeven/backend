@@ -46,15 +46,14 @@ public class SavingStatisticsController {
                     content = @Content(schema = @Schema(implementation = MonthlyTotalResponse.class))
             )
     })
-    //@SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @SecurityRequirement(name = "cookieAuth")
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/monthly-total/{year}/{month}")
     public ResponseEntity<MonthlyTotalResponse> getMonthlyTotal(
             @Parameter(description = "조회할 연도", example = "2024") @PathVariable int year,
             @Parameter(description = "조회할 월(1-12)", example = "3") @PathVariable int month) {
-        Integer currentMemberId = 12;
-        //authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         log.info("월별 통계 memberid: {}", currentMemberId);
         return ResponseEntity.ok(statisticsService.getMonthlyTotal(year, month, currentMemberId));
     }
@@ -69,15 +68,14 @@ public class SavingStatisticsController {
                     content = @Content(schema = @Schema(implementation = CategoryStatisticsResponse.class))
             )
     })
-    //@SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @SecurityRequirement(name = "cookieAuth")
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/category/{year}/{month}")
     public ResponseEntity<List<CategoryStatisticsResponse>> getCategoryStatistics(
             @Parameter(description = "조회할 연도", example = "2024") @PathVariable int year,
             @Parameter(description = "조회할 월(1-12)", example = "3") @PathVariable int month) {
-        Integer currentMemberId = 12;
-        //authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         log.info("카테고리별 통계 memberid: {}", currentMemberId);
         return ResponseEntity.ok(statisticsService.getCategoryStatistics(year, month, currentMemberId));
     }
@@ -92,15 +90,14 @@ public class SavingStatisticsController {
                     content = @Content(schema = @Schema(implementation = HourlyStatisticsResponse.class))
             )
     })
-    //@SecurityRequirement(name = "cookieAuth")
-    //@VaildateResourceOwner
+    @SecurityRequirement(name = "cookieAuth")
+    @VaildateResourceOwner
     //@AuthCheck(validateAuthor = true) // 작성자 본인만 접근 가능
     @GetMapping("/hourly/{year}/{month}")
     public ResponseEntity<List<HourlyStatisticsResponse>> getHourlyStatistics(
             @Parameter(description = "조회할 연도", example = "2024") @PathVariable int year,
             @Parameter(description = "조회할 월(1-12)", example = "3") @PathVariable int month) {
-        Integer currentMemberId = 12;
-        //authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         log.info("시간대별 통계 memberid: {}", currentMemberId);
         return ResponseEntity.ok(statisticsService.getHourlyStatistics(year, month, currentMemberId));
     }
