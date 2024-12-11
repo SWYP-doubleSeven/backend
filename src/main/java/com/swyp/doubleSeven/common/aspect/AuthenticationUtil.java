@@ -1,10 +1,13 @@
 package com.swyp.doubleSeven.common.aspect;
 
+import com.swyp.doubleSeven.common.exception.BusinessException;
+import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
 import com.swyp.doubleSeven.domain.member.dao.GuestDAO;
 import com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
