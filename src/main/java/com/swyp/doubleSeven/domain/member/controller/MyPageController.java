@@ -50,11 +50,10 @@ public class MyPageController {
                     )
             )
     })
-    //@SecurityRequirement(name = "cookieAuth")
+    @SecurityRequirement(name = "cookieAuth")
     @GetMapping("/member-status")
     public MemberStatusResponse selectMemberStatus () {
-        Integer currentMemberId = 12;
-        //authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         return myPageService.selectMemberStatus(currentMemberId);
     }
 }
