@@ -43,7 +43,7 @@
                     url: '/v2/user/me',
                     success: function (response) {
                         // 서버로 사용자 정보를 전송 (비동기 방식)
-                        var promise = fetch('http://3.39.123.15:8090/api/auth/kakao-login?code=' + encodeURIComponent(response.id), {
+                        var promise = fetch('https://api-zerocost.site/api/auth/kakao-login?code=' + encodeURIComponent(response.id), {
                             method: 'GET',
                         });
 

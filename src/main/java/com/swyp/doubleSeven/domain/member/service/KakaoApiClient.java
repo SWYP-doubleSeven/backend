@@ -35,17 +35,14 @@ public class KakaoApiClient {
             params.add("redirect_uri", "http://localhost:8090/api/auth/kakao-login");
         } else {
             log.debug("운영환경");
-            params.add("redirect_uri", "http://3.39.123.15:8090/api/auth/kakao-login");
+            params.add("redirect_uri", "https://api-zerocost.site/api/auth/kakao-login");
 
         }
 
         // 로그 추가
         log.info("Requesting Access Token with Authorization Code: {}", authorizationCode);
-        log.info("Redirect URI Sent: {}", "http://3.39.123.15:8090/api/auth/kakao-login");
+        log.info("Redirect URI Sent: {}", "https://api-zerocost.site/api/auth/kakao-login");
 
-        // 로그 추가
-        log.info("Requesting Access Token with Authorization Code: {}", authorizationCode);
-        log.info("Redirect URI Sent: {}", "http://3.39.123.15:8090/api/auth/kakao-login");
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
         try {
