@@ -96,7 +96,7 @@ public class SavingController {
     public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest, HttpSession session) {
         //log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
         //savingRequest.setMemberId(12);
-        savingRequest.setMemberId((Integer)session.getAttribute("memberId"));
+        //savingRequest.setMemberId((Integer)session.getAttribute("memberId"));
         return ResponseEntity.status(HttpStatus.CREATED).body(savingService.createVirtualItem(savingRequest));
     }
 

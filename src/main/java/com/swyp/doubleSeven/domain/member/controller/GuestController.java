@@ -34,7 +34,55 @@ public class GuestController {
             //@ApiResponse(responseCode = "400", description = "잘못된 요청")
     })
     @PostMapping("/sign-in")
-    public ResponseEntity<GuestLoginResponse> signInGuest (
+    public ResponseEntity<GuestLoginResponse> signInGuest(HttpServletRequest request, HttpServletResponse response) {
+        GuestLoginResponse guestResponse = guestService.signInGuest(request/*, response*/);
+
+        // 쿠키 설정을 위한 공통 속성 (Domain 유지)
+        String cookieProperties = "Path=/; Domain=api-zerocost.site; Secure; SameSite=None; Max-Age=2592000; Partitioned";
+
+        // memberKeyId 쿠키 설정
+        String memberKeyIdCookie = String.format("%s=%s; %s",
+                "memberKeyId",
+                guestResponse.getMemberKeyId(),
+                cookieProperties
+        );
+        response.addHeader("Set-Cookie", memberKeyIdCookie);
+
+        // memberId 쿠키 설정
+        String memberIdCookie = String.format("%s=%s; %s",
+                "memberId",
+                guestResponse.getMemberId().toString(),
+                cookieProperties
+        );
+        response.addHeader("Set-Cookie", memberIdCookie);
+
+        // loginType 쿠키 설정
+        String loginTypeCookie = String.format("%s=%s; %s",
+                "loginType",
+                "GUEST",
+                cookieProperties
+        );
+        response.addHeader("Set-Cookie", loginTypeCookie);
+
+        return ResponseEntity.ok(guestResponse);
+    }
+
+        /*// 쿠키 설정을 헤더로 직접
+        String cookieValue = String.format("%s=%s; Path=/; Domain=api-zerocost.site; Secure; SameSite=None",
+                "memberKeyId", guestResponse.getMemberKeyId());
+        response.addHeader("Set-Cookie", cookieValue);
+
+        String memberIdCookieValue = String.format("%s=%s; Path=/; Domain=api-zerocost.site; Secure; SameSite=None",
+                "memberId", guestResponse.getMemberId().toString());
+        response.addHeader("Set-Cookie", memberIdCookieValue);
+
+        String loginTypeCookieValue = String.format("%s=%s; Path=/; Domain=api-zerocost.site; Secure; SameSite=None",
+                "loginType", "GUEST");
+        response.addHeader("Set-Cookie", loginTypeCookieValue);
+
+        return ResponseEntity.ok(guestResponse);
+    }*/
+    /*public ResponseEntity<GuestLoginResponse> signInGuest (
             HttpServletRequest request,
             HttpServletResponse response,
             HttpSession session
@@ -46,7 +94,7 @@ public class GuestController {
         session.setAttribute("role", Role.GUEST.getType());
 
         return ResponseEntity.ok(guestService.signInGuest(request, response));
-    }
+    }*/
 
     @Operation(summary = "API 통신 X", description = "통신이 필요하지 않은 ")
     @ApiResponses({
