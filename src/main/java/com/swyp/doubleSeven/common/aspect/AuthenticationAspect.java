@@ -117,11 +117,11 @@ public class AuthenticationAspect {
                 throw new BusinessException(GuestError.NOTFOUND_GUEST);
             }
 
-            /*return AuthInfo.builder()
+            return AuthInfo.builder()
                     .memberId(guestInfo.getMemberId())
                     .loginType(LoginType.GUEST.name())
                     .role(Role.GUEST.name())
-                    .build();*/
+                    .build();
         }
 
         // 3. 미인증 사용자
