@@ -200,7 +200,7 @@ public class AuthenticationAspect {
     }
 
     /**
-     * 작성자 권한을 검증합니다.
+     * saving CRUD시 작성자 권한을 검증합니다.
      * @param joinPoint AOP 조인포인트
      * @param currentMemberId 현재 사용자 ID
      * @throws BusinessException 권한 없음 예외

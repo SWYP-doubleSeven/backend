@@ -101,4 +101,17 @@ public class MemberService {
 
         return nickname;
     }
+
+    public MemberResponse updateMemberInfo(MemberRequest memberRequest) {
+        memberDAO.updateMemberInfo(memberRequest);
+        return memberDAO.findMemberByMemberId(memberRequest.getMemberId());
+    }
+
+    public int deleteOldMember() {
+        return memberDAO.deleteOldMember();
+    }
+
+    public int withdrawMember(Integer memberId) {
+        return memberDAO.withdrawMember(memberId);
+    }
 }

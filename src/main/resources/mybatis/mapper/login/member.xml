@@ -106,8 +106,35 @@
         WHERE MEMBER_NICKNAME = #{nickname}
     </select>
 
-    <!-- ★★ 게스트 로그인 ★★ -->
+    <update id="updateMemberInfo" parameterType="MemberRequest">
+        UPDATE MEMBER SET
+              MEMBER_NICKNAME = #{memberNickname}
+              , UPDT_ID = #{memberId}
+              , UPDT_DT = NOW()
+          WHERE MEMBER_ID = #{memberId}
+    </update>
 
+    <delete id="deleteOldMember">
+        <![CDATA[
+        DELETE FROM MEMBER
+        WHERE MEMBER_ID IN (
+            SELECT A.MEMBER_ID
+            FROM MEMBER A
+                     LEFT JOIN MEMBER_ATTENDANCE B ON A.MEMBER_ID = B.MEMBER_ID
+            WHERE B.LAST_LOGIN_DATE < DATE_SUB(NOW(), INTERVAL 1 YEAR)
+              AND A.ROLE = 'MEMBER'
+        )
+        ]]>
+    </delete>
+
+    <update id="withdrawMember" parameterType="java.lang.Integer">
+        UPDATE MEMBER SET
+            DLTN_YN = 'Y'
+            , UPDT_ID = #{memberId}
+            , UPDT_DT = NOW()
+        WHERE MEMBER_ID = #{memberId}
+        AND ROLE IN ('MEMBER', 'ADMIN')
+    </update>
 
 
 </mapper>
