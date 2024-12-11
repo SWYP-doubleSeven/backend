@@ -49,6 +49,7 @@ public class UserBadgeController {
                                "badgeName": "가치를 새기다",
                                "emblemPath": "https://aws.s3.address/badge_image/badge_mark+the+moment.png",
                                "badgeType": "LOG",
+                               "badgeTypeKr": "제로코스트와 함께",
                                "badgeDescription": "처음 가계부 작성",
                                "operator": ">=",
                                "value": "1",
@@ -56,7 +57,7 @@ public class UserBadgeController {
                                "rgstId": 0,
                                "rgstDt": "2024-11-30 20:54:05",
                                "updtId": 0,
-                               "updtDt": "string",
+                               "updtDt": "2024-11-30 20:54:05",
                                "acquireYN": "Y"
                              }
                             """
@@ -93,6 +94,7 @@ public class UserBadgeController {
                                       "badgeName": "첫 만남",
                                       "emblemPath": "https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_first+step.png",
                                       "badgeType": "ATTENDANCE",
+                                      "badgeTypeKr": "제로코스트와 함께",
                                       "badgeDescription": "처음 가입",
                                       "operator": ">=",
                                       "value": "1",
@@ -108,6 +110,7 @@ public class UserBadgeController {
                                       "badgeName": "가치를 새기다",
                                       "emblemPath": "https://zerocost-image-bucket.s3.ap-northeast-2.amazonaws.com/badge_image/badge_mark+the+moment.png",
                                       "badgeType": "LOG",
+                                      "badgeTypeKr": "제로코스트와 함께",
                                       "badgeDescription": "처음 가계부 작성",
                                       "operator": ">=",
                                       "value": "1",

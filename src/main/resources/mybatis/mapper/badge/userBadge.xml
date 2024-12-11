@@ -9,6 +9,7 @@
         <result property="badgeName" column="BADGE_NAME"/>
         <result property="emblemPath" column="EMBLEM_PATH"/>
         <result property="badgeType" column="BADGE_TYPE"/>
+        <result property="badgeTypeKr" column="BADGE_TYPE_KR"/>
         <result property="badgeDescription" column="BADGE_DESCRIPTION"/>
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
@@ -26,6 +27,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
+            A.BADGE_TYPE_KR,
             A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
@@ -49,6 +51,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
+            A.BADGE_TYPE_KR,
             A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
@@ -91,6 +94,7 @@
             B.BADGE_NAME,
             B.EMBLEM_PATH,
             B.BADGE_TYPE,
+            B.BADGE_TYPE_KR,
             B.BADGE_DESCRIPTION,
             B.OPERATOR,
             B.VALUE,
