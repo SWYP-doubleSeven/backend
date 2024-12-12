@@ -31,7 +31,6 @@ import java.util.List;
 public class AdminBadgeController {
 
     private final AdminBadgeService adminBadgeService;
-
     private final CommonImageUploader commonImageUploader;
 
     @PostMapping

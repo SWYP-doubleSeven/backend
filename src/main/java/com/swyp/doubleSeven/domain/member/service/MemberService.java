@@ -6,6 +6,7 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.KakaoUserDTO;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,16 +22,12 @@ public class MemberService {
     private final KakaoApiClient kakaoApiClient;
     private final MemberDAO memberDAO;
 
-    public String getKakaoAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
-        return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
-    }
 
     public MemberResponse processKakaoUser(String memberKeyId) {
 //        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
-        MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
 
         Integer memberId = null;
-        if (existingMember == null) { // 신규 회원 처리
+        if (memberKeyId == null) { // 신규 회원 처리
             MemberRequest newMemberRequest = MemberRequest.builder()
                     .memberKeyId(String.valueOf(memberKeyId))
                     .loginType(LoginType.KAKAO.getType())
@@ -48,15 +45,16 @@ public class MemberService {
             memberId = newMemberRequest.getMemberId();
 
         } else {
-            memberId = existingMember.getMemberId();
-            if(LoginType.GUEST.getType().equals(existingMember.getLoginType())) { // 게스트->카카오 로그인전환
+            MemberResponse memberResponse = memberDAO.findMemberByMemberKeyId(memberKeyId);
+            memberId = memberResponse.getMemberId();
+            if(LoginType.GUEST.getType().equals(memberResponse.getLoginType())) { // 게스트->카카오 로그인전환
 
                 MemberRequest guestToKakaoMemberRequest = MemberRequest.builder()
-                        .memberId(existingMember.getMemberId())
+                        .memberId(memberResponse.getMemberId())
                         .memberKeyId(memberKeyId)
                         .loginType(LoginType.KAKAO.getType())
                         .memberNickname(createRandomNickname())
-                        .email(existingMember.getEmail())
+                        .email(memberResponse.getEmail())
                         .role(Role.MEMBER.getType())
                         .dltnYn("N")
                         .rgstId(0)
@@ -76,6 +74,10 @@ public class MemberService {
     public MemberResponse findMemberByMemberId(Integer memberId) {
         return memberDAO.findMemberByMemberId(memberId);
     }
+
+    //    public String getKakaoAccessToken(String authorizationCode, HttpServletRequest httpServletRequest) {
+//        return kakaoApiClient.requestAccessToken(authorizationCode, httpServletRequest);
+//    }
 
     /* 랜덤 닉네임 생성 */
     public String createRandomNickname() {
