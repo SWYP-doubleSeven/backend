@@ -8,13 +8,16 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberDAO {
     MemberResponse findMemberByMemberKeyId(String memberKeyId);
+
     MemberResponse findMemberByMemberId(Integer memberId);
+
     void insertMember(MemberRequest memberRequest);
-    void updateMember(MemberRequest memberRequest);
+
+    void updateMemberRole(MemberRequest memberRequest);
 
     String isSameNickname(String nickname);
 
-    int updateMemberInfo(MemberRequest memberRequest);
+    int updateMemberNickname(MemberRequest memberRequest);
 
     int deleteOldMember();
 

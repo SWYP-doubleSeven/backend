@@ -10,6 +10,10 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +50,8 @@ public class MemberController {
     @PostMapping("/users")
     @Operation
     @AuthCheck(allowedRoles = Role.MEMBER)
-    public ResponseEntity<MemberResponse> updateMemberInfo(@RequestBody MemberRequest memberRequest) {
-        MemberResponse memberResponse = memberService.updateMemberInfo(memberRequest);
+    public ResponseEntity<MemberResponse> updateMemberNickname(@RequestBody MemberRequest memberRequest) {
+        MemberResponse memberResponse = memberService.updateMemberNickname(memberRequest);
         return ResponseEntity.ok().body(memberResponse);
     }
 
