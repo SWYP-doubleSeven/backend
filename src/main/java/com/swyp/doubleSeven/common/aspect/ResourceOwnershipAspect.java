@@ -44,31 +44,4 @@ public class ResourceOwnershipAspect {
         log.debug("Resource access validated - User: {}, Resource: {}", currentMemberId, savingId);
     }
 
-    private Integer getCurrentMemberId() {
-        // 세션에서 로그인 타입 확인
-        String loginTypeStr = (String) request.getSession().getAttribute("loginType");
-
-        // 소셜 로그인 (KAKAO, GOOGLE) 체크
-        if (loginTypeStr != null) {
-            LoginType loginType = LoginType.valueOf(loginTypeStr);
-            if (loginType == LoginType.KAKAO || loginType == LoginType.GOOGLE) {
-                return (Integer) request.getSession().getAttribute("memberId");
-            }
-        }
-
-        // 게스트 로그인 체크
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("memberKeyId".equals(cookie.getName())) {
-                    GuestLoginResponse guestInfo = guestDAO.selectMemberKeyId(cookie.getValue());
-                    if (guestInfo != null) {
-                        return guestInfo.getMemberId();
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
 }

@@ -64,12 +64,12 @@ public class UserBadgeController {
                     )
             )
     )
-    public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId, HttpServletRequest httpServletRequest, HttpSession session) {
+    public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId) {
 
-        Integer memberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         BadgeRequest request = new BadgeRequest();
         request.setBadgeId(badgeId);
-        request.setMemberId(memberId);
+        request.setMemberId(currentMemberId);
         return ResponseEntity.status(HttpStatus.OK).body(service.getBadge(request));
     }
 
