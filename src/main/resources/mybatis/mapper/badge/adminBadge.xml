@@ -9,6 +9,7 @@
         <result property="badgeName" column="BADGE_NAME"/>
         <result property="emblemPath" column="EMBLEM_PATH"/>
         <result property="badgeType" column="BADGE_TYPE"/>
+        <result property="badgeTypeKr" column="BADGE_TYPE_KR"/>
         <result property="badgeDescription" column="BADGE_DESCRIPTION"/>
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
@@ -25,6 +26,7 @@
             BADGE_NAME,
             EMBLEM_PATH,
             BADGE_TYPE,
+            BADGE_TYPE_KR,
             BADGE_DESCRIPTION,
             OPERATOR,
             VALUE,
@@ -36,6 +38,7 @@
             #{badgeName},
             #{emblemPath},
             #{badgeType},
+            #{badgeTypeKr},
             #{badgeDescription},
             #{operator},
             #{value},
@@ -52,6 +55,7 @@
             BADGE_NAME = #{badgeName},
             EMBLEM_PATH = #{emblemPath},
             BADGE_TYPE = #{badgeType},
+            BADGE_TYPE_KR = #{badgeTypeKr},
             BADGE_DESCRIPTION = #{badgeDescription},
             OPERATOR = #{operator},
             VALUE = #{value},
@@ -67,12 +71,13 @@
     </delete>
 
     <!-- 전체 뱃지 목록 조회 -->
-    <select id="getBadgeList" parameterType="BadgeSearchCriteria" resultMap="BadgeResultMap">
+    <select id="getBadgeList" resultMap="BadgeResultMap">
         SELECT
             A.BADGE_ID,
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
+            A.BADGE_TYPE_KR,
             A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,
@@ -92,15 +97,6 @@
         ) B
         ON A.BADGE_ID = B.BADGE_ID
         WHERE 1=1
-        <if test="badgeName != null">
-            AND BADGE_NAME LIKE CONCAT('%', #{badgeName}, '%')
-        </if>
-        <if test="badgeType != null">
-            AND BADGE_TYPE = #{badgeType}
-        </if>
-        <if test="value != null">
-            AND VALUE = #{value}
-        </if>
         ORDER BY BADGE_ID ASC
     </select>
 
@@ -111,6 +107,7 @@
             A.BADGE_NAME,
             A.EMBLEM_PATH,
             A.BADGE_TYPE,
+            A.BADGE_TYPE_KR,
             A.BADGE_DESCRIPTION,
             A.OPERATOR,
             A.VALUE,

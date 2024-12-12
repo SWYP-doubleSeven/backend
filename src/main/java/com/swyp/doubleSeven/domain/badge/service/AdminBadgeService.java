@@ -1,7 +1,6 @@
 package com.swyp.doubleSeven.domain.badge.service;
 
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
-import com.swyp.doubleSeven.domain.badge.dto.request.BadgeSearchCriteria;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -22,6 +21,6 @@ public interface AdminBadgeService {
     BadgeResponse getBadge(Integer badgeId);
 
     // 뱃지 목록 조회
-    List<BadgeResponse> getBadgeList(BadgeSearchCriteria criteria);
+    List<BadgeResponse> getBadgeList();
 
 }
