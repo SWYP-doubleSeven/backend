@@ -25,6 +25,7 @@
     <select id="findMemberByMemberId" resultMap="MemberResultMap">
         SELECT
             MEMBER_ID
+             , MEMBER_KEY_ID
              , MEMBER_NICKNAME
              , MEMBER_NAME
              , EMAIL
@@ -42,6 +43,7 @@
     <select id="findMemberByMemberKeyId" resultMap="MemberResultMap">
         SELECT
             MEMBER_ID
+            , MEMBER_KEY_ID
             , MEMBER_NICKNAME
             , MEMBER_NAME
             , EMAIL
@@ -84,11 +86,12 @@
         )
     </insert>
 
-    <!--로그인시 사용자 정보 업데이트-->
-    <update id="updateMember" parameterType="MemberRequest">
+    <!--게스트->카카오 로그인전환시 사용자 정보 업데이트-->
+    <update id="updateMemberRole" parameterType="MemberRequest">
         UPDATE MEMBER SET
             ROLE = #{role},
             LOGIN_TYPE = #{loginType},
+            MEMBER_KEY_ID = #{memberKeyId},
             MEMBER_NICKNAME = #{memberNickname},
             UPDT_ID = #{updtId},
             UPDT_DT = #{updtDt}
@@ -106,7 +109,7 @@
         WHERE MEMBER_NICKNAME = #{nickname}
     </select>
 
-    <update id="updateMemberInfo" parameterType="MemberRequest">
+    <update id="updateMemberNickname" parameterType="MemberRequest">
         UPDATE MEMBER SET
               MEMBER_NICKNAME = #{memberNickname}
               , UPDT_ID = #{memberId}

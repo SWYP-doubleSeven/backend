@@ -49,7 +49,7 @@ public class MemberService {
 
         } else {
             memberId = existingMember.getMemberId();
-            if(LoginType.GUEST.getType().equals(existingMember.getLoginType())) {
+            if(LoginType.GUEST.getType().equals(existingMember.getLoginType())) { // 게스트->카카오 로그인전환
 
                 MemberRequest guestToKakaoMemberRequest = MemberRequest.builder()
                         .memberId(existingMember.getMemberId())
@@ -65,7 +65,7 @@ public class MemberService {
                         .updtDt(LocalDateTime.now())
                         .build();
 
-                memberDAO.updateMember(guestToKakaoMemberRequest);
+                memberDAO.updateMemberRole(guestToKakaoMemberRequest);
             }
         }
 
@@ -102,8 +102,8 @@ public class MemberService {
         return nickname;
     }
 
-    public MemberResponse updateMemberInfo(MemberRequest memberRequest) {
-        memberDAO.updateMemberInfo(memberRequest);
+    public MemberResponse updateMemberNickname(MemberRequest memberRequest) {
+        memberDAO.updateMemberNickname(memberRequest);
         return memberDAO.findMemberByMemberId(memberRequest.getMemberId());
     }
 
