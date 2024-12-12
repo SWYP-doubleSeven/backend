@@ -38,9 +38,18 @@ public class GuestController {
         GuestLoginResponse guestResponse = guestService.signInGuest(request/*, response*/);
 
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
-        String cookieProperties = "Path=/; Domain=api-zerocost.site; Secure; SameSite=None; Max-Age=2592000; Partitioned";
+        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000";
+        //String cookieProperties = "Path=/; Domain=api-zerocost.site; Secure; SameSite=None; Max-Age=2592000; Partitioned";
 
-        // memberKeyId 쿠키 설정
+        // 각 쿠키 설정
+        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+                guestResponse.getMemberKeyId(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
+                guestResponse.getMemberId().toString(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
+                "GUEST", cookieProperties));
+
+        /*// memberKeyId 쿠키 설정
         String memberKeyIdCookie = String.format("%s=%s; %s",
                 "memberKeyId",
                 guestResponse.getMemberKeyId(),
@@ -62,7 +71,7 @@ public class GuestController {
                 "GUEST",
                 cookieProperties
         );
-        response.addHeader("Set-Cookie", loginTypeCookie);
+        response.addHeader("Set-Cookie", loginTypeCookie);*/
 
         return ResponseEntity.ok(guestResponse);
     }
