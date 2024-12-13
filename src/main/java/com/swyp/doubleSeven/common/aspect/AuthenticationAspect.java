@@ -132,6 +132,7 @@ public class AuthenticationAspect {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+                log.info("extractMemberKeyIdFromCookies: {}", cookie.getName(), cookie.getValue());
                 if ("memberKeyId".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
