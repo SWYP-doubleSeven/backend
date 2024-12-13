@@ -45,6 +45,16 @@ public class AuthenticationUtil {
         }
 
 
+        MemberResponse memberInfo = memberDAO.findMemberByMemberKeyId(memberKeyId);
+        if(memberInfo != null) {
+            return memberInfo.getMemberId();
+        }
+
+        GuestLoginResponse guestInfo = guestDAO.selectMemberKeyId(memberKeyId);
+        if (guestInfo != null) {
+            return guestInfo.getMemberId();
+        }
+
         return null;
     }
 }
