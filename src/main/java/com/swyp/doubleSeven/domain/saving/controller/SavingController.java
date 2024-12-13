@@ -21,7 +21,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -63,6 +62,7 @@ public class SavingController {
                     {
                         "badgeId": 2,
                         "badgeName": "가치를 새기다",
+                        "badgeTypeKr": "가치를 새기다",
                         "emblemPath": "https://aws.s3.address/badge_image/badge_mark+the+moment.png",
                         "badgeType": "LOG",
                         "badgeDescription": "처음 가계부 작성",
@@ -93,7 +93,7 @@ public class SavingController {
     @SecurityRequirement(name = "cookieAuth")
     @AuthCheck
     @PostMapping
-    public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest, HttpSession session) {
+    public ResponseEntity<SavingResponse> createVirtualItem (@RequestBody SavingRequest savingRequest) {
         //log.info("가상소비저장로그 - {}", savingRequest.getMemberId(), savingRequest.getAmount());
         //savingRequest.setMemberId(12);
         //savingRequest.setMemberId((Integer)session.getAttribute("memberId"));

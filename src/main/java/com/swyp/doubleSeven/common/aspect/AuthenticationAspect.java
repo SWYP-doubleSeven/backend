@@ -5,6 +5,7 @@ import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.domain.common.enums.LoginType;
 import com.swyp.doubleSeven.domain.common.enums.Role;
+import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.member.error.GuestError;
 import com.swyp.doubleSeven.domain.member.dao.GuestDAO;
 import com.swyp.doubleSeven.domain.member.dao.MemberDAO;
@@ -80,48 +81,41 @@ public class AuthenticationAspect {
     }
 
     /**
-     * 세션과 쿠키에서 사용자 인증 정보를 조회합니다.
+     * 쿠키에서 사용자 인증 정보를 조회합니다.
      * @return AuthInfo 사용자 인증 정보
      * @throws //BusinessException LOGIN_REQUIRED (로그인 필요시)
      */
     private AuthInfo getAuthInfo () {
-        // 1. 소셜 로그인 - 세션 확인
-        Integer sessionMemberId = (Integer) request.getSession().getAttribute("memberId");
-        log.debug("Session memberId: {}", sessionMemberId);
 
-        if (sessionMemberId != null) {
-            String loginType = (String) request.getSession().getAttribute("loginType");
-            String role = (String) request.getSession().getAttribute("role");
-            log.debug("Session info - loginType: {}, role: {}", loginType, role);
-
-            return AuthInfo.builder()
-                    .memberId(sessionMemberId)
-                    .loginType(loginType)
-                    .role(role)
-                    .build();
-        }
-            /*return AuthInfo.builder()
-                    .memberId(sessionMemberId)
-                    .loginType((String) request.getSession().getAttribute("loginType"))
-                    .role((String) request.getSession().getAttribute("role"))
-                    .build();*/
-
-
-        // 2. 게스트 로그인 - 쿠키 확인
+        // 로그인 - 쿠키 확인
         String memberKeyId = extractMemberKeyIdFromCookies();
         if (memberKeyId != null) {
-            GuestLoginResponse guestInfo = guestDAO.selectMemberKeyId(memberKeyId);
-            log.debug("Guest info from DB: {}", guestInfo);
 
-            if (guestInfo == null) {
-                throw new BusinessException(GuestError.NOTFOUND_GUEST);
+            // 1. 멤버 로그인 정보 확인
+            MemberResponse memberInfo = memberDAO.findMemberByMemberKeyId(memberKeyId);
+            if(memberInfo != null) {
+                return AuthInfo.builder()
+                        .memberId(memberInfo.getMemberId())
+                        .loginType(LoginType.KAKAO.name())
+                        .role(Role.MEMBER.name())
+                        .build();
+
+                // 2. 게스트 로그인 정보 확인
+            } else {
+                GuestLoginResponse guestInfo = guestDAO.selectMemberKeyId(memberKeyId);
+                log.debug("Guest info from DB: {}", guestInfo);
+
+                if (guestInfo == null) {
+                    throw new BusinessException(GuestError.NOTFOUND_GUEST);
+                }
+
+                return AuthInfo.builder()
+                        .memberId(guestInfo.getMemberId())
+                        .loginType(LoginType.GUEST.name())
+                        .role(Role.GUEST.name())
+                        .build();
             }
 
-            return AuthInfo.builder()
-                    .memberId(guestInfo.getMemberId())
-                    .loginType(LoginType.GUEST.name())
-                    .role(Role.GUEST.name())
-                    .build();
         }
 
         // 3. 미인증 사용자
@@ -139,6 +133,21 @@ public class AuthenticationAspect {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("memberKeyId".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 쿠키에서 memberId를 추출합니다.
+     */
+    private String extractMemberIdFromCookies() {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("memberId".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

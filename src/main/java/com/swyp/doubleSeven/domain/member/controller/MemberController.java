@@ -1,5 +1,6 @@
 package com.swyp.doubleSeven.domain.member.controller;
 
+import com.swyp.doubleSeven.common.aspect.AuthenticationUtil;
 import com.swyp.doubleSeven.common.aspect.anotation.AuthCheck;
 import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.common.util.CommonAspect;
@@ -10,11 +11,7 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -29,20 +26,25 @@ import java.util.List;
 public class MemberController {
     private final MemberService memberService;
     private final CommonAspect commonAspect;
+    private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/auth/kakao-login")
-    public ResponseEntity<MemberResponse> kakaoLogin(@RequestParam("code") String code, HttpSession session) {
+    public ResponseEntity<MemberResponse> kakaoLogin(@RequestParam("code") String memberKeyId, HttpServletResponse response) {
 
-//      String accessToken = memberService.getKakaoAccessToken(code, httpServletRequest);
-        MemberResponse memberResponse = memberService.processKakaoUser(code);
-
-        session.setAttribute("memberId", memberResponse.getMemberId());
-        session.setAttribute("memberNickname", memberResponse.getMemberNickname());
-        session.setAttribute("loginType", memberResponse.getLoginType());
-        session.setAttribute("role", memberResponse.getRole());
+        MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
 
         List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
         memberResponse.setBadgeResponseList(badgeResponseList);
+
+        // 쿠키 설정을 위한 공통 속성 (Domain 유지)
+        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000";
+        // 각 쿠키 설정
+        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+                memberResponse.getMemberKeyId(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
+                memberResponse.getMemberId().toString(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
+                "KAKAO", cookieProperties));
 
         return ResponseEntity.ok(memberResponse);
     }
@@ -57,10 +59,11 @@ public class MemberController {
 
     @PostMapping("/withdrawal")
     @AuthCheck(allowedRoles = Role.MEMBER)
-    public int withdraw(@RequestParam("memberId") Integer memberId, HttpSession session) {
-        if((Integer)session.getAttribute("memberId") != memberId) {
+    public int withdraw(@RequestParam("memberId") Integer memberId) {
+        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        if(currentMemberId != memberId) {
             throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
         }
-        return memberService.withdrawMember(memberId);
+        return memberService.withdrawMember(currentMemberId);
     }
 }
