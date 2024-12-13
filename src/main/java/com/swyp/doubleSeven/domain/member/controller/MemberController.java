@@ -11,6 +11,7 @@ import com.swyp.doubleSeven.domain.member.dto.request.MemberRequest;
 import com.swyp.doubleSeven.domain.member.dto.response.MemberResponse;
 import com.swyp.doubleSeven.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,10 @@ public class MemberController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/auth/kakao-login")
-    public ResponseEntity<MemberResponse> kakaoLogin(@RequestParam("code") String memberKeyId, HttpServletResponse response) {
+    public ResponseEntity<MemberResponse> kakaoLogin(
+            @RequestParam("code") String memberKeyId
+            , HttpServletResponse response
+            , HttpServletRequest request) {
 
         MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
 
