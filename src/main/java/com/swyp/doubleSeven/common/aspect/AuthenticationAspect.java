@@ -130,6 +130,7 @@ public class AuthenticationAspect {
      */
     private String extractMemberKeyIdFromCookies() {
         Cookie[] cookies = request.getCookies();
+        if(cookies == null) log.info("cookie is null");
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 log.info("extractMemberKeyIdFromCookies: {}", cookie.getName(), cookie.getValue());
@@ -146,6 +147,7 @@ public class AuthenticationAspect {
      */
     private String extractMemberIdFromCookies() {
         Cookie[] cookies = request.getCookies();
+        if(cookies == null) log.info("cookie is null");
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("memberId".equals(cookie.getName())) {

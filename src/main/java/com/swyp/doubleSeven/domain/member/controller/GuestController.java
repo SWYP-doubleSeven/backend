@@ -12,10 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/guest")
 @RequiredArgsConstructor
 @Tag(name = "Guest", description = "게스트 관련 API")
@@ -46,6 +48,11 @@ public class GuestController {
                 guestResponse.getMemberId().toString(), cookieProperties));
         response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
                 "GUEST", cookieProperties));
+
+        log.info("====게스트 로그인=====");
+        log.info("쿠키 속성: {}", cookieProperties);
+        log.info("Set-Cookie: memberKeyId={}", guestResponse.getMemberKeyId());
+        log.info("Set-Cookie: memberId={}", guestResponse.getMemberId());
 
         /*// memberKeyId 쿠키 설정
         String memberKeyIdCookie = String.format("%s=%s; %s",

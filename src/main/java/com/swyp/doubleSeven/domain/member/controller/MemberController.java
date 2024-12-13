@@ -52,8 +52,8 @@ public class MemberController {
 
         log.info("====카카오 로그인=====");
         log.info("쿠키 속성: {}", cookieProperties);
-        log.info("Set-Cookie: memberKeyId={}; {}", memberResponse.getMemberKeyId());
-        log.info("Set-Cookie: memberId={}; {}", memberResponse.getMemberId());
+        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
+        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
 
 
         return ResponseEntity.ok(memberResponse);
