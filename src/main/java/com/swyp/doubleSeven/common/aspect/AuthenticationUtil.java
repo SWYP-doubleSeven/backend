@@ -25,6 +25,7 @@ public class AuthenticationUtil {
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
+                log.info("getCurrentMemberId의 cookie값: {}", cookie.getName(), cookie.getValue());
                 if ("memberKeyId".equals(cookie.getName())) {
                     memberKeyId = cookie.getValue();
                     break;
