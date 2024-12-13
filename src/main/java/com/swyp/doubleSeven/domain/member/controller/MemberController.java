@@ -43,11 +43,11 @@ public class MemberController {
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
         String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
         // 각 쿠키 설정
-        response.setHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
                 memberResponse.getMemberKeyId(), cookieProperties));
-        response.setHeader("Set-Cookie", String.format("memberId=%s; %s",
+        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
                 memberResponse.getMemberId().toString(), cookieProperties));
-        response.setHeader("Set-Cookie", String.format("loginType=%s; %s",
+        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
                 "KAKAO", cookieProperties));
 
         log.info("====카카오 로그인=====");
