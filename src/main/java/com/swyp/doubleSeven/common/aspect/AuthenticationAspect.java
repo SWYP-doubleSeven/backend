@@ -52,7 +52,7 @@ public class AuthenticationAspect {
         try {
             // 1. 인증 정보 조회
             AuthInfo authInfo = getAuthInfo();
-            log.debug("Retrieved authInfo: {}", authInfo);
+            log.info("Retrieved authInfo: {}", authInfo);
 
             // 2. 권한 검증
             validateAuth(authInfo, authCheck);
@@ -163,7 +163,7 @@ public class AuthenticationAspect {
      * @throws BusinessException 권한 없음 예외
      */
     private void validateAuth(AuthInfo authInfo, AuthCheck authCheck) {
-        log.debug("Validating auth for user with loginType: {} and role: {}",
+        log.info("Validating auth for user with loginType: {} and role: {}",
                 authInfo.getLoginType(), authInfo.getRole());
 
 
@@ -182,7 +182,7 @@ public class AuthenticationAspect {
                     ? GuestError.GUEST_ACCESS_DENIED
                     : MemberError.MEMBER_ACCESS_DENIED);
         }
-        log.debug("Auth validation successful");
+        log.info("Auth validation successful");
 
     }
 
@@ -199,9 +199,12 @@ public class AuthenticationAspect {
                         Method setMemberId = arg.getClass().getMethod("setMemberId", Integer.class);
                         setMemberId.invoke(arg, memberId);
 
+
+
                         Method getMemberId = arg.getClass().getMethod("getMemberId");
                         Integer setMemberIdValue = (Integer) getMemberId.invoke(arg);
-                        log.debug("Set and verified memberId {} for {}", setMemberIdValue, arg.getClass().getSimpleName());
+                        log.info("==========setMemberIdForArgs========");
+                        log.info("Set and verified memberId {} for {}", setMemberIdValue, arg.getClass().getSimpleName());
                     } catch (Exception e) {
                         throw new BusinessException(Error.BAD_REQUEST);
                     }

@@ -7,10 +7,12 @@ import com.swyp.doubleSeven.domain.member.dto.response.guest.GuestLoginResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationUtil {
     private final HttpServletRequest request;
     private final GuestDAO guestDAO;
@@ -29,9 +31,11 @@ public class AuthenticationUtil {
                 }
             }
         }
+        log.info("getCurrentMemberId: {}", memberKeyId);
 
         MemberResponse memberInfo = memberDAO.findMemberByMemberKeyId(memberKeyId);
         if(memberInfo != null) {
+            log.info("getCurrentMemberId의 getMemberId: {}", memberInfo.getMemberId());
             return memberInfo.getMemberId();
         }
 
@@ -39,6 +43,7 @@ public class AuthenticationUtil {
         if (guestInfo != null) {
             return guestInfo.getMemberId();
         }
+
 
         return null;
     }
