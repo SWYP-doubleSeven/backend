@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class AdminBadgeController {
     private final CommonImageUploader commonImageUploader;
 
     @PostMapping
+    @SecurityRequirement(name = "cookieAuth")
     @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 등록", description = "관리자가 뱃지를 등록합니다")
     @ApiResponses({
@@ -87,6 +89,7 @@ public class AdminBadgeController {
 
     @PutMapping
     @AuthCheck(allowedRoles = Role.ADMIN)
+    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "뱃지 수정", description = "관리자가 뱃지를 수정합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공",
@@ -136,6 +139,7 @@ public class AdminBadgeController {
 
     @DeleteMapping("/{badgeId}")
     @AuthCheck(allowedRoles = Role.ADMIN)
+    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "뱃지 삭제", description = "관리자가 뱃지를 삭제합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "삭제 성공",
@@ -151,6 +155,7 @@ public class AdminBadgeController {
 
     @GetMapping("/list")
     @AuthCheck(allowedRoles = Role.ADMIN)
+    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "관리자-뱃지 목록조회", description = "관리자가 뱃지 목록을 조회합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
