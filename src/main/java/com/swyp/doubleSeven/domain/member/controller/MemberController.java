@@ -46,6 +46,13 @@ public class MemberController {
         response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
                 "KAKAO", cookieProperties));
 
+        log.info("====카카오 로그인=====");
+        log.info("쿠키 속성: {}", cookieProperties);
+        log.info("Set-Cookie: memberKeyId={}; {}", memberResponse.getMemberKeyId(), cookieProperties);
+        log.info("Set-Cookie: memberId={}; {}", memberResponse.getMemberId(), cookieProperties);
+        log.info("Set-Cookie: loginType=KAKAO; {}", cookieProperties);
+
+
         return ResponseEntity.ok(memberResponse);
     }
 

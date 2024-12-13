@@ -41,7 +41,7 @@ public class ResourceOwnershipAspect {
             throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
         }
 
-        log.debug("Resource access validated - User: {}, Resource: {}", currentMemberId, savingId);
+        log.info("Resource access validated - User: {}, Resource: {}", currentMemberId, savingId);
     }
 
 }
