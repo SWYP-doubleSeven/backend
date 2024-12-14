@@ -91,21 +91,21 @@ public class MemberController {
         }
         return memberService.withdrawMember(currentMemberId);
     }
-
-    @PostMapping("/auth/logout")
-    public ResponseEntity<String> logout(HttpServletResponse response) {
-        // 쿠키 이름들
-        String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
-
-        // 각 쿠키 삭제
-        for (String cookieName : cookiesToDelete) {
-            Cookie cookie = new Cookie(cookieName, null);
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            cookie.setDomain("api-zerocost.site");
-            response.addCookie(cookie);
-        }
-
-        return ResponseEntity.ok("로그아웃 성공");
-    }
+//
+//    @PostMapping("/auth/logout")
+//    public ResponseEntity<String> logout(HttpServletResponse response) {
+//        // 쿠키 이름들
+//        String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
+//
+//        // 각 쿠키 삭제
+//        for (String cookieName : cookiesToDelete) {
+//            Cookie cookie = new Cookie(cookieName, null);
+//            cookie.setMaxAge(0);
+//            cookie.setPath("/");
+//            cookie.setDomain("api-zerocost.site");
+//            response.addCookie(cookie);
+//        }
+//
+//        return ResponseEntity.ok("로그아웃 성공");
+//    }
 }
