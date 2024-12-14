@@ -78,7 +78,16 @@
         DAY(s.SAVING_YMD) as day,
         sub.SUB_CATEGORY_NAME,
         MIN(s.SAVING_YMD) as first_appearance,
-        SUM(s.AMOUNT) as CATEGORY_TOTAL_AMOUNT
+        (
+        SELECT SUM(AMOUNT)
+        FROM SAVING s2
+        WHERE s2.MEMBER_ID = s.MEMBER_ID
+        AND DAY(s2.SAVING_YMD) = DAY(s.SAVING_YMD)
+        AND YEAR(s2.SAVING_YMD) = #{year}
+        AND MONTH(s2.SAVING_YMD) = #{month}
+        AND s2.IS_DELETE = 'N'
+        AND s2.SUB_CATEGORY_ID = s.SUB_CATEGORY_ID
+        ) as CATEGORY_TOTAL_AMOUNT
         FROM SAVING s
         JOIN SUB_CATEGORY sub
         ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
@@ -91,6 +100,7 @@
         </if>
         GROUP BY
         DAY(s.SAVING_YMD),
+        s.SUB_CATEGORY_ID,
         sub.SUB_CATEGORY_NAME
         )
         SELECT
