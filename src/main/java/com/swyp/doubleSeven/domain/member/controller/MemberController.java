@@ -43,7 +43,7 @@ public class MemberController {
         memberResponse.setBadgeResponseList(badgeResponseList);
 
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
-        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000;";
+        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
         // 각 쿠키 설정
         response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
                 memberResponse.getMemberKeyId(), cookieProperties));
@@ -71,7 +71,7 @@ public class MemberController {
         cookie.setPath("/");                      // 모든 경로에서 접근 가능
         cookie.setSecure(true);                   // HTTPS 전용
         cookie.setHttpOnly(true);                 // JavaScript 접근 차단
-        cookie.setDomain("api-zerocost.site");    // 쿠키 도메인 설정
+        cookie.setDomain("zerocost-eta.vercel.app");    // 쿠키 도메인 설정
         response.addCookie(cookie);               // 응답에 쿠키 추가
     }
 
