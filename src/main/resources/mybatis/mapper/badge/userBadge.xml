@@ -69,6 +69,25 @@
         AND NOT(A.BADGE_TYPE = 'DATE' AND B.BADGE_ID IS NULL)
     </select>
 
+    <!-- 새로 얻은 뱃지 top3 목록 조회 -->
+    <select id="getBadgeListLimit3" parameterType="java.lang.Integer" resultMap="BadgeResultMap">
+        SELECT
+            A.BADGE_ID,
+            A.BADGE_NAME,
+            A.EMBLEM_PATH,
+            A.BADGE_TYPE,
+            A.BADGE_TYPE_KR,
+            A.BADGE_DESCRIPTION
+        FROM BADGE A
+                 LEFT OUTER JOIN BADGE_ACQUIRE B
+                                 ON A.BADGE_ID = B.BADGE_ID
+                                     AND B.MEMBER_ID = #{memberId}
+        WHERE 1=1
+            AND B.BADGE_ID IS NOT NULL
+        ORDER BY B.GET_DATE DESC
+        LIMIT 3
+    </select>
+
     <!--소비 기록 후 획득가능한 뱃지목록 조회-->
     <select id="getBadgeIdAfterSaving" parameterType="badgeRequest" resultMap="BadgeResultMap">
         SELECT * FROM BADGE A
