@@ -43,7 +43,7 @@ public class MemberController {
         memberResponse.setBadgeResponseList(badgeResponseList);
 
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
-        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
+        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000;";
         // 각 쿠키 설정
         response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
                 memberResponse.getMemberKeyId(), cookieProperties));
@@ -98,12 +98,13 @@ public class MemberController {
         // 쿠키 이름들
         String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
 
-        // 각 쿠키 삭제
         for (String cookieName : cookiesToDelete) {
             Cookie cookie = new Cookie(cookieName, null);
-            cookie.setMaxAge(0);
-            cookie.setPath("/");
-            cookie.setDomain("api-zerocost.site");
+            cookie.setMaxAge(0); // 쿠키 만료
+            cookie.setPath("/"); // Path 일치
+            cookie.setDomain("api-zerocost.site"); // Domain 일치
+            cookie.setSecure(true); // HTTPS 사용
+            cookie.setHttpOnly(true); // JS 접근 차단
             response.addCookie(cookie);
         }
 
