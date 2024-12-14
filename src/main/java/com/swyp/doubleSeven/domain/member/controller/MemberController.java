@@ -31,6 +31,7 @@ public class MemberController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/auth/kakao-login")
+    @CrossOrigin(origins = "https://zerocost-eta.vercel.app", allowCredentials = "true")
     public ResponseEntity<MemberResponse> kakaoLogin(
             @RequestParam("code") String memberKeyId
             , HttpServletResponse response
@@ -41,24 +42,24 @@ public class MemberController {
         List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
         memberResponse.setBadgeResponseList(badgeResponseList);
 
-//        // 쿠키 설정을 위한 공통 속성 (Domain 유지)
-//        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
-//        // 각 쿠키 설정
-//        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
-//                memberResponse.getMemberKeyId(), cookieProperties));
-//        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
-//                memberResponse.getMemberId().toString(), cookieProperties));
-//        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
-//                "KAKAO", cookieProperties));
-//
-//        log.info("====카카오 로그인=====");
-//        log.info("쿠키 속성: {}", cookieProperties);
-//        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
-//        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
+        // 쿠키 설정을 위한 공통 속성 (Domain 유지)
+        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
+        // 각 쿠키 설정
+        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+                memberResponse.getMemberKeyId(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
+                memberResponse.getMemberId().toString(), cookieProperties));
+        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
+                "KAKAO", cookieProperties));
 
-        setCookie(response, "memberKeyId", memberKeyId);
-        setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
-        setCookie(response, "loginType", memberResponse.getLoginType());
+        log.info("====카카오 로그인=====");
+        log.info("쿠키 속성: {}", cookieProperties);
+        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
+        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
+
+//        setCookie(response, "memberKeyId", memberKeyId);
+//        setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
+//        setCookie(response, "loginType", memberResponse.getLoginType());
 
 
         return ResponseEntity.ok(memberResponse);
