@@ -53,7 +53,8 @@ public class MyPageController {
     @SecurityRequirement(name = "cookieAuth")
     @GetMapping("/member-status")
     public MemberStatusResponse selectMemberStatus () {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        Integer currentMemberId = 45;
         return myPageService.selectMemberStatus(currentMemberId);
     }
 }
