@@ -1,9 +1,11 @@
 package com.swyp.doubleSeven.domain.member.dto.response;
 
+import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import java.util.List;
 
 @Getter
 @Builder
@@ -15,4 +17,11 @@ public class MemberStatusResponse {
 
     @Schema(description = "가입일로부터 총 절약 금액", example = "18000")
     private int totalAmount;
+
+    @Schema(description = "사용자의 뱃지 정보", example = "Bagde테이블 list")
+    private List<BadgeResponse> badgeResponseList;
+
+    public void setBadgeResponseList(List<BadgeResponse> badgeResponseList) {
+        this.badgeResponseList = badgeResponseList;
+    }
 }

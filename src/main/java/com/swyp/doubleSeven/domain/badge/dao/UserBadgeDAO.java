@@ -18,4 +18,6 @@ public interface UserBadgeDAO {
     List<BadgeResponse> getBadgeIdAfterSaving(BadgeRequest badgeRequest);
 
     List<BadgeResponse> getBadgeIdAfterLogin(BadgeRequest badgeRequest);
+
+    List<BadgeResponse> getBadgeListLimit3(Integer memberId);
 }
