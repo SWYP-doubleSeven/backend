@@ -70,7 +70,7 @@ public class MemberController {
         cookie.setPath("/");                      // 모든 경로에서 접근 가능
         cookie.setSecure(true);                   // HTTPS 전용
         cookie.setHttpOnly(true);                 // JavaScript 접근 차단
-        cookie.setDomain("api-zerocost.site");    // 쿠키 도메인 설정
+        cookie.setDomain("zerocost-eta.vercel.app");    // 쿠키 도메인 설정
         response.addCookie(cookie);               // 응답에 쿠키 추가
     }
 
@@ -91,21 +91,21 @@ public class MemberController {
         }
         return memberService.withdrawMember(currentMemberId);
     }
-//
-//    @PostMapping("/auth/logout")
-//    public ResponseEntity<String> logout(HttpServletResponse response) {
-//        // 쿠키 이름들
-//        String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
-//
-//        // 각 쿠키 삭제
-//        for (String cookieName : cookiesToDelete) {
-//            Cookie cookie = new Cookie(cookieName, null);
-//            cookie.setMaxAge(0);
-//            cookie.setPath("/");
-//            cookie.setDomain("api-zerocost.site");
-//            response.addCookie(cookie);
-//        }
-//
-//        return ResponseEntity.ok("로그아웃 성공");
-//    }
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        // 쿠키 이름들
+        String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
+
+        // 각 쿠키 삭제
+        for (String cookieName : cookiesToDelete) {
+            Cookie cookie = new Cookie(cookieName, null);
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            cookie.setDomain("api-zerocost.site");
+            response.addCookie(cookie);
+        }
+
+        return ResponseEntity.ok("로그아웃 성공");
+    }
 }
