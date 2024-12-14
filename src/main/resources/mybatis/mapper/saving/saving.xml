@@ -62,7 +62,10 @@
 
     <select id="selectSavingMonthly" resultMap="monthlySavingMap">
         WITH DayTotalAmount AS (
-        SELECT DAY(SAVING_YMD) as day, SUM(AMOUNT) as DAY_TOTAL_AMOUNT, COUNT(*) as COUNT
+        SELECT
+        DAY(SAVING_YMD) as day,
+        SUM(AMOUNT) as DAY_TOTAL_AMOUNT,
+        COUNT(*) as COUNT
         FROM SAVING
         WHERE MEMBER_ID = #{memberId}
         AND YEAR(SAVING_YMD) = #{year}
@@ -71,18 +74,14 @@
         GROUP BY DAY(SAVING_YMD)
         ),
         FirstCategories AS (
-        SELECT DAY(s.SAVING_YMD) as day,
+        SELECT
+        DAY(s.SAVING_YMD) as day,
         sub.SUB_CATEGORY_NAME,
         MIN(s.SAVING_YMD) as first_appearance,
-        SUM(s2.AMOUNT) as CATEGORY_TOTAL_AMOUNT
+        SUM(s.AMOUNT) as CATEGORY_TOTAL_AMOUNT
         FROM SAVING s
-        JOIN SUB_CATEGORY sub ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
-        LEFT JOIN SAVING s2 ON DAY(s.SAVING_YMD) = DAY(s2.SAVING_YMD)
-        AND s2.SUB_CATEGORY_ID = s.SUB_CATEGORY_ID
-        AND s2.MEMBER_ID = #{memberId}
-        AND YEAR(s2.SAVING_YMD) = #{year}
-        AND MONTH(s2.SAVING_YMD) = #{month}
-        AND s2.IS_DELETE = 'N'
+        JOIN SUB_CATEGORY sub
+        ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
         WHERE s.MEMBER_ID = #{memberId}
         AND YEAR(s.SAVING_YMD) = #{year}
         AND MONTH(s.SAVING_YMD) = #{month}
@@ -90,9 +89,12 @@
         <if test="categoryName != null and categoryName != ''">
             AND sub.SUB_CATEGORY_NAME = #{categoryName}
         </if>
-        GROUP BY DAY(s.SAVING_YMD), sub.SUB_CATEGORY_NAME
+        GROUP BY
+        DAY(s.SAVING_YMD),
+        sub.SUB_CATEGORY_NAME
         )
-        SELECT s.MEMBER_ID,
+        SELECT
+        s.MEMBER_ID,
         DAY(s.SAVING_YMD) as day,
         dt.DAY_TOTAL_AMOUNT,
         dt.COUNT,
@@ -103,10 +105,13 @@
         s.AMOUNT,
         fc.CATEGORY_TOTAL_AMOUNT
         FROM SAVING s
-        JOIN SUB_CATEGORY sub ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
-        JOIN FirstCategories fc ON DAY(s.SAVING_YMD) = fc.day
+        JOIN SUB_CATEGORY sub
+        ON s.SUB_CATEGORY_ID = sub.SUB_CATEGORY_ID
+        JOIN FirstCategories fc
+        ON DAY(s.SAVING_YMD) = fc.day
         AND sub.SUB_CATEGORY_NAME = fc.SUB_CATEGORY_NAME
-        JOIN DayTotalAmount dt ON DAY(s.SAVING_YMD) = dt.day
+        JOIN DayTotalAmount dt
+        ON DAY(s.SAVING_YMD) = dt.day
         WHERE s.MEMBER_ID = #{memberId}
         AND YEAR(s.SAVING_YMD) = #{year}
         AND MONTH(s.SAVING_YMD) = #{month}
@@ -114,7 +119,10 @@
         <if test="categoryName != null and categoryName != ''">
             AND sub.SUB_CATEGORY_NAME = #{categoryName}
         </if>
-        ORDER BY day ASC, fc.first_appearance ASC, SAVING_TIME ASC
+        ORDER BY
+        day ASC,
+        fc.first_appearance ASC,
+        SAVING_TIME ASC
     </select>
 
 
