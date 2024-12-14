@@ -70,7 +70,7 @@ public class MemberController {
         cookie.setPath("/");                      // 모든 경로에서 접근 가능
         cookie.setSecure(true);                   // HTTPS 전용
         cookie.setHttpOnly(true);                 // JavaScript 접근 차단
-        cookie.setDomain("api-zerocost.site");    // 쿠키 도메인 설정
+        cookie.setDomain("zerocost-eta.vercel.app");    // 쿠키 도메인 설정
         response.addCookie(cookie);               // 응답에 쿠키 추가
     }
 
