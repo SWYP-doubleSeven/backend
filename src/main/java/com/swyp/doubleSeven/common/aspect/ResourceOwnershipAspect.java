@@ -29,7 +29,7 @@ public class ResourceOwnershipAspect {
     private final AuthenticationUtil authenticationUtil;
     private final SavingDAO savingDAO;
 
-    @Before("@annotation(com.swyp.doubleSeven.common.annotation.ValidateResourceOwner) && args(savingId,..)")
+//    @Before("@annotation(com.swyp.doubleSeven.common.annotation.ValidateResourceOwner) && args(savingId,..)")
     public void validateResourceOwner(JoinPoint joinPoint, Integer savingId) {
         Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         if (currentMemberId == null) {

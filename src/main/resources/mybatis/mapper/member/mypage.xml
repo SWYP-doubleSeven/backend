@@ -13,6 +13,18 @@
                  LEFT JOIN SAVING s ON m.MEMBER_ID = s.MEMBER_ID
         WHERE m.MEMBER_ID = #{memberId} AND s.IS_DELETE = 'N'
         GROUP BY m.MEMBER_ID, m.RGST_DT
+        UNION ALL
+        SELECT
+            0 AS DAYS_FROM_REGISTRATION,
+            0 AS TOTAL_AMOUNT,
+            NULL AS BADGE_RESPONSE_LIST
+            WHERE NOT EXISTS (
+        SELECT 1
+        FROM MEMBER m
+                 LEFT JOIN SAVING s ON m.MEMBER_ID = s.MEMBER_ID
+        WHERE m.MEMBER_ID = #{memberId} AND s.IS_DELETE = 'N'
+                GROUP BY m.MEMBER_ID, m.RGST_DT
+            )
     </select>
 
 </mapper>

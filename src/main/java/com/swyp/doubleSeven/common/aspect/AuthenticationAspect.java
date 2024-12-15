@@ -40,6 +40,18 @@ public class AuthenticationAspect {
 
     private final GuestDAO guestDAO;
 
+
+    /** memberId를 이용해 loginType정보를 반환합니다 */
+    public String getLoginTypeByMemberId(Integer memberId) {
+        return memberDAO.getLoginTypeByMemberId(memberId);
+    }
+
+    /** memberId를 이용해 role정보를 반환합니다 */
+    public String getRoleByMemberId(Integer memberId) {
+        return memberDAO.getRoleByMemberId(memberId);
+    }
+
+
     /**
      * AuthCheck 어노테이션이 붙은 메서드 실행 전에 권한을 검증합니다.
      *

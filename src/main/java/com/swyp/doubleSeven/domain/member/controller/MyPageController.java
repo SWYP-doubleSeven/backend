@@ -15,7 +15,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,10 +54,12 @@ public class MyPageController {
                     )
             )
     })
-    @SecurityRequirement(name = "cookieAuth")
+//    @SecurityRequirement(name = "cookieAuth")
     @GetMapping("/member-status")
-    public MemberStatusResponse selectMemberStatus () {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
-        return myPageService.selectMemberStatus(currentMemberId);
+    public MemberStatusResponse selectMemberStatus (@RequestParam("memberId") Integer currentMemberId) {
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+        MemberStatusResponse memberStatusResponse = myPageService.selectMemberStatus(currentMemberId);
+        if(memberStatusResponse == null) memberStatusResponse = new MemberStatusResponse(0, 0, new ArrayList<>());
+        return memberStatusResponse;
     }
 }

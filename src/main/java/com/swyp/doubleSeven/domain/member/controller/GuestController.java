@@ -128,8 +128,8 @@ public class GuestController {
     })
     //@ValidateOnExecution
     @GetMapping("/show-modal")
-    public ResponseEntity<Boolean> countSaving () {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+    public ResponseEntity<Boolean> countSaving (@RequestParam(value="memberId") Integer currentMemberId) {
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         return ResponseEntity.ok(guestService.countSaving(currentMemberId));
     }
 }
