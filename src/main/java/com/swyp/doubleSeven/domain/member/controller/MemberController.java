@@ -43,10 +43,29 @@ public class MemberController {
         log.info("Server Name: {}", request.getServerName());
         log.info("Server Port: {}", request.getServerPort());
 
-        MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
+        try {
+            log.info("Received kakao login request with memberKeyId: {}", memberKeyId);
 
-        List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
-        memberResponse.setBadgeResponseList(badgeResponseList);
+            MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
+            log.info("Processed kakao user successfully: {}", memberResponse);
+
+            List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
+            memberResponse.setBadgeResponseList(badgeResponseList);
+
+            setCookie(response, "memberKeyId", memberKeyId);
+            setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
+            setCookie(response, "loginType", memberResponse.getLoginType());
+
+            return ResponseEntity.ok(memberResponse);
+        } catch (Exception e) {
+            log.error("Error during kakao login process", e);
+            throw e;
+        }
+
+        //MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
+
+        //List<BadgeResponse> badgeResponseList = commonAspect.afterLogin(memberResponse.getMemberId().intValue());
+        //memberResponse.setBadgeResponseList(badgeResponseList);
 
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
 //        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
@@ -63,12 +82,12 @@ public class MemberController {
 //        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
 //        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
 
-        setCookie(response, "memberKeyId", memberKeyId);
-        setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
-        setCookie(response, "loginType", memberResponse.getLoginType());
+        //setCookie(response, "memberKeyId", memberKeyId);
+        //setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
+        //setCookie(response, "loginType", memberResponse.getLoginType());
 
 
-        return ResponseEntity.ok(memberResponse);
+        //return ResponseEntity.ok(memberResponse);
     }
 
     private void setCookie(HttpServletResponse response, String name, String value) {
