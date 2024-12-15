@@ -31,7 +31,7 @@ public class MemberController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/auth/kakao-login")
-    @CrossOrigin(origins = "https://zerocost-eta.vercel.app", allowCredentials = "true")
+    @CrossOrigin(origins = {"https://zerocost-eta.vercel.app", "http://localhost:3000", "https://zerocost.swygbro.com"}, allowCredentials = "true")
     public ResponseEntity<MemberResponse> kakaoLogin(
             @RequestParam("code") String memberKeyId
             , HttpServletResponse response
