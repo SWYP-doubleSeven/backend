@@ -31,11 +31,17 @@ public class MemberController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/auth/kakao-login")
-    @CrossOrigin(origins = "https://zerocost-eta.vercel.app", allowCredentials = "true")
+    //@CrossOrigin(origins = {"https://zerocost-eta.vercel.app", "http://localhost:3000", "https://zerocost.swygbro.com"}, allowCredentials = "true")
     public ResponseEntity<MemberResponse> kakaoLogin(
             @RequestParam("code") String memberKeyId
             , HttpServletResponse response
             , HttpServletRequest request) {
+
+        log.info("Request received from: {}", request.getHeader("Origin"));
+        log.info("Request URL: {}", request.getRequestURL());
+        log.info("Request URI: {}", request.getRequestURI());
+        log.info("Server Name: {}", request.getServerName());
+        log.info("Server Port: {}", request.getServerPort());
 
         MemberResponse memberResponse = memberService.processKakaoUser(memberKeyId);
 
