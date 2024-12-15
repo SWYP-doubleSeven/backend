@@ -120,7 +120,8 @@ public class MemberService {
 //        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
 
         Integer memberId = null;
-        if (memberKeyId == null) { // 신규 회원 처리
+        MemberResponse memberResponse = memberDAO.findMemberByMemberKeyId(memberKeyId);
+        if (memberResponse == null) { // 신규 회원 처리
             MemberRequest newMemberRequest = MemberRequest.builder()
                     .memberKeyId(String.valueOf(memberKeyId))
                     .loginType(LoginType.KAKAO.getType())
@@ -138,7 +139,6 @@ public class MemberService {
             memberId = newMemberRequest.getMemberId();
 
         } else {
-            MemberResponse memberResponse = memberDAO.findMemberByMemberKeyId(memberKeyId);
             memberId = memberResponse.getMemberId();
             if(LoginType.GUEST.getType().equals(memberResponse.getLoginType())) { // 게스트->카카오 로그인전환
 
