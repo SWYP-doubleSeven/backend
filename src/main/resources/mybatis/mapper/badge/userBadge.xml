@@ -14,6 +14,7 @@
         <result property="operator" column="OPERATOR"/>
         <result property="value" column="VALUE"/>
         <result property="acquireYN" column="ACQUIRE_YN"/>
+        <result property="count" column="COUNT"/>
         <result property="rgstId" column="RGST_ID"/>
         <result property="rgstDt" column="RGST_DT"/>
         <result property="updtId" column="UPDT_ID"/>
@@ -59,11 +60,20 @@
             DATE_FORMAT(A.RGST_DT, '%Y-%m-%d %H:%i:%s') AS RGST_DT,
             A.UPDT_ID,
             DATE_FORMAT(A.UPDT_DT, '%Y-%m-%d %H:%i:%s') AS UPDT_DT,
-            CASE WHEN B.BADGE_ID IS NOT NULL THEN 'Y' ELSE 'N' END AS ACQUIRE_YN
+            CASE WHEN B.BADGE_ID IS NOT NULL THEN 'Y' ELSE 'N' END AS ACQUIRE_YN,
+            IFNULL(C.COUNT, 0) AS COUNT
         FROM BADGE A
         LEFT OUTER JOIN BADGE_ACQUIRE B
             ON A.BADGE_ID = B.BADGE_ID
             AND B.MEMBER_ID = #{memberId}
+        LEFT OUTER JOIN (
+            SELECT
+            BADGE_ID,
+            COUNT(MEMBER_ID) AS COUNT
+            FROM
+            BADGE_ACQUIRE
+            GROUP BY BADGE_ID
+        ) C ON A.BADGE_ID = C.BADGE_ID
         WHERE 1=1
         AND NOT(A.BADGE_TYPE = 'MAX_MONEY' AND B.BADGE_ID IS NULL)
         AND NOT(A.BADGE_TYPE = 'DATE' AND B.BADGE_ID IS NULL)
