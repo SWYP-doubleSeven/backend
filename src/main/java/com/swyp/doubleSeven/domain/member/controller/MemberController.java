@@ -82,10 +82,15 @@ public class MemberController {
     }
 
 
-    @PutMapping("/member")
+    @PutMapping("/members/{memberId}/nickname")
     @Operation(summary = "멤버 닉네임 업데이트", description = "사용자가 멤버 닉네임을 업데이트합니다")
 //    @AuthCheck(allowedRoles = Role.MEMBER)
-    public ResponseEntity<MemberResponse> updateMemberNickname(@RequestBody MemberRequest memberRequest) {
+    public ResponseEntity<MemberResponse> updateMemberNickname(
+            @PathVariable("memberId") Integer memberId
+            , @RequestParam("memberNickname") String memberNickname) {
+        MemberRequest memberRequest = new MemberRequest();
+        memberRequest.setMemberId(memberId);
+        memberRequest.setMemberNickname(memberNickname);
         MemberResponse memberResponse = memberService.updateMemberNickname(memberRequest);
         return ResponseEntity.ok().body(memberResponse);
     }
