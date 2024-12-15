@@ -24,7 +24,6 @@ public class MemberService {
 
     public MemberResponse processKakaoUser(String memberKeyId) {
         log.info("Processing Kakao user with memberKeyId: {}", memberKeyId);
-
         try {
             // 1. 기존 회원 조회
             MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
@@ -39,9 +38,9 @@ public class MemberService {
                 MemberRequest newMemberRequest = MemberRequest.builder()
                         .memberKeyId(memberKeyId)
                         .loginType(LoginType.KAKAO.getType())
-                        .memberNickname(createRandomNickname())
-                        .memberName(null)  // 추가
-                        .email(null)      // 추가
+                        .memberNickname(nickname)
+                        .memberName(null)
+                        .email(null)
                         .role(Role.MEMBER.getType())
                         .dltnYn("N")
                         .rgstId(0)
@@ -51,6 +50,7 @@ public class MemberService {
                         .build();
 
                 try {
+                    log.info("Attempting to insert new member: {}", newMemberRequest);
                     memberDAO.insertMember(newMemberRequest);
                     log.info("New member inserted successfully with id: {}", newMemberRequest.getMemberId());
                     return memberDAO.findMemberByMemberId(newMemberRequest.getMemberId());
@@ -59,9 +59,7 @@ public class MemberService {
                     throw new RuntimeException("Failed to register new member", e);
                 }
             }
-
             return existingMember;
-
         } catch (Exception e) {
             log.error("Error in processKakaoUser", e);
             throw new RuntimeException("Failed to process Kakao user", e);
