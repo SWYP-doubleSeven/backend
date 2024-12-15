@@ -6,8 +6,8 @@
     <!-- 가입일로부터 얼마를 아꼈는지 -->
     <select id="selectMemberStatus" resultType="com.swyp.doubleSeven.domain.member.dto.response.MemberStatusResponse">
         SELECT
-            COALESCE(DATEDIFF(DATE(NOW()), DATE(m.RGST_DT)) + 1, 0) AS DAYS_FROM_REGISTRATION,
-            COALESCE(SUM(s.AMOUNT), 0) AS TOTAL_AMOUNT,
+            (DATEDIFF(DATE(NOW()), DATE(m.RGST_DT)) + 1) AS DAYS_FROM_REGISTRATION,
+            SUM(s.AMOUNT) as TOTAL_AMOUNT,
             NULL AS BADGE_RESPONSE_LIST
         FROM MEMBER m
                  LEFT JOIN SAVING s ON m.MEMBER_ID = s.MEMBER_ID
