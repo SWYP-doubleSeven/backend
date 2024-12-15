@@ -36,6 +36,7 @@
         FROM MEMBER
         WHERE MEMBER_ID = #{memberId}
         AND DLTN_YN = 'N'
+        LIMIT 1
     </select>
 
 
@@ -55,6 +56,7 @@
         WHERE 1=1
             AND MEMBER_KEY_ID = #{memberKeyId}
             AND DLTN_YN = 'N'
+        LIMIT 1
     </select>
 
     <!-- 사용자 등록/업데이트 -->
