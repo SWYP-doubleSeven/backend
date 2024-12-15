@@ -22,4 +22,8 @@ public interface MemberDAO {
     int deleteOldMember();
 
     int withdrawMember(Integer memberId);
+
+    String getLoginTypeByMemberId(Integer memberId);
+
+    String getRoleByMemberId(Integer memberId);
 }

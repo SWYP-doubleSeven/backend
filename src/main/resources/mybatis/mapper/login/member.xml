@@ -109,6 +109,7 @@
         WHERE MEMBER_NICKNAME = #{nickname}
     </select>
 
+    <!--멤버 닉네임 업데이트-->
     <update id="updateMemberNickname" parameterType="MemberRequest">
         UPDATE MEMBER SET
               MEMBER_NICKNAME = #{memberNickname}
@@ -117,19 +118,21 @@
           WHERE MEMBER_ID = #{memberId}
     </update>
 
+    <!--1년 지난 멤버의 정보 완전 삭제-->
     <delete id="deleteOldMember">
         <![CDATA[
         DELETE FROM MEMBER
-        WHERE MEMBER_ID IN (
-            SELECT A.MEMBER_ID
-            FROM MEMBER A
-                     LEFT JOIN MEMBER_ATTENDANCE B ON A.MEMBER_ID = B.MEMBER_ID
-            WHERE B.LAST_LOGIN_DATE < DATE_SUB(NOW(), INTERVAL 1 YEAR)
-              AND A.ROLE = 'MEMBER'
-        )
+        WHERE ROLE = 'MEMBER'
+            AND EXISTS (
+            SELECT 1
+            FROM MEMBER_ATTENDANCE B
+            WHERE MEMBER.MEMBER_ID = B.MEMBER_ID
+              AND B.LAST_LOGIN_DATE < DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            )
         ]]>
     </delete>
 
+    <!--회원탈퇴-->
     <update id="withdrawMember" parameterType="java.lang.Integer">
         UPDATE MEMBER SET
             DLTN_YN = 'Y'
@@ -138,6 +141,24 @@
         WHERE MEMBER_ID = #{memberId}
         AND ROLE IN ('MEMBER', 'ADMIN')
     </update>
+
+    <!--memberId이용해 loginType조회-->
+    <select id="getLoginTypeByMemberId" resultType="java.lang.String">
+        SELECT LOGIN_TYPE
+            FROM MEMBER
+        WHERE 1=1
+            AND MEMBER_ID = #{memberId}
+            AND DLTN_YN = 'N'
+    </select>
+
+    <!--memberId이용해 role조회-->
+    <select id="getRoleByMemberId" resultType="java.lang.String">
+        SELECT ROLE
+            FROM MEMBER
+        WHERE 1=1
+            AND MEMBER_ID = #{memberId}
+            AND DLTN_YN = 'N'
+    </select>
 
 
 </mapper>
