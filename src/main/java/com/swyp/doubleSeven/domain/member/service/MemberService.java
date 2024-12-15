@@ -23,6 +23,52 @@ public class MemberService {
     private final MemberDAO memberDAO;
 
     public MemberResponse processKakaoUser(String memberKeyId) {
+        log.info("Processing Kakao user with memberKeyId: {}", memberKeyId);
+
+        try {
+            // 1. 기존 회원 조회
+            MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
+            log.info("Existing member search result: {}", existingMember);
+
+            if (existingMember == null) {
+                log.info("New user registration required");
+                // 2. 신규 회원인 경우
+                String nickname = createRandomNickname();
+                log.info("Generated nickname: {}", nickname);
+
+                MemberRequest newMemberRequest = MemberRequest.builder()
+                        .memberKeyId(memberKeyId)
+                        .loginType(LoginType.KAKAO.getType())
+                        .memberNickname(createRandomNickname())
+                        .memberName(null)  // 추가
+                        .email(null)      // 추가
+                        .role(Role.MEMBER.getType())
+                        .dltnYn("N")
+                        .rgstId(0)
+                        .rgstDt(LocalDateTime.now())
+                        .updtId(0)
+                        .updtDt(LocalDateTime.now())
+                        .build();
+
+                try {
+                    memberDAO.insertMember(newMemberRequest);
+                    log.info("New member inserted successfully with id: {}", newMemberRequest.getMemberId());
+                    return memberDAO.findMemberByMemberId(newMemberRequest.getMemberId());
+                } catch (Exception e) {
+                    log.error("Failed to insert new member", e);
+                    throw new RuntimeException("Failed to register new member", e);
+                }
+            }
+
+            return existingMember;
+
+        } catch (Exception e) {
+            log.error("Error in processKakaoUser", e);
+            throw new RuntimeException("Failed to process Kakao user", e);
+        }
+    }
+
+    /*public MemberResponse processKakaoUser(String memberKeyId) {
         try {
             // 1. 기존 회원 조회
             MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
@@ -70,7 +116,7 @@ public class MemberService {
             log.error("Error processing Kakao user: ", e);
             throw new RuntimeException("Failed to process Kakao user", e);
         }
-    }
+    }*/
 
     /*public MemberResponse processKakaoUser(String memberKeyId) {
 //        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
