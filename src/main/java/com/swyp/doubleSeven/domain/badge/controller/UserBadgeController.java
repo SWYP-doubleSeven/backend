@@ -35,7 +35,7 @@ public class UserBadgeController {
     private final AuthenticationUtil authenticationUtil;
 
     @GetMapping("/{badgeId}")
-    @SecurityRequirement(name = "cookieAuth")
+//    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "사용자-뱃지 단건조회",
             description = "사용자가 뱃지 하나를 조회합니다. (로그인/소비기록 후 자동으로 뱃지정보가 조회되므로 잘 쓰지 않는 api)")
     @ApiResponse(
@@ -66,9 +66,9 @@ public class UserBadgeController {
                     )
             )
     )
-    public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId) {
+    public ResponseEntity<BadgeResponse> getBadge(@PathVariable Integer badgeId, @RequestParam("memberId") Integer currentMemberId) {
 
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         BadgeRequest request = new BadgeRequest();
         request.setBadgeId(badgeId);
         request.setMemberId(currentMemberId);
@@ -79,7 +79,7 @@ public class UserBadgeController {
 
 
     @GetMapping("/list")
-    @SecurityRequirement(name = "cookieAuth")
+//    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "사용자-뱃지 목록조회",
             description = "사용자가 뱃지 목록을 조회합니다. 사용자가 획득하지 않은 특정날짜(1/1, 10/31, ..), 매달 최고 금액 저축 뱃지는 제외하고, " +
                     "사용자의 획득 여부를 같이 반환합니다")
@@ -128,8 +128,8 @@ public class UserBadgeController {
                     )
             )
     )
-    public ResponseEntity<List<BadgeResponse>> getBadgeList() {
-        Integer memberId = authenticationUtil.getCurrentMemberId();
+    public ResponseEntity<List<BadgeResponse>> getBadgeList(@RequestParam("memberId") Integer memberId) {
+//        Integer memberId = authenticationUtil.getCurrentMemberId();
         return ResponseEntity.status(HttpStatus.OK).body(service.getBadgeList(memberId));
     }
 }

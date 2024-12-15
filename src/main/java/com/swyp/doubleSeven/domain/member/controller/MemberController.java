@@ -75,25 +75,28 @@ public class MemberController {
         response.addCookie(cookie);               // 응답에 쿠키 추가
     }
 
-    @PostMapping("/users")
-    @Operation
-    @AuthCheck(allowedRoles = Role.MEMBER)
+
+    @PutMapping("/member")
+    @Operation(summary = "멤버 닉네임 업데이트", description = "사용자가 멤버 닉네임을 업데이트합니다")
+//    @AuthCheck(allowedRoles = Role.MEMBER)
     public ResponseEntity<MemberResponse> updateMemberNickname(@RequestBody MemberRequest memberRequest) {
         MemberResponse memberResponse = memberService.updateMemberNickname(memberRequest);
         return ResponseEntity.ok().body(memberResponse);
     }
 
-    @PostMapping("/withdrawal")
-    @AuthCheck(allowedRoles = Role.MEMBER)
-    public int withdraw(@RequestParam("memberId") Integer memberId) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
-        if(currentMemberId != memberId) {
-            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
-        }
+    @PostMapping("/withdrawal/{memberId}")
+//    @AuthCheck(allowedRoles = Role.MEMBER)
+    @Operation(summary = "회원 탈퇴", description = "사용자가 회원탈퇴합니다")
+    public int withdrawMember(@RequestParam("memberId") Integer currentMemberId) {
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+//        if(currentMemberId != memberId) {
+//            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+//        }
         return memberService.withdrawMember(currentMemberId);
     }
 
     @PostMapping("/auth/logout")
+    @Operation(summary = "로그아웃", description = "사용자가 로그아웃 합니다")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         // 쿠키 이름들
         String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};
