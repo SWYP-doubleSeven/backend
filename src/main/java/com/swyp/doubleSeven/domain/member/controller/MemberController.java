@@ -95,7 +95,7 @@ public class MemberController {
         return ResponseEntity.ok().body(memberResponse);
     }
 
-    @PostMapping("/withdrawal/{memberId}")
+    @PostMapping("/auth/kakao-withdrawal")
 //    @AuthCheck(allowedRoles = Role.MEMBER)
     @Operation(summary = "회원 탈퇴", description = "사용자가 회원탈퇴합니다")
     public int withdrawMember(@RequestParam("memberId") Integer currentMemberId) {
