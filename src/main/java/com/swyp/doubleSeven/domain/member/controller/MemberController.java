@@ -43,57 +43,60 @@ public class MemberController {
         memberResponse.setBadgeResponseList(badgeResponseList);
 
         // 쿠키 설정을 위한 공통 속성 (Domain 유지)
-        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
-        // 각 쿠키 설정
-        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
-                memberResponse.getMemberKeyId(), cookieProperties));
-        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
-                memberResponse.getMemberId().toString(), cookieProperties));
-        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
-                "KAKAO", cookieProperties));
+//        String cookieProperties = "Path=/; SameSite=None; Secure; HttpOnly; Max-Age=2592000; Domain=api-zerocost.site";
+//        // 각 쿠키 설정
+//        response.setHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+//                memberResponse.getMemberKeyId(), cookieProperties));
+//        response.setHeader("Set-Cookie", String.format("memberId=%s; %s",
+//                memberResponse.getMemberId().toString(), cookieProperties));
+//        response.setHeader("Set-Cookie", String.format("loginType=%s; %s",
+//                "KAKAO", cookieProperties));
+//
+//        log.info("====카카오 로그인=====");
+//        log.info("쿠키 속성: {}", cookieProperties);
+//        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
+//        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
 
-        log.info("====카카오 로그인=====");
-        log.info("쿠키 속성: {}", cookieProperties);
-        log.info("Set-Cookie: memberKeyId={}", memberResponse.getMemberKeyId());
-        log.info("Set-Cookie: memberId={}", memberResponse.getMemberId());
-
-//        setCookie(response, "memberKeyId", memberKeyId);
-//        setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
-//        setCookie(response, "loginType", memberResponse.getLoginType());
+        setCookie(response, "memberKeyId", memberKeyId);
+        setCookie(response, "memberId", String.valueOf(memberResponse.getMemberId()));
+        setCookie(response, "loginType", memberResponse.getLoginType());
 
 
         return ResponseEntity.ok(memberResponse);
     }
 
-    public void setCookie(HttpServletResponse response, String name, String value) {
+    private void setCookie(HttpServletResponse response, String name, String value) {
         Cookie cookie = new Cookie(name, value);  // 쿠키 생성
         cookie.setMaxAge(2592000);                 // 유효기간 설정 (초 단위)
         cookie.setPath("/");                      // 모든 경로에서 접근 가능
         cookie.setSecure(true);                   // HTTPS 전용
         cookie.setHttpOnly(true);                 // JavaScript 접근 차단
-        cookie.setDomain("zerocost-eta.vercel.app");    // 쿠키 도메인 설정
+        cookie.setDomain("api-zerocost.site");    // 쿠키 도메인 설정
         response.addCookie(cookie);               // 응답에 쿠키 추가
     }
 
-    @PostMapping("/users")
-    @Operation
-    @AuthCheck(allowedRoles = Role.MEMBER)
+
+    @PutMapping("/member")
+    @Operation(summary = "멤버 닉네임 업데이트", description = "사용자가 멤버 닉네임을 업데이트합니다")
+//    @AuthCheck(allowedRoles = Role.MEMBER)
     public ResponseEntity<MemberResponse> updateMemberNickname(@RequestBody MemberRequest memberRequest) {
         MemberResponse memberResponse = memberService.updateMemberNickname(memberRequest);
         return ResponseEntity.ok().body(memberResponse);
     }
 
-    @PostMapping("/withdrawal")
-    @AuthCheck(allowedRoles = Role.MEMBER)
-    public int withdraw(@RequestParam("memberId") Integer memberId) {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
-        if(currentMemberId != memberId) {
-            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
-        }
+    @PostMapping("/withdrawal/{memberId}")
+//    @AuthCheck(allowedRoles = Role.MEMBER)
+    @Operation(summary = "회원 탈퇴", description = "사용자가 회원탈퇴합니다")
+    public int withdrawMember(@RequestParam("memberId") Integer currentMemberId) {
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+//        if(currentMemberId != memberId) {
+//            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+//        }
         return memberService.withdrawMember(currentMemberId);
     }
 
     @PostMapping("/auth/logout")
+    @Operation(summary = "로그아웃", description = "사용자가 로그아웃 합니다")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         // 쿠키 이름들
         String[] cookiesToDelete = {"memberKeyId", "memberId", "loginType"};

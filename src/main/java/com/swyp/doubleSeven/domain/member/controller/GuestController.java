@@ -42,11 +42,11 @@ public class GuestController {
         //String cookieProperties = "Path=/; Domain=api-zerocost.site; Secure; SameSite=None; Max-Age=2592000; Partitioned";
 
         // 각 쿠키 설정
-        response.addHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
+        response.setHeader("Set-Cookie", String.format("memberKeyId=%s; %s",
                 guestResponse.getMemberKeyId(), cookieProperties));
-        response.addHeader("Set-Cookie", String.format("memberId=%s; %s",
+        response.setHeader("Set-Cookie", String.format("memberId=%s; %s",
                 guestResponse.getMemberId().toString(), cookieProperties));
-        response.addHeader("Set-Cookie", String.format("loginType=%s; %s",
+        response.setHeader("Set-Cookie", String.format("loginType=%s; %s",
                 "GUEST", cookieProperties));
 
         log.info("====게스트 로그인=====");
@@ -128,8 +128,8 @@ public class GuestController {
     })
     //@ValidateOnExecution
     @GetMapping("/show-modal")
-    public ResponseEntity<Boolean> countSaving () {
-        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
+    public ResponseEntity<Boolean> countSaving (@RequestParam(value="memberId") Integer currentMemberId) {
+//        Integer currentMemberId = authenticationUtil.getCurrentMemberId();
         return ResponseEntity.ok(guestService.countSaving(currentMemberId));
     }
 }
