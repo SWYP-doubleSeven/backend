@@ -1,12 +1,16 @@
 package com.swyp.doubleSeven.domain.badge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.swyp.doubleSeven.common.aspect.AuthenticationAspect;
 import com.swyp.doubleSeven.common.aspect.anotation.AuthCheck;
+import com.swyp.doubleSeven.common.exception.BusinessException;
 import com.swyp.doubleSeven.common.util.CommonImageUploader;
 import com.swyp.doubleSeven.domain.badge.dto.request.BadgeRequest;
 import com.swyp.doubleSeven.domain.badge.dto.response.BadgeResponse;
 import com.swyp.doubleSeven.domain.badge.service.AdminBadgeService;
+import com.swyp.doubleSeven.domain.common.enums.Error;
 import com.swyp.doubleSeven.domain.common.enums.Role;
+import com.swyp.doubleSeven.domain.saving.dto.request.SavingRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -33,10 +37,11 @@ public class AdminBadgeController {
 
     private final AdminBadgeService adminBadgeService;
     private final CommonImageUploader commonImageUploader;
+    private final AuthenticationAspect authenticationAspect;
 
     @PostMapping
-    @SecurityRequirement(name = "cookieAuth")
-    @AuthCheck(allowedRoles = Role.ADMIN)
+//    @SecurityRequirement(name = "cookieAuth")
+//    @AuthCheck(allowedRoles = Role.ADMIN)
     @Operation(summary = "뱃지 등록", description = "관리자가 뱃지를 등록합니다")
     @ApiResponses({
         @ApiResponse(responseCode = "201", description = "등록 성공",
@@ -67,6 +72,10 @@ public class AdminBadgeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+        if (!"ADMIN".equals(authenticationAspect.getRoleByMemberId(badgeRequest.getMemberId()))) {
+            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+        }
+
         String fileName = "";
         // 파일 업로드 처리
         if (multipartFile != null && !multipartFile.isEmpty()) {
@@ -88,8 +97,8 @@ public class AdminBadgeController {
 
 
     @PutMapping
-    @AuthCheck(allowedRoles = Role.ADMIN)
-    @SecurityRequirement(name = "cookieAuth")
+//    @AuthCheck(allowedRoles = Role.ADMIN)
+//    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "뱃지 수정", description = "관리자가 뱃지를 수정합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "수정 성공",
@@ -121,6 +130,10 @@ public class AdminBadgeController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+        if (!"ADMIN".equals(authenticationAspect.getRoleByMemberId(badgeRequest.getMemberId()))) {
+            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+        }
+
         String fileName = "";
         // 파일 업로드 처리
         if (multipartFile != null && !multipartFile.isEmpty()) {
@@ -138,8 +151,8 @@ public class AdminBadgeController {
     }
 
     @DeleteMapping("/{badgeId}")
-    @AuthCheck(allowedRoles = Role.ADMIN)
-    @SecurityRequirement(name = "cookieAuth")
+//    @AuthCheck(allowedRoles = Role.ADMIN)
+//    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "뱃지 삭제", description = "관리자가 뱃지를 삭제합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "204", description = "삭제 성공",
@@ -148,14 +161,18 @@ public class AdminBadgeController {
                                  { "badgeId": 1 }
                                  """)))
     })
-    public ResponseEntity<BadgeResponse> deleteBadge(@PathVariable Integer badgeId) {
-        adminBadgeService.deleteBadge(badgeId);
+    public ResponseEntity<BadgeResponse> deleteBadge(@RequestBody BadgeRequest badgeRequest) {
+        if (!"ADMIN".equals(authenticationAspect.getRoleByMemberId(badgeRequest.getMemberId()))) {
+            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+        }
+
+        adminBadgeService.deleteBadge(badgeRequest.getBadgeId());
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/list")
-    @AuthCheck(allowedRoles = Role.ADMIN)
-    @SecurityRequirement(name = "cookieAuth")
+//    @AuthCheck(allowedRoles = Role.ADMIN)
+//    @SecurityRequirement(name = "cookieAuth")
     @Operation(summary = "관리자-뱃지 목록조회", description = "관리자가 뱃지 목록을 조회합니다")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공",
@@ -195,7 +212,10 @@ public class AdminBadgeController {
                                ]
                         """)))
     })
-    public ResponseEntity<List<BadgeResponse>> getBadgeList() {
+    public ResponseEntity<List<BadgeResponse>> getBadgeList(@RequestParam("memberId") Integer memberId) {
+        if (!"ADMIN".equals(authenticationAspect.getRoleByMemberId(memberId))) {
+            throw new BusinessException(Error.RESOURCE_ACCESS_DENIED);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(adminBadgeService.getBadgeList());
     }
 }

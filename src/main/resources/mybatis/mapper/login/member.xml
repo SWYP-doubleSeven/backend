@@ -139,7 +139,6 @@
             , UPDT_ID = #{memberId}
             , UPDT_DT = NOW()
         WHERE MEMBER_ID = #{memberId}
-        AND ROLE IN ('MEMBER', 'ADMIN')
     </update>
 
     <!--memberId이용해 loginType조회-->
