@@ -22,8 +22,57 @@ public class MemberService {
     private final KakaoApiClient kakaoApiClient;
     private final MemberDAO memberDAO;
 
-
     public MemberResponse processKakaoUser(String memberKeyId) {
+        try {
+            // 1. 기존 회원 조회
+            MemberResponse existingMember = memberDAO.findMemberByMemberKeyId(memberKeyId);
+
+            if (existingMember == null) {
+                // 2. 신규 회원인 경우
+                MemberRequest newMemberRequest = MemberRequest.builder()
+                        .memberKeyId(memberKeyId)
+                        .loginType(LoginType.KAKAO.getType())
+                        .memberNickname(createRandomNickname())
+                        .role(Role.MEMBER.getType())
+                        .dltnYn("N")
+                        .rgstId(0)
+                        .rgstDt(LocalDateTime.now())
+                        .updtId(0)
+                        .updtDt(LocalDateTime.now())
+                        .build();
+
+                memberDAO.insertMember(newMemberRequest);
+                return memberDAO.findMemberByMemberId(newMemberRequest.getMemberId());
+            } else {
+                // 3. 기존 회원인 경우
+                if(LoginType.GUEST.getType().equals(existingMember.getLoginType())) {
+                    // 게스트->카카오 로그인 전환
+                    MemberRequest guestToKakaoMemberRequest = MemberRequest.builder()
+                            .memberId(existingMember.getMemberId())
+                            .memberKeyId(memberKeyId)
+                            .loginType(LoginType.KAKAO.getType())
+                            .memberNickname(createRandomNickname())
+                            .email(existingMember.getEmail())
+                            .role(Role.MEMBER.getType())
+                            .dltnYn("N")
+                            .rgstId(0)
+                            .rgstDt(LocalDateTime.now())
+                            .updtId(0)
+                            .updtDt(LocalDateTime.now())
+                            .build();
+
+                    memberDAO.updateMemberRole(guestToKakaoMemberRequest);
+                    return memberDAO.findMemberByMemberId(existingMember.getMemberId());
+                }
+                return existingMember;
+            }
+        } catch (Exception e) {
+            log.error("Error processing Kakao user: ", e);
+            throw new RuntimeException("Failed to process Kakao user", e);
+        }
+    }
+
+    /*public MemberResponse processKakaoUser(String memberKeyId) {
 //        KakaoUserDTO kakaoUser = kakaoApiClient.getUserInfo(accessToken);
 
         Integer memberId = null;
@@ -69,7 +118,7 @@ public class MemberService {
 
         // MemberResponse 생성
         return memberDAO.findMemberByMemberId(memberId);
-    }
+    }*/
 
     public MemberResponse findMemberByMemberId(Integer memberId) {
         return memberDAO.findMemberByMemberId(memberId);
